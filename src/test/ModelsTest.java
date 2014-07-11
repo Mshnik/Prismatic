@@ -12,6 +12,18 @@ import util.*;
 
 public class ModelsTest {
 
+  /** A direct subclass of Hex with no additional functionality
+   * Used to allow testing of the Hex class - not to be used outside of testing
+   * @author MPatashnik
+   *
+   */
+  private static class SimpleHex extends Hex{
+    private SimpleHex(Board b, int r, int c){
+      super(b, r, c);
+    }
+  };
+  
+  
   @Test
   public void testContstants() {
     //Good god I hope these never get changed... just in case
@@ -22,14 +34,14 @@ public class ModelsTest {
   }
   
   @Test
-  public void testBoardConstruction(){
+  public void testHexAndBoardConstruction(){
     //Test that a board can be populated with hexes correctly
     
     Board b = new Board(2,2);
-    Hex one = new Prism(b, 0, 0, null);
-    Hex two = new Prism(b, 0, 1, null);
-    Hex three = new Prism(b, 1, 0, null);
-    Hex four = new Prism(b, 1, 1, null);
+    Hex one = new SimpleHex(b, 0, 0);
+    Hex two = new SimpleHex(b, 0, 1);
+    Hex three = new SimpleHex(b, 1, 0);
+    Hex four = new SimpleHex(b, 1, 1);
     
     assertEquals(b.getHex(0, 0), one);
     assertEquals(b.getHex(0, 1), two);
@@ -38,16 +50,16 @@ public class ModelsTest {
     
     //Check that errors are thrown at the correct time.
     try{
-      new Prism(null, 0, 0, null);
-      fail("Successfully constructed prism into null board");
+      new SimpleHex(null, 0, 0);
+      fail("Successfully constructed hex into null board");
     }catch(IllegalArgumentException e){}
     try{
-      new Prism(b, -1, 0, null);
-      fail("Successfully constructed prism into Illegal Position");
+      new SimpleHex(b, -1, 0);
+      fail("Successfully constructed hex into Illegal Position");
     }catch(IllegalArgumentException e){}
     try{
-      new Prism(b, 0, 0, null);
-      fail("Successfully constructed prism into already occupied Position");
+      new SimpleHex(b, 0, 0);
+      fail("Successfully constructed hex into already occupied Position");
     }catch(IllegalArgumentException e){}
     
     //Check preventing illegal board construction
@@ -62,7 +74,7 @@ public class ModelsTest {
     Board b = new Board(4,4);
     for(int i = 0; i < 4; i++){
       for(int j = 0; j < 4; j++){
-        new Prism(b, i,j,null);
+        new SimpleHex(b, i,j);
       }
     }
     
