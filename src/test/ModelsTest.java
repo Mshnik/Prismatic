@@ -4,15 +4,19 @@ import static org.junit.Assert.*;
 
 import models.*;
 import models.Board.Color;
-import models.Prism.ColorCircle;
 
 import org.junit.Test;
 
 import util.*;
 
+
+//TODO-TEST:
+// ColorCircle random
+//Hex.colorLinked
+//Spark and Hex findLight, powering up and down
 public class ModelsTest {
 
-  /** A direct subclass of Hex with no additional functionality
+  /** A direct subclass of Hex with minimum additional functionality (only as required)
    * Used to allow testing of the Hex class - not to be used outside of testing
    * @author MPatashnik
    *
@@ -21,6 +25,12 @@ public class ModelsTest {
     private SimpleHex(Board b, int r, int c){
       super(b, r, c);
     }
+    @Override
+    public boolean isLit(){ return false; }
+    @Override
+    protected boolean findLight(boolean b) { return false; }
+    @Override
+    public Color colorOfSide(int n) throws IllegalArgumentException { return null; }
   };
   
   
@@ -35,6 +45,10 @@ public class ModelsTest {
   
   @Test
   public void testHexAndBoardConstruction(){
+    Board b0 = new Board(1, 3);
+    assertEquals(b0.getHeight(), 1);
+    assertEquals(b0.getWidth(), 3);
+    
     //Test that a board can be populated with hexes correctly
     
     Board b = new Board(2,2);
@@ -43,6 +57,8 @@ public class ModelsTest {
     Hex three = new SimpleHex(b, 1, 0);
     Hex four = new SimpleHex(b, 1, 1);
     
+    assertEquals(b.getHeight(), 2);
+    assertEquals(b.getWidth(), 2);
     assertEquals(b.getHex(0, 0), one);
     assertEquals(b.getHex(0, 1), two);
     assertEquals(b.getHex(1, 0), three);
@@ -236,7 +252,7 @@ public class ModelsTest {
     //Test getting array and individual positions
     for(int i = 0; i < c.length; i++){
       assertEquals(c[i], p.colorArray()[i]);
-      assertEquals(c[i], p.colorAt(i));
+      assertEquals(c[i], p.colorOfSide(i));
     }
     
     //Test forward rotation
@@ -244,7 +260,7 @@ public class ModelsTest {
     Color[] cRotated = {Color.PINK, Color.BLUE, Color.RED, Color.CYAN, Color.ORANGE, Color.YELLOW};
     for(int i = 0; i < cRotated.length; i++){
       assertEquals(cRotated[i], p.colorArray()[i]);
-      assertEquals(cRotated[i], p.colorAt(i));
+      assertEquals(cRotated[i], p.colorOfSide(i));
     }
     
     //Test backward rotation - color array back to original
@@ -252,7 +268,7 @@ public class ModelsTest {
     //Test getting array and individual positions
     for(int i = 0; i < c.length; i++){
       assertEquals(c[i], p.colorArray()[i]);
-      assertEquals(c[i], p.colorAt(i));
+      assertEquals(c[i], p.colorOfSide(i));
     }
   }
 

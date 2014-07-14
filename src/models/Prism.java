@@ -2,7 +2,6 @@ package models;
 
 import models.Board.Color;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import util.*;
@@ -18,8 +17,7 @@ public class Prism extends Hex{
    */
   public Prism(Board b, Location l, Color[] colors) throws IllegalArgumentException{
     super(b, l);
-    if(colors != null && colors.length != SIDES) throw new IllegalArgumentException("Can't set color array of size " + colors.length);
-    colorCircle = ColorCircle.fromArray(colors);
+    setColorCircle(colors);
   }
   
   /** Constructs a Prism and puts it into board b
@@ -41,30 +39,73 @@ public class Prism extends Hex{
     return colorCircle.toArray();
   }
   
-  /** Returns the color at position, where 0 is the top, going clockwise.
-   * @throws ArrayIndexOutOfBoundsException
-   */
-  public Color colorAt(int position) throws ArrayIndexOutOfBoundsException{
-    return colorCircle.toArray()[position];
-  }
-  
   /** Allows setting the ColorCircle, but only if it isn't set yet (is null).
-   * @throws IllegalArgumentException if the colorcircle is currently non-null
+   * Also causes the prism to look for light
+   * @throws IllegalArgumentException if the colorCircle is currently non-null
    */
   public void setColorCircle(Color[] colors) throws IllegalArgumentException{
     if(colorCircle != null) throw new IllegalArgumentException("Can't set colorCirle of " + this);
     if(colors != null && colors.length != SIDES) throw new IllegalArgumentException("Can't set color array of size " + colors.length);
     colorCircle = ColorCircle.fromArray(colors);
+    findLight(true);
   }
   
-  /** Rotates this prism once clockwise (moves head back) */
+  /** Rotates this prism once clockwise (moves head back). Also causes the prism to look for light and redraw itself */
   public void rotate(){
     colorCircle = colorCircle.prev;
+    findLight(true);
   }
   
-  /** Rotates this prism once couter clockwise (moves head forward) */
+  /** Rotates this prism once counter clockwise (moves head forward). Also causes the prism to look for light and redraw itself */
   public void rotateCounter(){
     colorCircle = colorCircle.next;
+    findLight(true);
+  }
+  
+  @Override
+  /** Returns the colorCircle at the correct index for the color of a given side */
+  public Color colorOfSide(int n) throws IllegalArgumentException{
+    if(n < 0 || n > SIDES - 1) throw new IllegalArgumentException ("Illegal Side Number " + n);
+    return colorCircle.toArray()[n];
+  }
+  
+  @Override
+  /** Tries to find light by looking at all neighbor hexes that this isn't providing light to
+   * Returns true if this is lit at the end of the procedure, false otherwise
+   */
+  protected boolean findLight(boolean thisChanged) {
+    //Check if old light provider can still provide light after this rotated (changed)
+    if(thisChanged && ! Hex.colorLinked(this, lighter)){
+      // If not, unlight all hexes this was lighting before re-lighting anything.
+      lighter = null;
+      for(Hex h : getNeighbors()){
+        h.findLight(false);
+      }
+    }
+
+    boolean wasLit = isLit();
+    boolean nowLit = false;
+    for(Hex h : getNeighbors()){
+      if(Hex.colorLinked(this, h) && h.lighter != this){
+        lighter = h;
+        nowLit = true;
+        break;
+      }
+    }
+    //If couldn't find light, set lighter to null
+    if(!nowLit)
+      lighter = null;
+    
+    //If lighting status changed because of this call, let neighbors know, though it wasn't their change
+    if(nowLit != wasLit){
+      for(Hex h : getNeighbors()){
+        h.findLight(false);
+      }
+    }
+    
+    //Redraw this (happens post recursion)
+    draw();
+    return nowLit;
   }
   
   /** Two prisms are equal if they are equal as hexes and if their two colorCircles are equal */
@@ -78,113 +119,4 @@ public class Prism extends Hex{
   public int hashCode(){
     return Objects.hash(board, location, colorCircle);
   }
-  
-  /** Represents a gem on the prism - one link.
-   * Using this instead of built in linked list class because of rotation functionality.
-   * @author MPatashnik
-   *
-   */
-  public static class ColorCircle{
-    private Color color;
-    private ColorCircle prev;
-    private ColorCircle next;
-    private int size;  //The total size of the circle this ColorCircle is a link in.
-    
-    /** Constructs a color circle with the given inputs. Should only be used by helper constructing functions */
-    private ColorCircle(Color c, ColorCircle p, ColorCircle n){
-      color = c;
-      prev = p;
-      next = n;
-    }
-    
-    /** Returns the color of this link of the circle */
-    public Color getColor(){
-      return color;
-    }
-    
-    /** Returns the next link in this circle (moves clockwise) */
-    public ColorCircle getNext(){
-      return next;
-    }
-    
-    /** Returns the previous link in this circle (moves counterclockwise) */
-    public ColorCircle getPrevious(){
-      return prev;
-    }
-    
-    /** Returns the total size of the circle this ColorCirle is a link in */
-    public int getSize(){
-      return size;
-    }
-    
-    /** Creates a circularly linked list of colorCircles from an array of colors.
-     * Returns the first colorCircle (head of the circle)
-     * Returns null if the input is null or length 0.
-     */
-    public static ColorCircle fromArray(Color[] colors){
-      if (colors == null || colors.length == 0) return null;
-      int l = colors.length;
-      ColorCircle[] temp = new ColorCircle[l];
-      for(int i = 0; i < l; i++) temp[i] = new ColorCircle(colors[i], null, null);
-      
-      for(int i = 0; i < l; i++) {
-        temp[i].size = l; 
-        temp[i].prev = temp[Util.mod(i-1, l)]; 
-        temp[i].next = temp[Util.mod(i+1, l)]; 
-      }
-      
-      return temp[0];
-    }
-    
-    /** Converts this colorCircle (And its companions) into a color array, with this one at index 0. */
-    public Color[] toArray(){
-      ArrayList<Color> temp = new ArrayList<Color>();
-      ColorCircle d = this;
-      do{
-        temp.add(d.color);
-        d = d.next;
-      }while(d != this);
-      return temp.toArray(new Color[temp.size()]);
-    }
-    
-    /** Returns a string representation of the color of this link in the colorCircle */
-    @Override
-    public String toString(){
-      return color.toString().toLowerCase();
-    }
-    
-    /** Two color circles are equal if their sizes are equal and, for every colorCircle in the chain, the colors are equal */
-    @Override
-    public boolean equals(Object o){
-      if (! (o instanceof ColorCircle)) return false;
-      ColorCircle c = (ColorCircle)o;
-      ColorCircle d = this;
-      if(size != c.size) return false;
-      do{
-        if(c.color != d.color) return false;
-        c = c.next;
-        d = d.next;
-      }while(d != this);
-      return true;
-    }
-    
-    /** Hashes a ColorCircle based on its colors, starting with the head.
-     * No collisions so long as the number of colors is <= 8 - (4 bits per color).
-     */
-    @Override
-    public int hashCode(){
-      int i = 0;
-      int sum = 0;
-      ColorCircle c = this;
-      do{
-        sum += c.color.hashCode() << i;
-        i += 4;
-        c = c.next;
-      }while(c != this);
-      return sum;
-    }
-    
-  }
-  
-
 }
