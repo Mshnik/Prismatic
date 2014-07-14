@@ -43,6 +43,9 @@ public class Spark extends Hex {
   /** Makes this spark use the next avaliable color, and redraw */
   public void useNextColor(){
     avaliableColors = avaliableColors.getNext();
+    for(Hex h : getNeighbors()){
+      h.findLight(false);
+    }
     draw();
   }
   

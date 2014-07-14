@@ -1,19 +1,26 @@
 package gui;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import models.*;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 
 import util.*;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 
 /** GUI for testing purposes - shows board and allows for mutation */
@@ -43,9 +50,14 @@ public class GUI extends JFrame {
     instance = this;
     getContentPane().setLayout(new BorderLayout(0, 0));
     
-    centerPanel = new HexPanel();
+    centerPanel = new JPanel();
     centerPanel.setBackground(Color.WHITE);
-    getContentPane().add(centerPanel, BorderLayout.CENTER);
+    centerPanel.setLayout(null);
+    centerPanel.setSize(new Dimension(10000, 10000));
+    
+    JScrollPane scrollPane = new JScrollPane(centerPanel);
+    scrollPane.setSize(800, 800);
+    getContentPane().add(scrollPane, BorderLayout.CENTER);
     
     setSize(new Dimension(800, 800));
     
@@ -59,42 +71,80 @@ public class GUI extends JFrame {
     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
   }
   
-  private static final int BUFFER = 50;
-  private static final int HEX_RAD = 100;
+  public void createAndAddHexPanel(Hex h){
+    centerPanel.add(new HexPanel(h));
+  }
   
-  
+
+  private static final int HEX_RAD = 80;
+  private static final int BUFFER = 80;
+
+  /** One hex, as a drawable element */
   public class HexPanel extends JPanel{
     private static final long serialVersionUID = 1L;
-
-    public void paintComponent(Graphics g){
-      
-      //Paint hexes
-      for(Hex h : board.allHexes()){
-        drawHex(h, g);
+    private final Hex h;
+    private final int xIndex;
+    private final int yIndex;
+    private final Point center;
+    private final Polygon poly;
+    
+    public HexPanel(Hex h){
+      this.h = h;
+      xIndex = h.location.col;
+      yIndex = h.location.row;
+      int yOffset = 0;
+      if(xIndex % 2 == 1) yOffset = HEX_RAD;
+      center = new Point(BUFFER + HEX_RAD * 2 * xIndex * 3/4, BUFFER + HEX_RAD * 2 * yIndex + yOffset);
+      poly = new Polygon();
+      for(int i = 0; i < Hex.SIDES; i++){
+        poly.addPoint((int)(HEX_RAD + HEX_RAD * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES)), 
+                      (int)(HEX_RAD + HEX_RAD * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES)));
       }
+      //setBorder(BorderFactory.createLineBorder(Color.BLACK));
+      setLayout(null);
+      setBounds(center.x - HEX_RAD, center.y - HEX_RAD, HEX_RAD * 2, HEX_RAD * 2);
+      addMouseListener(new RotationListener());
     }
     
-    /** Tells the gui how to draw a hex - draws as a polygon */
-    private void drawHex(Hex h, Graphics g){
-      int x = h.location.col;
-      int y = h.location.row;
-      Polygon poly = new Polygon();
-      
-      int yOffset = 0;
-      if(x % 2 == 1) yOffset = HEX_RAD/2;
-      
-      Point center = new Point(BUFFER + HEX_RAD * x * 3/4, BUFFER + HEX_RAD * y + yOffset); //Center of poly
-            
-      for(int i = 0; i < Hex.SIDES; i++){
-        poly.addPoint((int)(center.x + HEX_RAD/2 * Math.cos(i * 2 * Math.PI / Hex.SIDES)), 
-                      (int)(center.y + HEX_RAD/2 * Math.sin(i * 2 * Math.PI / Hex.SIDES)));
+    private class RotationListener implements MouseListener{
+
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if(poly.contains(e.getPoint())){
+          HexPanel h = (HexPanel)e.getSource();
+          Hex hex = h.h;
+          if(hex instanceof Prism){
+            Prism p = (Prism)hex;
+            p.rotate();
+          }
+          else if(hex instanceof Spark){
+            Spark s = (Spark)hex;
+            s.useNextColor();
+          }
+        }
       }
+
+      @Override
+      public void mousePressed(MouseEvent e) {}
+
+      @Override
+      public void mouseReleased(MouseEvent e) {}
+
+      @Override
+      public void mouseEntered(MouseEvent e) {}
+
+      @Override
+      public void mouseExited(MouseEvent e) {}
+      
+    }
+    
+    public void paintComponent(Graphics g){
       g.drawPolygon(poly);
       if(h instanceof Prism){
         Prism p = (Prism)h;
         for(int i = 0; i < Hex.SIDES; i++){
           Polygon triangle = new Polygon();
-          triangle.addPoint(center.x, center.y);
+          triangle.addPoint(HEX_RAD, HEX_RAD);
           for(int k = i; k < i+2; k++){
             triangle.addPoint(poly.xpoints[Util.mod(k, Hex.SIDES)], poly.ypoints[Util.mod(k, Hex.SIDES)]);
           }
@@ -102,25 +152,42 @@ public class GUI extends JFrame {
           g.setColor(Board.colorFromColor(p.colorOfSide(i)));
           g.fillPolygon(triangle);
         }
+        if(p.isLit()){
+          g.setColor(Color.YELLOW);
+          Graphics2D g2 = (Graphics2D)g;
+          g2.setStroke(new BasicStroke(5));
+          g.drawPolygon(poly);
+        }
       }
       else if(h instanceof Spark){
         Spark s = (Spark)h;
         g.setColor(Board.colorFromColor(s.getColor()));
         g.fillPolygon(poly);
+        g.setColor(Color.YELLOW);
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setStroke(new BasicStroke(5));
+        g.drawPolygon(poly);
       }
-    }
+    } 
   }
   
   /** Creates a sample gui and allows playing with it */
   public static void main(String[] args){
     Board b = new Board(5,5);
+    GUI g = new GUI(b);
     for(int r = 0; r < b.getHeight(); r++){
       for(int c = 0; c < b.getWidth(); c++){
-        new Prism(b, r, c, ColorCircle.randomArray(Hex.SIDES));
+        if(r != 0 || c != 0){
+          Prism p = new Prism(b, r, c, ColorCircle.randomArray(Hex.SIDES));
+          g.createAndAddHexPanel(p);
+        } else{
+          Spark s = new Spark(b, r, c, ColorCircle.randomArray(Hex.SIDES));
+          g.createAndAddHexPanel(s);
+        }
+        g.repaint();
       }
     }
-    
-    new GUI(b);
+    b.relight();
   }
   
 }

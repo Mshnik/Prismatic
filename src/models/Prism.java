@@ -40,14 +40,12 @@ public class Prism extends Hex{
   }
   
   /** Allows setting the ColorCircle, but only if it isn't set yet (is null).
-   * Also causes the prism to look for light
    * @throws IllegalArgumentException if the colorCircle is currently non-null
    */
   public void setColorCircle(Color[] colors) throws IllegalArgumentException{
     if(colorCircle != null) throw new IllegalArgumentException("Can't set colorCirle of " + this);
     if(colors != null && colors.length != SIDES) throw new IllegalArgumentException("Can't set color array of size " + colors.length);
     colorCircle = ColorCircle.fromArray(colors);
-    findLight(true);
   }
   
   /** Rotates this prism once clockwise (moves head back). Also causes the prism to look for light and redraw itself */
@@ -74,8 +72,8 @@ public class Prism extends Hex{
    * Returns true if this is lit at the end of the procedure, false otherwise
    */
   protected boolean findLight(boolean thisChanged) {
-    //Check if old light provider can still provide light after this rotated (changed)
-    if(thisChanged && ! Hex.colorLinked(this, lighter)){
+    //Check if old light provider existed can still provide light after this rotated (changed)
+    if(thisChanged && isLit() && !Hex.colorLinked(this, lighter)){
       // If not, unlight all hexes this was lighting before re-lighting anything.
       lighter = null;
       for(Hex h : getNeighbors()){
@@ -86,7 +84,7 @@ public class Prism extends Hex{
     boolean wasLit = isLit();
     boolean nowLit = false;
     for(Hex h : getNeighbors()){
-      if(Hex.colorLinked(this, h) && h.lighter != this){
+      if(Hex.colorLinked(this, h) && h.isLit() && h.lighter != this){
         lighter = h;
         nowLit = true;
         break;

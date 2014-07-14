@@ -96,6 +96,13 @@ public class Board {
     }
   }
   
+  /** Re-calcualtes light on whole board */
+  public void relight(){
+    for(Hex h : allHexes()){
+      h.findLight(false);
+    }
+  }
+  
   /** Constructor for an empty board of size rs*cs */
   public Board(int rs, int cs) throws IllegalArgumentException {
     if (rs < 0 || cs < 0) throw new IllegalArgumentException("Illegal Board Construction for Dimensions " + rs + ", " + cs);

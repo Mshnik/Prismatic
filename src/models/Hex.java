@@ -36,7 +36,7 @@ public abstract class Hex{
    */
   public static boolean colorLinked(Hex h1, Hex h2){
     if(h1 == null || h2 == null) return false;
-    Hex[] h1Neighbors = h1.getNeighbors();
+    Hex[] h1Neighbors = h1.getNeighborsWithBlanks();
     for(int i = 0; i < SIDES; i++){
       if(h2 == h1Neighbors[i]){
         int j = Util.mod(i+(SIDES/2), SIDES); //side of h2 that is h1.
