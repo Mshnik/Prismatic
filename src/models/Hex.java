@@ -1,6 +1,8 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 import gui.*;
@@ -122,6 +124,17 @@ public abstract class Hex{
       return Color.NONE;
   }
   
+  /** Returns the chain of hexes providing this light */
+  public List<Hex> lighterList(){
+    Hex l = lighter;
+    List<Hex> lst = new LinkedList<Hex>();
+    while(l != null){
+      lst.add(l);
+      l = l.lighter;
+    }
+    return lst;
+  }
+  
   /** Causes this hex to try to find light among it's neighbors.
    * If it can, set lighter and return true (this remains lit). 
    * Otherwise return false (this becomes unlit).
@@ -147,7 +160,7 @@ public abstract class Hex{
   void provideLight(){
     if(isLit() != Color.NONE){
       for(Hex h : getNeighbors()){
-        if(Hex.colorLinked(this, h) == isLit() && lighter != h && h.lighter != this && h.isLit() != isLit())
+        if(Hex.colorLinked(this, h) == isLit() && lighter != h && h.lighter != this && lit != h.lit)
           h.findLight(false);
       }
     }
@@ -159,7 +172,7 @@ public abstract class Hex{
   void findLightProvider(Color preferred){
     lighter = null;
     for(Hex h : getNeighbors()){
-      if(h.lighter != this && h.lit != Color.NONE && colorLinked(this, h) == h.lit && (preferred == Color.NONE || h.lit == preferred)){ 
+      if(h.lighter != this && h.lit != Color.NONE && colorLinked(this, h) == h.lit && (preferred == Color.NONE || h.lit == preferred) && !h.lighterList().contains(this)){ 
         lighter = h;
         return;
       }

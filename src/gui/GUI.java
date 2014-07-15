@@ -171,7 +171,7 @@ public class GUI extends JFrame {
           g.fillPolygon(triangle);
         }
         if(p.isLit() != Board.Color.NONE){
-          g.setColor(Color.YELLOW);
+          g.setColor(Board.colorFromColor(p.isLit()));
           Graphics2D g2 = (Graphics2D)g;
           g2.setStroke(new BasicStroke(5));
           g.drawPolygon(poly);
@@ -195,11 +195,11 @@ public class GUI extends JFrame {
     GUI g = new GUI(b);
     for(int r = 0; r < b.getHeight(); r++){
       for(int c = 0; c < b.getWidth(); c++){
-        if(r != 0 || c != 0){
-          Prism p = new Prism(b, r, c, ColorCircle.randomArray(Hex.SIDES, 3));
+        if(r != 0 || c % 2 == 0){
+          Prism p = new Prism(b, r, c, ColorCircle.randomArray(Hex.SIDES, 2));
           g.createAndAddHexPanel(p);
         } else{
-          Spark s = new Spark(b, r, c, ColorCircle.randomArray(Hex.SIDES, 3));
+          Spark s = new Spark(b, r, c, ColorCircle.randomArray(Hex.SIDES, 2));
           g.createAndAddHexPanel(s);
         }
         g.repaint();
