@@ -71,9 +71,9 @@ public class Prism extends Hex{
   /** Tries to find light by looking at all neighbor hexes that this isn't providing light to
    * Returns true if this is lit at the end of the procedure, false otherwise
    */
-  protected boolean findLight(boolean thisChanged) {
-    //Check if old light provider existed can still provide light after this rotated (changed)
-    if(thisChanged && isLit() && !Hex.colorLinked(this, lighter)){
+  protected Color findLight(boolean thisChanged) {
+    //Check if old light provider existed can still provide light of the same color after this rotated (changed)
+    if(thisChanged){
       // If not, unlight all hexes this was lighting before re-lighting anything.
       lighter = null;
       for(Hex h : getNeighbors()){
@@ -81,17 +81,18 @@ public class Prism extends Hex{
       }
     }
 
-    boolean wasLit = isLit();
-    boolean nowLit = false;
+    Color wasLit = isLit();
+    Color nowLit = Color.NONE;
     for(Hex h : getNeighbors()){
-      if(Hex.colorLinked(this, h) && h.isLit() && h.lighter != this){
+      Color link = Hex.colorLinked(this, h);
+      if((link != Color.NONE) && (h.isLit() == link) && h.lighter != this){
         lighter = h;
-        nowLit = true;
+        nowLit = link;
         break;
       }
     }
     //If couldn't find light, set lighter to null
-    if(!nowLit)
+    if(nowLit == Color.NONE)
       lighter = null;
     
     //If lighting status changed because of this call, let neighbors know, though it wasn't their change

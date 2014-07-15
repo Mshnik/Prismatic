@@ -15,13 +15,12 @@ public class Spark extends Hex {
    * @param b - the board this spark belongs to
    * @param l - the location of this spark in (row, col) in the board
    * @param colors - the colors of this spark, in clockwise order starting with the top. Can be null, then set later.
-   * @throws IllegalArgumentException - if there is already hex at row,col, or row,col is OOB, or if colors is nonnull and length != SIDES.
+   * @throws IllegalArgumentException - if there is already hex at row,col, or row,col is OOB, or if colors is nonnull and length == 0.
    */
   public Spark(Board b, Location l, Color[] colors) throws IllegalArgumentException{
     super(b, l);
-    if(colors != null && colors.length != SIDES) throw new IllegalArgumentException("Can't set color array of size " + colors.length);
-    avaliableColors = ColorCircle.fromArray(colors);
-    draw();
+    if(colors == null || colors.length == 0) throw new IllegalArgumentException("Can't set color array of size " );
+    setAvaliableColors(colors);
   }
   
   /** Constructs a Spark and puts it into board b
@@ -54,16 +53,25 @@ public class Spark extends Hex {
     return avaliableColors.toArray();
   }
   
+  /** Allows setting the ColorCircle, but only if it isn't set yet (is null).
+   * @throws IllegalArgumentException if the colorCircle is currently non-null
+   */
+  public void setAvaliableColors(Color[] colors) throws IllegalArgumentException{
+    if(avaliableColors != null) throw new IllegalArgumentException("Can't set colorCirle of " + this);
+    if(colors != null && colors.length == 0) throw new IllegalArgumentException("Can't set color array of size " + colors.length);
+    avaliableColors = ColorCircle.fromArray(colors);
+  }
+  
   @Override
   /** Sparks always find light because they always light themselves. No setting of fields neccesary */
-  protected boolean findLight(boolean thischanged) {
-    return true;
+  protected Color findLight(boolean thischanged) {
+    return getColor();
   }
   
   @Override
   /** Overrides Hex isLit() because Sparks are always lit */
-  public boolean isLit(){
-    return true;
+  public Color isLit(){
+    return getColor();
   }
   
   @Override

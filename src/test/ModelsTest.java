@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+
 import models.*;
 import models.Board.Color;
 
@@ -12,7 +14,6 @@ import util.*;
 
 //TODO-TEST:
 // ColorCircle random
-//Hex.colorLinked
 //Spark and Hex findLight, powering up and down
 public class ModelsTest {
 
@@ -26,9 +27,7 @@ public class ModelsTest {
       super(b, r, c);
     }
     @Override
-    public boolean isLit(){ return false; }
-    @Override
-    protected boolean findLight(boolean b) { return false; }
+    protected Color findLight(boolean b) { return Color.NONE; }
     @Override
     public Color colorOfSide(int n) throws IllegalArgumentException { return null; }
   };
@@ -216,6 +215,42 @@ public class ModelsTest {
     ColorCircle circle5 = ColorCircle.fromArray(c5);
     assertFalse(circle3.equals(circle5));
     assertFalse(circle5.equals(circle3));
+    
+    //Test Random colorCircle functions
+    Color[] c6 = ColorCircle.randomArray(5, 8);
+    assertEquals(5, c6.length);
+    Color[] c7 = ColorCircle.random(5, 8).toArray();
+    assertEquals(5, c7.length);
+    Color[] c8 = ColorCircle.random(8, 2).toArray();
+    HashSet<Color> distinctColors = new HashSet<Color>();
+    for(Color col : c8)
+      distinctColors.add(col);
+    assertTrue(2>=distinctColors.size());
+    
+    try{
+      ColorCircle.randomArray(0, 9);
+      fail("Created Size 0 Color Array");
+    }catch(IllegalArgumentException e){}
+    try{
+      ColorCircle.random(0,9 );
+      fail("Created Size 0 Color Circle");
+    }catch(IllegalArgumentException e){}
+    try{
+      ColorCircle.randomArray(-2, 9);
+      fail("Created negative size Color Array");
+    }catch(IllegalArgumentException e){}
+    try{
+      ColorCircle.random(-2, 9);
+      fail("Created negative size Color Circle");
+    }catch(IllegalArgumentException e){}
+    try{
+      ColorCircle.random(7, 0);
+      fail("Created color circle with at most 0 colors");
+    }catch(IllegalArgumentException e){}
+    try{
+      ColorCircle.random(7, -2);
+      fail("Created color circle with at most -2 colors");
+    }catch(IllegalArgumentException e){}
   }
   
   @Test
@@ -270,6 +305,84 @@ public class ModelsTest {
       assertEquals(c[i], p.colorArray()[i]);
       assertEquals(c[i], p.colorOfSide(i));
     }
+  }
+  
+  @Test
+  public void testSparkConstructionAndColorSwap(){
+    Board b = new Board();
+    
+    //Test spark construction with unset colors
+    Color[] c = {Color.RED, Color.BLUE};
+    Spark one = new Spark(b, 0, 0, c);
+    assertEquals(one, b.getHex(0, 0));
+    Color[] c2 = one.getAvaliableColors();
+    for(int i = 0; i < c.length; i++){
+      assertEquals(c[i], c2[i]);
+    }
+    //Test getting current color
+    assertEquals(Color.RED, one.getColor());
+    one.useNextColor();
+    assertEquals(Color.BLUE, one.getColor());
+    one.useNextColor();
+    assertEquals(Color.RED, one.getColor());
+    
+    //Check always-lit
+    assertEquals(Color.RED, one.isLit());
+    
+    //Check in-bounds colorOfSide
+    for(int i = 0; i < Hex.SIDES; i++){
+      assertEquals(Color.RED, one.colorOfSide(i));
+    }
+    
+    //Check illegal color setting
+    try{
+      new Spark(b, 2, 2, null);
+      fail("Created spark with null color circle");
+    }catch(IllegalArgumentException e){}
+    try{
+      new Spark(b, 1, 0, new Color[0]);
+      fail("Created spark with length 0 color circle");
+    }catch(IllegalArgumentException e){}
+    try{
+      one.setAvaliableColors(c);
+      fail("Reset colorCircle of already set spark");
+    }catch(IllegalArgumentException e){}
+  }
+  
+  @Test
+  public void testColorLinked(){
+    Board b = new Board(3,3);
+    Color[] cOne = {Color.NONE, Color.NONE, Color.BLUE, Color.ORANGE, Color.NONE, Color.NONE};
+    Prism one = new Prism(b, 0, 0, cOne);
+    Color[] cTwo = {Color.NONE, Color.RED, Color.NONE, Color.NONE, Color.NONE, Color.BLUE};
+    Prism two = new Prism(b, 0, 1, cTwo);
+    Color[] cThree = {Color.GREEN, Color.RED, Color.NONE, Color.NONE, Color.NONE, Color.BLUE};
+    Prism three = new Prism(b, 1, 0, cThree); 
+    Color[] cFour = {Color.NONE, Color.RED, Color.NONE, Color.GREEN, Color.NONE, Color.BLUE};
+    Prism four = new Prism(b, 1, 2, cFour);
+    
+    //Check correct colorLink
+    helpLink(one, two, Color.BLUE);
+    
+    //Check link to null
+    helpLink(two, b.getHex(new Location(0,2)), Color.NONE);
+    
+    //Check incorrect colorLink
+    helpLink(one, three, Color.NONE);
+    
+    //Check non-neighbors
+    helpLink(one, four, Color.NONE);
+    
+    Color[] cFive = {Color.GREEN};
+    Spark s = new Spark(b, 2, 2, cFive);
+    
+    //Check with Spark
+    helpLink(four, s, Color.GREEN);
+  }
+  
+  private void helpLink(Hex one, Hex two, Color expected){
+    assertEquals(one + " and " + two + " colorLinked", expected, Hex.colorLinked(one, two));
+    assertEquals(two + " and " + one + " colorLinked", expected, Hex.colorLinked(two, one));
   }
 
 }

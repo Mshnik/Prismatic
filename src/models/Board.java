@@ -18,11 +18,11 @@ public class Board {
     NONE,
     RED,
     BLUE,
-    YELLOW,
     GREEN,
     ORANGE,
     PURPLE,
     CYAN,
+    YELLOW,
     PINK
   }
   

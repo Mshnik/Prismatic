@@ -30,21 +30,22 @@ public abstract class Hex{
   Hex lighter;        //The hex providing this hex with light. null if this is unlit. 
                       //Should be a neighbor. Visible to subclasses, though some may not use it.
   
-  /** Returns true iff:
-   *    1) The two hexes are neighbors (both non-null)
+  /** Returns the color that links h1 and h2:
+   *    1) The two hexes are neighbors (both non-null), otherwise returns none
    *    2) The colors of the adjacent sides are the same
    */
-  public static boolean colorLinked(Hex h1, Hex h2){
-    if(h1 == null || h2 == null) return false;
+  public static Color colorLinked(Hex h1, Hex h2){
+    if(h1 == null || h2 == null) return Color.NONE;
     Hex[] h1Neighbors = h1.getNeighborsWithBlanks();
     for(int i = 0; i < SIDES; i++){
       if(h2 == h1Neighbors[i]){
         int j = Util.mod(i+(SIDES/2), SIDES); //side of h2 that is h1.
-        return h1.colorOfSide(i) == h2.colorOfSide(j);
+        if(h1.colorOfSide(i) == h2.colorOfSide(j)) return h1.colorOfSide(i);
+        else return Color.NONE;
       }
     }
     //h2 not a neighbor of h1
-    return false;
+    return Color.NONE;
   }
   
   
@@ -112,9 +113,12 @@ public abstract class Hex{
     return temp.toArray(new Hex[temp.size()]);
   }
   
-  /** Returns true if this hex is lit, false otherwise */
-  public boolean isLit(){
-    return lighter != null;
+  /** Returns the color this hex is lit, NONE otherwise */
+  public Color isLit(){
+    if(lighter != null)
+      return lighter.isLit();
+    else
+      return Color.NONE;
   }
   
   /** Causes this hex to try to find light among it's neighbors.
@@ -124,15 +128,15 @@ public abstract class Hex{
    * a hex this is lighting.
    * 
    * @param thisChanged - true if this hex underwent a change, false if it was some other hex
-   * @return true if this hex is lit after the search, false otherwise.
+   * @return The color this is lit after the change
    */
-  abstract protected boolean findLight(boolean thisChanged);
+  abstract protected Color findLight(boolean thisChanged);
   
   /** Returns the color of side n of this hex (where side 0 is the top).
    * @throws IllegalArgumentException if n < 0, n > 5.
    */
   abstract public Color colorOfSide(int n) throws IllegalArgumentException;
-  
+    
   @Override
   /** The start of a toString for subclasses that is the location's toString */
   public String toString(){

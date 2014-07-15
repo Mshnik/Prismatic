@@ -62,21 +62,22 @@ public class ColorCircle{
     return temp[0];
   }
   
-  /** Returns a random color array of a given length.
-   * Returns null if length <= 0 */
-  public static Color[] randomArray(int length){
-    if (length <= 0) return null;
+  /** Returns a random color array of a given length. Uses at most maxColors (or 6 if maxColors > 6) colors, never uses NONE.
+   * throws IllegalArgumentException if length <= 0 or maxColors <= 0*/
+  public static Color[] randomArray(int length, int maxColors) throws IllegalArgumentException{
+    if (length <= 0) throw new IllegalArgumentException("Can't make Color Array of length " + length + " for color circle");
+    if(maxColors <= 0) throw new IllegalArgumentException("Can't make Color Array of length using at most " + maxColors + " colors");
     Color[] colors = new Color[length];
     for(int i = 0; i < length; i++){
-      colors[i] = Color.values()[(int)(Math.random() * Color.values().length)];
+      colors[i] = Color.values()[1 + (int)(Math.random() * (Math.min(maxColors, Color.values().length - 1)))];
     }
     return colors;
   }
   
-  /** Creates a random color circle of the given length.
-   * Returns null if length <= 0 */
-   public static ColorCircle random(int length){
-     return fromArray(randomArray(length));
+  /** Creates a random color circle of the given length. Uses at most maxColors (or 6 if maxColors > 6) colors, never uses NONE.
+   * throws IllegalArgumentException if length <= 0 or maxColors <= 0*/
+   public static ColorCircle random(int length, int maxColors) throws IllegalArgumentException{
+     return fromArray(randomArray(length, maxColors));
    }
   
   /** Converts this colorCircle (And its companions) into a color array, with this one at index 0. */

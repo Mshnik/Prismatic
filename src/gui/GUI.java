@@ -1,6 +1,5 @@
 package gui;
 
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import models.*;
 import java.awt.BorderLayout;
@@ -20,7 +19,6 @@ import java.awt.event.WindowEvent;
 
 import util.*;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 
 
 /** GUI for testing purposes - shows board and allows for mutation */
@@ -40,6 +38,11 @@ public class GUI extends JFrame {
   /** Returns the currently open GUI instance */
   public static GUI getInstance(){
     return instance;
+  }
+  
+  /** Returns the board of this GUI */
+  public Board getBoard(){
+    return board;
   }
   
   /** Constructs a gui to display board b */
@@ -152,7 +155,7 @@ public class GUI extends JFrame {
           g.setColor(Board.colorFromColor(p.colorOfSide(i)));
           g.fillPolygon(triangle);
         }
-        if(p.isLit()){
+        if(p.isLit() != Board.Color.NONE){
           g.setColor(Color.YELLOW);
           Graphics2D g2 = (Graphics2D)g;
           g2.setStroke(new BasicStroke(5));
@@ -178,10 +181,10 @@ public class GUI extends JFrame {
     for(int r = 0; r < b.getHeight(); r++){
       for(int c = 0; c < b.getWidth(); c++){
         if(r != 0 || c != 0){
-          Prism p = new Prism(b, r, c, ColorCircle.randomArray(Hex.SIDES));
+          Prism p = new Prism(b, r, c, ColorCircle.randomArray(Hex.SIDES, 3));
           g.createAndAddHexPanel(p);
         } else{
-          Spark s = new Spark(b, r, c, ColorCircle.randomArray(Hex.SIDES));
+          Spark s = new Spark(b, r, c, ColorCircle.randomArray(Hex.SIDES, 3));
           g.createAndAddHexPanel(s);
         }
         g.repaint();
