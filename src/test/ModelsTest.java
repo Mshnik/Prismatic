@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.Assert.*;
 
+import gui.GUI;
+
 import java.util.HashSet;
 
 import models.*;
@@ -11,10 +13,6 @@ import org.junit.Test;
 
 import util.*;
 
-
-//TODO-TEST:
-// ColorCircle random
-//Spark and Hex findLight, powering up and down
 public class ModelsTest {
 
   /** A direct subclass of Hex with minimum additional functionality (only as required)
@@ -380,9 +378,89 @@ public class ModelsTest {
     helpLink(four, s, Color.GREEN);
   }
   
+  /** Checks if two hexes are linked with the expected color, both ways */
   private void helpLink(Hex one, Hex two, Color expected){
     assertEquals(one + " and " + two + " colorLinked", expected, Hex.colorLinked(one, two));
     assertEquals(two + " and " + one + " colorLinked", expected, Hex.colorLinked(two, one));
   }
+  
+  @Test
+  public void testLighting(){
+    Board b = new Board(3,3);
+    Color[][] colors = { Board.noneArray(Hex.SIDES),                                              //(0,0)
+                         {Color.NONE, Color.NONE, Color.NONE, Color.RED, Color.NONE, Color.RED},  //(0,1)
+                         {Color.NONE, Color.NONE, Color.RED, Color.RED, Color.NONE, Color.NONE},  //(0,2)
+                         {Color.RED, Color.BLUE},                                                 //(1,0)
+                         {Color.RED, Color.NONE, Color.RED, Color.NONE, Color.BLUE, Color.NONE},  //(1,1)
+                         {Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED},      //(1,2)
+                         {Color.RED, Color.NONE, Color.NONE, Color.NONE, Color.NONE, Color.NONE}, //(2,0)
+                         {Color.BLUE, Color.NONE, Color.NONE, Color.NONE, Color.NONE, Color.BLUE},//(2,1)
+                         {Color.BLUE}                                                             //(2,2)
+                       };
+    new Prism(b, 0, 0, colors[0]);
+    new Prism(b, 0, 1, colors[1]);
+    new Prism(b, 0, 2, colors[2]);
+    new Spark(b, 1, 0, colors[3]);
+    new Prism(b, 1, 1, colors[4]);
+    new Prism(b, 1, 2, colors[5]);
+    new Prism(b, 2, 0, colors[6]);
+    new Prism(b, 2, 1, colors[7]);
+    new Spark(b, 2, 2, colors[8]);
+   
+    //Show for debugging purposes - uncomment and step through rotations to see board.
+    //GUI g = new GUI(b);
+    //g.retile();
+    
+    //Set initial lighting
+    b.relight();
+    
+    Color[][] lighting = {{Color.NONE, Color.NONE, Color.NONE},{Color.RED, Color.NONE, Color.NONE},{Color.RED, Color.NONE, Color.BLUE}};
+    helpLight(b, lighting);
+    
+    //Test rotating a prism propigates light
+    b.getHex(1, 1).asPrism().rotateCounter();
+    Color[][] lightingTwo = {{Color.NONE, Color.NONE, Color.RED},{Color.RED, Color.RED, Color.RED},{Color.RED, Color.NONE, Color.BLUE}};
+    helpLight(b, lightingTwo);
+    
+    //Test undoing rotation removes light
+    b.getHex(1,1).asPrism().rotate();
+    helpLight(b, lighting);
+    
+    //Test a merging branch can find light from one fork if the other leaves
+    
+    //Create two paths
+    b.getHex(0, 1).asPrism().rotateCounter();
+    b.getHex(1, 1).asPrism().rotateCounter();
+    
+    Color[][] lightingThree = {{Color.NONE, Color.RED, Color.RED},{Color.RED, Color.RED, Color.RED},{Color.RED, Color.NONE, Color.BLUE}};
+    helpLight(b, lightingThree);
+    
+    //Remove top path
+    b.getHex(0, 1).asPrism().rotate();
+    
+    helpLight(b, lightingTwo);
+    
+    //Test Rotating a prism that still merges doesn't remove light
+    b.getHex(1,2).asPrism().rotate();
+    helpLight(b, lightingTwo);
+    
+    //Test adding second color of light doesn't overpower currently lit color of light
+    b.getHex(2, 1).asPrism().rotate();
+    Color[][] lightingFour = {{Color.NONE, Color.NONE, Color.RED},{Color.RED, Color.RED, Color.RED},{Color.RED, Color.BLUE, Color.BLUE}};
+    helpLight(b, lightingFour);
+    
+    //Test turning off Spark removes light
+    b.getHex(1,0).asSpark().useNextColor();
+    Color[][] lightingFive = {{Color.NONE, Color.NONE, Color.NONE},{Color.BLUE, Color.BLUE, Color.NONE},{Color.NONE, Color.BLUE, Color.BLUE}};
+    helpLight(b, lightingFive);
+  }
 
+  /** Checks if each hex in b is lit the corresponding color of lit */
+  private void helpLight(Board b, Color[][] lit){
+    for(int i = 0; i < b.getHeight(); i++){
+      for(int j = 0; j < b.getWidth(); j++){
+        assertEquals("Hex at (" + i + "," + j + ") lit ", lit[i][j], b.getHex(i, j).isLit());
+      }
+    }
+  }
 }

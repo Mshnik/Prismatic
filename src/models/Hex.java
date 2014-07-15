@@ -29,6 +29,7 @@ public abstract class Hex{
   
   Hex lighter;        //The hex providing this hex with light. null if this is unlit. 
                       //Should be a neighbor. Visible to subclasses, though some may not use it.
+  Color lit = Color.NONE;  //Used to remember the color this was lit while changing liters. identical to lighter.isLit outside of light changing process.
   
   /** Returns the color that links h1 and h2:
    *    1) The two hexes are neighbors (both non-null), otherwise returns none
@@ -132,11 +133,56 @@ public abstract class Hex{
    */
   abstract protected Color findLight(boolean thisChanged);
   
+  /** Helper method for use in findLight implementations. Tells neighbors this is currently lighting to look elsewhere */
+  void stopProvidingLight(){
+    for(Hex h : getNeighbors()){
+      if(h.lighter == this)
+        h.findLight(false);
+    }
+  }
+  
+  /** Helper method for use in findLight implementations. Tells neighbors that this is now lit, 
+   * maybe get light from this, if not already or this getting light from that.
+   * If this isn't lit, do nothing. */
+  void provideLight(){
+    if(isLit() != Color.NONE){
+      for(Hex h : getNeighbors()){
+        if(Hex.colorLinked(this, h) == isLit() && lighter != h && h.lighter != this && h.isLit() != isLit())
+          h.findLight(false);
+      }
+    }
+  }
+  
+  /** Helper method for use in findLight implementations. Tries to find light among neighbors.
+   *  If a link is found, sets that neighbor as lighter. If no link found, sets lighter to null.
+   *  Only looks for preferred. If preferred is NONE, takes any color. */
+  void findLightProvider(Color preferred){
+    lighter = null;
+    for(Hex h : getNeighbors()){
+      if(h.lighter != this && h.lit != Color.NONE && colorLinked(this, h) == h.lit && (preferred == Color.NONE || h.lit == preferred)){ 
+        lighter = h;
+        return;
+      }
+    }
+  }
+  
   /** Returns the color of side n of this hex (where side 0 is the top).
    * @throws IllegalArgumentException if n < 0, n > 5.
    */
   abstract public Color colorOfSide(int n) throws IllegalArgumentException;
     
+  /** Returns this as a prism, if the cast is allowed. Throws runtimeexception otherwise */
+  public Prism asPrism() throws RuntimeException{
+    if(! (this instanceof Prism)) throw new RuntimeException("Can't cast " + this + " to a Prism");
+    return (Prism)this;
+  }
+  
+  /** Returns this as a Spark, if the cast is allowed. Throws runtimeexception otherwise */
+  public Spark asSpark() throws RuntimeException{
+    if(! (this instanceof Spark)) throw new RuntimeException("Can't cast " + this + " to a Spark");
+    return (Spark)this;
+  }
+  
   @Override
   /** The start of a toString for subclasses that is the location's toString */
   public String toString(){

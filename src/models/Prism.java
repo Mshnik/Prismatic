@@ -69,42 +69,32 @@ public class Prism extends Hex{
   
   @Override
   /** Tries to find light by looking at all neighbor hexes that this isn't providing light to
-   * Returns true if this is lit at the end of the procedure, false otherwise
+   * Tries to stay the same color of light if multiple are avaliable. Otherwise chooses arbitrarily.
+   * Returns the color this is lit at the end of the procedure, false otherwise
    */
   protected Color findLight(boolean thisChanged) {
-    //Check if old light provider existed can still provide light of the same color after this rotated (changed)
-    if(thisChanged){
-      // If not, unlight all hexes this was lighting before re-lighting anything.
-      lighter = null;
-      for(Hex h : getNeighbors()){
-        h.findLight(false);
-      }
+    Color wasLit = lit;
+    //If this was providing light, stop providing light (RECURSION)
+    if(lit != Color.NONE){
+      lit = Color.NONE;
+      stopProvidingLight();
+    }
+    
+    //First try to find a provider of the previous color of light
+    findLightProvider(wasLit);
+    
+    //If that didn't work, try to find any provider of light.
+    if(lighter == null) findLightProvider(Color.NONE); 
+    
+    //Try to give light to neighbors (RECURSION)
+    if(isLit() != Color.NONE){
+      lit = isLit();
+      provideLight();
     }
 
-    Color wasLit = isLit();
-    Color nowLit = Color.NONE;
-    for(Hex h : getNeighbors()){
-      Color link = Hex.colorLinked(this, h);
-      if((link != Color.NONE) && (h.isLit() == link) && h.lighter != this){
-        lighter = h;
-        nowLit = link;
-        break;
-      }
-    }
-    //If couldn't find light, set lighter to null
-    if(nowLit == Color.NONE)
-      lighter = null;
-    
-    //If lighting status changed because of this call, let neighbors know, though it wasn't their change
-    if(nowLit != wasLit){
-      for(Hex h : getNeighbors()){
-        h.findLight(false);
-      }
-    }
-    
-    //Redraw this (happens post recursion)
+    //Redraw (post recursion) and return the color this is now lit
     draw();
-    return nowLit;
+    return isLit();
   }
   
   /** Two prisms are equal if they are equal as hexes and if their two colorCircles are equal */

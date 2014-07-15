@@ -42,9 +42,9 @@ public class Spark extends Hex {
   /** Makes this spark use the next avaliable color, and redraw */
   public void useNextColor(){
     avaliableColors = avaliableColors.getNext();
-    for(Hex h : getNeighbors()){
-      h.findLight(false);
-    }
+    lit = getColor();
+    stopProvidingLight();
+    provideLight();
     draw();
   }
   
@@ -60,6 +60,7 @@ public class Spark extends Hex {
     if(avaliableColors != null) throw new IllegalArgumentException("Can't set colorCirle of " + this);
     if(colors != null && colors.length == 0) throw new IllegalArgumentException("Can't set color array of size " + colors.length);
     avaliableColors = ColorCircle.fromArray(colors);
+    lit = getColor();
   }
   
   @Override

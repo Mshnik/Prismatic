@@ -42,6 +42,15 @@ public class Board {
     }
   }
   
+  /** Returns an array of length l filled with Color.NONE */
+  public static Color[] noneArray(int length){
+    Color[] c = new Color[length];
+    for(int i = 0; i < length; i++){
+      c[i] = Color.NONE;
+    }
+    return c;
+  }
+  
   /** The board of hexes for this board. Stored in "odd-q" layout to
    * make storing a hexagonal grid possible in a 2-D matrix.
    * For illustration, see 

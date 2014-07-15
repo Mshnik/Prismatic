@@ -74,8 +74,23 @@ public class GUI extends JFrame {
     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
   }
   
+  /** Creates a hex panel for hex h - draws h */
   public void createAndAddHexPanel(Hex h){
     centerPanel.add(new HexPanel(h));
+  }
+  
+  /** Removes all hexpanels (perhaps so they can be redrawn) */
+  public void removeAllHexPanels(){
+    centerPanel.removeAll();
+  }
+  
+  /** Repopulates this Gui with the board */
+  public void retile(){
+    removeAllHexPanels();
+    for(Hex h : board.allHexes()){
+      createAndAddHexPanel(h);
+    }
+    repaint();
   }
   
 
