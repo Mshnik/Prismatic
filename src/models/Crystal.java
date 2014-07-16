@@ -1,7 +1,5 @@
 package models;
 
-
-
 import util.*;
 
 public class Crystal extends Hex {

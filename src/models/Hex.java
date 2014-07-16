@@ -32,49 +32,6 @@ public abstract class Hex{
                       //Should be a neighbor. Visible to subclasses, though some may not use it.
   Color lit = Color.NONE;  //Used to remember the color this was lit while changing liters. identical to lighter.isLit outside of light changing process.
                            //Hexes can change the lighter of other prisms, but should leave changing lit to the hex it belongs to
-    
-  
-  /** Returns the color that links h1 and h2:
-   *    1) The two hexes are neighbors (both non-null), otherwise returns none
-   *    2) The colors of the adjacent sides are the same
-   */
-  public static Color colorLinked(Hex h1, Hex h2){
-    if(h1 == null || h2 == null) return Color.NONE;
-    Hex[] h1Neighbors = h1.getNeighborsWithBlanks();
-    for(int i = 0; i < SIDES; i++){
-      if(h2 == h1Neighbors[i]){
-        int j = Util.mod(i+(SIDES/2), SIDES); //side of h2 that is h1.
-        if(h1.colorOfSide(i) == h2.colorOfSide(j)) return h1.colorOfSide(i);
-        else return Color.NONE;
-      }
-    }
-    //h2 not a neighbor of h1
-    return Color.NONE;
-  }
-  
-  /** @See Hex.colorLinked(this, h) */
-  public Color colorLinked(Hex h){
-    return colorLinked(this, h);
-  }
-  
-  /** Returns the index (0 ... SIDES - 1) of the side of h1 that is facing h2. Returns -1 if the two are not neighbors or h==null */
-  public static int indexLink(Hex h1, Hex h2){
-    if(h1 == null || h2 == null) return -1;
-    Hex[] h1Neighbors = h1.getNeighborsWithBlanks();
-    for(int i = 0; i < SIDES; i++){
-      if(h2 == h1Neighbors[i]){
-        return i;
-      }
-    }
-    //h2 not a neighbor of h1
-    return -1;
-  }
-
-  /** @See indexLink(this, h) */
-  public int indexLink(Hex h){
-    return indexLink(this, h);
-  }
-  
   
   /** Stores Board b and Point p as board and location in this hex.
    * Throws IllegalArgumentException if b is null, point p is already occupied on board b,
@@ -140,6 +97,16 @@ public abstract class Hex{
     return temp.toArray(new Hex[temp.size()]);
   }
   
+  /** @See Hex.colorLinked(this, h) */
+  public Color colorLinked(Hex h){
+    return board.colorLinked(this, h);
+  }
+
+  /** @See indexLink(this, h) */
+  public int indexLink(Hex h){
+    return board.indexLink(this, h);
+  }
+  
   /** Returns the color this hex is lit, NONE otherwise */
   public Color isLit(){
     if(lighter != null)
@@ -186,7 +153,7 @@ public abstract class Hex{
   void provideLight(){
     if(isLit() != Color.NONE){
       for(Hex h : getNeighbors()){
-        if((h instanceof Crystal) || !(h instanceof Spark) && Hex.colorLinked(this, h) == isLit() && lighter != h && h.lighter != this && lit != h.lit)
+        if((h instanceof Crystal) || !(h instanceof Spark) && colorLinked(h) == isLit() && lighter != h && h.lighter != this && lit != h.lit)
           h.findLight(false);
       }
     }
@@ -198,7 +165,7 @@ public abstract class Hex{
   void findLightProvider(Color preferred){
     lighter = null;
     for(Hex h : getNeighbors()){
-      if(h.lighter != this && h.lit != Color.NONE && colorLinked(this, h) == h.lit && (preferred == Color.NONE || h.lit == preferred) && !h.lighterList().contains(this)){ 
+      if(h.lighter != this && h.lit != Color.NONE && colorLinked(h) == h.lit && (preferred == Color.NONE || h.lit == preferred) && !h.lighterList().contains(this)){ 
         lighter = h;
         return;
       }

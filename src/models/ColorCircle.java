@@ -10,8 +10,8 @@ import util.Util;
  */
 public class ColorCircle{
   private Color color;
-  protected ColorCircle prev;
-  protected ColorCircle next;
+  private ColorCircle prev;
+  private ColorCircle next;
   private int size;  //The total size of the circle this ColorCircle is a link in.
   
   /** Constructs a color circle with the given inputs. Should only be used by helper constructing functions */
@@ -19,26 +19,6 @@ public class ColorCircle{
     color = c;
     prev = p;
     next = n;
-  }
-  
-  /** Returns the color of this link of the circle */
-  public Color getColor(){
-    return color;
-  }
-  
-  /** Returns the next link in this circle (moves clockwise) */
-  public ColorCircle getNext(){
-    return next;
-  }
-  
-  /** Returns the previous link in this circle (moves counterclockwise) */
-  public ColorCircle getPrevious(){
-    return prev;
-  }
-  
-  /** Returns the total size of the circle this ColorCirle is a link in */
-  public int getSize(){
-    return size;
   }
   
   /** Creates a circularly linked list of colorCircles from an array of colors.
@@ -77,6 +57,26 @@ public class ColorCircle{
    public static ColorCircle random(int length, int maxColors) throws IllegalArgumentException{
      return fromArray(randomArray(length, maxColors));
    }
+  
+  /** Returns the color of this link of the circle */
+  public Color getColor(){
+    return color;
+  }
+  
+  /** Returns the next link in this circle (moves clockwise) */
+  public ColorCircle getNext(){
+    return next;
+  }
+  
+  /** Returns the previous link in this circle (moves counterclockwise) */
+  public ColorCircle getPrevious(){
+    return prev;
+  }
+  
+  /** Returns the total size of the circle this ColorCirle is a link in */
+  public int getSize(){
+    return size;
+  }
   
   /** Converts this colorCircle (And its companions) into a color array, with this one at index 0. */
   public Color[] toArray(){

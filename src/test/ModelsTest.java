@@ -308,8 +308,8 @@ public class ModelsTest {
   
   /** Checks if two hexes are linked with the expected color, both ways */
   private void helpLink(Hex one, Hex two, Color expected){
-    assertEquals(one + " and " + two + " colorLinked", expected, Hex.colorLinked(one, two));
-    assertEquals(two + " and " + one + " colorLinked", expected, Hex.colorLinked(two, one));
+    if(one != null) assertEquals(one + " and " + two + " colorLinked", expected, one.colorLinked(two));
+    if(two != null) assertEquals(two + " and " + one + " colorLinked", expected, two.colorLinked(one));
   }
   
   @Test
@@ -487,8 +487,8 @@ public class ModelsTest {
     new Prism(b, 1, 1, colors[4]);
     new Prism(b, 1, 2, colors[5]);
     
-    GUI g = new GUI(b);
-    g.retile();
+    //GUI g = new GUI(b);
+    //g.retile();
     
     //Set initial lighting
     b.relight();                

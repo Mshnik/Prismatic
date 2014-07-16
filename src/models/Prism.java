@@ -11,6 +11,9 @@ public class Prism extends Hex{
   /** Defines default rotation behavior for all prisms - true for clockwise, false for couterclockwise */
   public static boolean ROTATE_CLOCKWISE = true;
   
+  /** The gems of  this prism. Value of colorCircle is the gem on the top */
+  private ColorCircle colorCircle;
+  
   /** Constructs a Prism and puts it into board b
    * @param b - the board this prism belongs to
    * @param l - the location of this prism in (row, col) in the board
@@ -33,9 +36,6 @@ public class Prism extends Hex{
     this(b, new Location(row, col), colors);
   }
   
-  /** The gems of  this prism. Value of colorCircle is the gem on the top */
-  private ColorCircle colorCircle;
-  
   /** Returns the colors of this prism, clockwise from the current top */
   public Color[] colorArray(){
     return colorCircle.toArray();
@@ -53,14 +53,14 @@ public class Prism extends Hex{
   /** Rotates this prism once clockwise (moves head back). Also causes the prism to look for light and redraw itself */
   public void rotate(){
     board.moves++;
-    colorCircle = colorCircle.prev;
+    colorCircle = colorCircle.getPrevious();
     findLight(true);
   }
   
   /** Rotates this prism once counter clockwise (moves head forward). Also causes the prism to look for light and redraw itself */
   public void rotateCounter(){
     board.moves++;
-    colorCircle = colorCircle.next;
+    colorCircle = colorCircle.getNext();
     findLight(true);
   }
   

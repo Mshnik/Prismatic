@@ -7,6 +7,8 @@ package models;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.junit.experimental.categories.Category;
+
 import util.*;
 
 /** Represents the board of hexagonal tiles.
@@ -34,6 +36,37 @@ public class Board {
   /** returns the height of the board */
   public int getHeight(){
     return board.length;
+  }
+  
+  /** Returns the index (0 ... SIDES - 1) of the side of h1 that is facing h2. Returns -1 if the two are not neighbors or h==null */
+  public int indexLink(Hex h1, Hex h2){
+    if(h1 == null || h2 == null) return -1;
+    Hex[] h1Neighbors = h1.getNeighborsWithBlanks();
+    for(int i = 0; i < Hex.SIDES; i++){
+      if(h2 == h1Neighbors[i]){
+        return i;
+      }
+    }
+    //h2 not a neighbor of h1
+    return -1;
+  }
+  
+  /** Returns the color that links h1 and h2:
+   *    1) The two hexes are neighbors (both non-null), otherwise returns none
+   *    2) The colors of the adjacent sides are the same
+   */
+  public Color colorLinked(Hex h1, Hex h2){
+    if(h1 == null || h2 == null) return Color.NONE;
+    Hex[] h1Neighbors = h1.getNeighborsWithBlanks();
+    for(int i = 0; i < Hex.SIDES; i++){
+      if(h2 == h1Neighbors[i]){
+        int j = Util.mod(i+(Hex.SIDES/2), Hex.SIDES); //side of h2 that is h1.
+        if(h1.colorOfSide(i) == h2.colorOfSide(j)) return h1.colorOfSide(i);
+        else return Color.NONE;
+      }
+    }
+    //h2 not a neighbor of h1
+    return Color.NONE;
   }
   
   /** @See getHex(row, col) */
