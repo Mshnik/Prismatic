@@ -32,6 +32,7 @@ public abstract class Hex{
   Hex lighter;        //The hex providing this hex with light. null if this is unlit. 
                       //Should be a neighbor. Visible to subclasses, though some may not use it.
   Color lit = Color.NONE;  //Used to remember the color this was lit while changing liters. identical to lighter.isLit outside of light changing process.
+                           //Hexes can change the lighter of other prisms, but should leave changing lit to the hex it belongs to
   
   /** Returns the color that links h1 and h2:
    *    1) The two hexes are neighbors (both non-null), otherwise returns none
@@ -49,6 +50,11 @@ public abstract class Hex{
     }
     //h2 not a neighbor of h1
     return Color.NONE;
+  }
+  
+  /** @See Hex.colorLinked(this, h) */
+  public Color colorLinked(Hex h){
+    return colorLinked(this, h);
   }
   
   
@@ -156,11 +162,13 @@ public abstract class Hex{
   
   /** Helper method for use in findLight implementations. Tells neighbors that this is now lit, 
    * maybe get light from this, if not already or this getting light from that.
-   * If this isn't lit, do nothing. */
+   * If this isn't lit, do nothing. 
+   * 
+   * Note: Always try to provide light to crystal, never try to provide light to spark. Neither of these recurse, so no trouble*/
   void provideLight(){
     if(isLit() != Color.NONE){
       for(Hex h : getNeighbors()){
-        if(Hex.colorLinked(this, h) == isLit() && lighter != h && h.lighter != this && lit != h.lit)
+        if((h instanceof Crystal) || !(h instanceof Spark) && Hex.colorLinked(this, h) == isLit() && lighter != h && h.lighter != this && lit != h.lit)
           h.findLight(false);
       }
     }
@@ -183,7 +191,10 @@ public abstract class Hex{
    * @throws IllegalArgumentException if n < 0, n > 5.
    */
   abstract public Color colorOfSide(int n) throws IllegalArgumentException;
-    
+   
+  /** Perform default behavior for 'interacting' (clicking) this hex */
+  abstract public void click();
+  
   /** Returns this as a prism, if the cast is allowed. Throws runtimeexception otherwise */
   public Prism asPrism() throws RuntimeException{
     if(! (this instanceof Prism)) throw new RuntimeException("Can't cast " + this + " to a Prism");

@@ -28,7 +28,7 @@ public class Spark extends Hex {
    * @param row - the row of this spark in board
    * @param col - the col of this spark in board
    * @param colors - the colors of this spark, in clockwise order starting with the top. Can be null, then set later.
-   * @throws IllegalArgumentException - if there is already hex at row,col, or row,col is OOB, or if colors is nonnull and length != 6.
+   * @throws IllegalArgumentException - if there is already hex at row,col, or row,col is OOB, or if colors is nonnull and length == 0.
    */
   public Spark(Board b, int row, int col, Color[] colors) throws IllegalArgumentException{
     this(b, new Location(row, col), colors);
@@ -67,6 +67,12 @@ public class Spark extends Hex {
   /** Sparks always find light because they always light themselves. No setting of fields neccesary */
   protected Color findLight(boolean thischanged) {
     return getColor();
+  }
+  
+  @Override
+  /** Default behavior for a spark is to switch to the next avaliable color */
+  public void click(){
+    useNextColor();
   }
   
   @Override

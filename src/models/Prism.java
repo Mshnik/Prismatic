@@ -9,6 +9,9 @@ import util.*;
 /** Represents a single prism */
 public class Prism extends Hex{
   
+  /** Defines default rotation behavior for all prisms - true for clockwise, false for couterclockwise */
+  public static boolean ROTATE_CLOCKWISE = true;
+  
   /** Constructs a Prism and puts it into board b
    * @param b - the board this prism belongs to
    * @param l - the location of this prism in (row, col) in the board
@@ -95,6 +98,13 @@ public class Prism extends Hex{
     //Redraw (post recursion) and return the color this is now lit
     draw();
     return isLit();
+  }
+  
+  @Override
+  /** Default behavior for a Prism is to rotate. Rotates clockwise if ROTATE_CLOCKWISE, rotates counterclockwise otherwise. */
+  public void click(){
+    if(ROTATE_CLOCKWISE) rotate();
+    else rotateCounter();
   }
   
   /** Two prisms are equal if they are equal as hexes and if their two colorCircles are equal */

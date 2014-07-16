@@ -28,6 +28,8 @@ public class ModelsTest {
     protected Color findLight(boolean b) { return Color.NONE; }
     @Override
     public Color colorOfSide(int n) throws IllegalArgumentException { return null; }
+    @Override
+    public void click() {}
   };
   
   
@@ -305,6 +307,12 @@ public class ModelsTest {
     }
   }
   
+  /** Checks if two hexes are linked with the expected color, both ways */
+  private void helpLink(Hex one, Hex two, Color expected){
+    assertEquals(one + " and " + two + " colorLinked", expected, Hex.colorLinked(one, two));
+    assertEquals(two + " and " + one + " colorLinked", expected, Hex.colorLinked(two, one));
+  }
+  
   @Test
   public void testSparkConstructionAndColorSwap(){
     Board b = new Board();
@@ -377,11 +385,18 @@ public class ModelsTest {
     //Check with Spark
     helpLink(four, s, Color.GREEN);
   }
-  
-  /** Checks if two hexes are linked with the expected color, both ways */
-  private void helpLink(Hex one, Hex two, Color expected){
-    assertEquals(one + " and " + two + " colorLinked", expected, Hex.colorLinked(one, two));
-    assertEquals(two + " and " + one + " colorLinked", expected, Hex.colorLinked(two, one));
+ 
+  /** Checks if each hex in b is lit the corresponding color of lit. Empty board spaces should be null */
+  private void helpLight(Board b, Color[][] lit){
+    for(int i = 0; i < b.getHeight(); i++){
+      for(int j = 0; j < b.getWidth(); j++){
+        Hex h = b.getHex(i,j);
+        if(h == null)
+          assertEquals("No hex at (" + i + "," + j + ")", lit[i][j], h);
+        else
+          assertEquals("Hex at (" + i + "," + j + ") lit ", lit[i][j], h.isLit());
+      }
+    }
   }
   
   @Test
@@ -454,13 +469,50 @@ public class ModelsTest {
     Color[][] lightingFive = {{Color.NONE, Color.NONE, Color.NONE},{Color.BLUE, Color.BLUE, Color.NONE},{Color.NONE, Color.BLUE, Color.BLUE}};
     helpLight(b, lightingFive);
   }
-
-  /** Checks if each hex in b is lit the corresponding color of lit */
-  private void helpLight(Board b, Color[][] lit){
-    for(int i = 0; i < b.getHeight(); i++){
-      for(int j = 0; j < b.getWidth(); j++){
-        assertEquals("Hex at (" + i + "," + j + ") lit ", lit[i][j], b.getHex(i, j).isLit());
-      }
-    }
+  
+  @Test
+  public void testCrystalConstructionandLighting(){
+    Board b = new Board(2,3);
+    
+    Color[][] colors = { {Color.RED}, 
+                         {Color.RED, Color.NONE, Color.NONE, Color.NONE, Color.RED, Color.NONE},
+                         {},
+                         {Color.BLUE},
+                         {Color.BLUE, Color.NONE, Color.NONE, Color.NONE, Color.BLUE, Color.NONE},
+                         {Color.BLUE, Color.NONE, Color.NONE, Color.NONE, Color.BLUE, Color.NONE}};
+    
+    new Spark(b, 0, 0, colors[0]);
+    new Prism(b, 0, 1, colors[1]);
+    new Crystal(b, 0, 2);
+    new Spark(b, 1, 0, colors[3]);
+    new Prism(b, 1, 1, colors[4]);
+    new Prism(b, 1, 2, colors[5]);
+    
+    GUI g = new GUI(b);
+    g.retile();
+    
+    //Set initial lighting
+    b.relight();                
+    
+    Color[][] lighting = { {Color.RED, Color.NONE, Color.NONE}, {Color.BLUE, Color.NONE, Color.NONE}};
+    helpLight(b, lighting);
+    
+    //Light the crystal
+    b.getHex(0,1).asPrism().rotate();
+    
+    Color[][] lightingTwo = {{Color.RED, Color.RED, Color.RED},  {Color.BLUE, Color.NONE, Color.NONE}};
+    helpLight(b, lightingTwo);
+    
+    //Add an input of a different color - crystal shouldn't change color.
+    b.getHex(1,1).asPrism().rotate();
+    Color[][] lightingThree = {{Color.RED, Color.RED, Color.RED}, {Color.BLUE, Color.BLUE, Color.BLUE}};
+    helpLight(b, lightingThree);
+    
+    //Remove first light - crystal should pick up new color.
+    b.getHex(0,1).asPrism().rotate();
+    Color[][] lightingFour = {{Color.RED, Color.NONE, Color.BLUE}, {Color.BLUE, Color.BLUE, Color.BLUE}};
+    helpLight(b,lightingFour); 
   }
+
+
 }

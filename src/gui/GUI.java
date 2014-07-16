@@ -186,6 +186,15 @@ public class GUI extends JFrame {
         g2.setStroke(new BasicStroke(5));
         g.drawPolygon(poly);
       }
+      else if (h instanceof Crystal){
+        Crystal c = (Crystal)h;
+        g.setColor(Board.colorFromColor(c.isLit()));
+        g.fillPolygon(poly);
+        g.setColor(Color.LIGHT_GRAY);
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setStroke(new BasicStroke(5));
+        g.drawPolygon(poly);
+      }
     } 
   }
   
