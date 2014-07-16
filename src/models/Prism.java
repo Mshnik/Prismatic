@@ -1,6 +1,5 @@
 package models;
 
-import models.Board.Color;
 
 import java.util.Objects;
 

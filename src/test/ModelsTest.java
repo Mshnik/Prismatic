@@ -7,7 +7,6 @@ import gui.GUI;
 import java.util.HashSet;
 
 import models.*;
-import models.Board.Color;
 
 import org.junit.Test;
 
@@ -402,7 +401,7 @@ public class ModelsTest {
   @Test
   public void testLighting(){
     Board b = new Board(3,3);
-    Color[][] colors = { Board.noneArray(Hex.SIDES),                                              //(0,0)
+    Color[][] colors = { Colors.noneArray(Hex.SIDES),                                              //(0,0)
                          {Color.NONE, Color.NONE, Color.NONE, Color.RED, Color.NONE, Color.RED},  //(0,1)
                          {Color.NONE, Color.NONE, Color.RED, Color.RED, Color.NONE, Color.NONE},  //(0,2)
                          {Color.RED, Color.BLUE},                                                 //(1,0)

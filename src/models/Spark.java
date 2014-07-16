@@ -2,7 +2,6 @@ package models;
 
 import java.util.Objects;
 
-import models.Board.Color;
 import util.*;
 
 public class Spark extends Hex {

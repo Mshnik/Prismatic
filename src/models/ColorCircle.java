@@ -1,8 +1,6 @@
 package models;
 
 import java.util.ArrayList;
-
-import models.Board.Color;
 import util.Util;
 
 /** Represents the color of one side of a hex - one link.

@@ -12,55 +12,6 @@ import util.*;
 /** Represents the board of hexagonal tiles.
  * Upon construction is empty - to fill with hexes, construct hexes with this as an argument. */
 public class Board {
-
-  /** Gem colors for prisms, and light colors */
-  public enum Color{
-    NONE,
-    RED,
-    BLUE,
-    GREEN,
-    ORANGE,
-    PURPLE,
-    CYAN,
-    YELLOW,
-    PINK
-  }
-  
-  /** Returns the Java awt color corresponding to this color enum value */
-  public static java.awt.Color colorFromColor(Color c){
-    switch(c){
-      case BLUE: return java.awt.Color.BLUE;
-      case CYAN: return java.awt.Color.CYAN;
-      case GREEN:return java.awt.Color.GREEN;
-      case NONE: return new java.awt.Color(0, 0, 0, 1); //clear
-      case ORANGE: return java.awt.Color.ORANGE;
-      case PINK: return java.awt.Color.PINK;
-      case PURPLE: return java.awt.Color.MAGENTA;
-      case RED: return java.awt.Color.RED;
-      case YELLOW: return java.awt.Color.YELLOW;
-      default: return java.awt.Color.white;
-    }
-  }
-  
-  /** Returns a subArray of colors, starting at color n and giving l colors. Loops back around as nessary.
-   * (Thus giving n > Color.values().length with have duplicates in the return) */
-  public static Color[] subValues(int offset, int n){
-    Color[] c = new Color[n];
-    for(int i = offset; i < n + offset; i++){
-      c[i - offset] = Color.values()[Util.mod(i, Color.values().length)];
-    }
-    return c;
-  }
-  
-  /** Returns an array of length l filled with Color.NONE */
-  public static Color[] noneArray(int length){
-    Color[] c = new Color[length];
-    for(int i = 0; i < length; i++){
-      c[i] = Color.NONE;
-    }
-    return c;
-  }
-  
   /** The board of hexes for this board. Stored in "odd-q" layout to
    * make storing a hexagonal grid possible in a 2-D matrix.
    * For illustration, see 

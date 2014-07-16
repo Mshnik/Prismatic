@@ -6,7 +6,6 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -45,7 +44,7 @@ public class GUI extends JFrame {
   private Board board;
   private static GUI instance = null; //Currently open instance. (only construct one of these at a time)
   
-  private HashMap<Board.Color, Boolean> colorEnabled;
+  private HashMap<Color, Boolean> colorEnabled;
   
   //JFrame stuff
   private JPanel centerPanel;
@@ -69,7 +68,7 @@ public class GUI extends JFrame {
     getContentPane().setLayout(new BorderLayout(0, 0));
     
     centerPanel = new JPanel();
-    centerPanel.setBackground(Color.WHITE);
+    centerPanel.setBackground(java.awt.Color.WHITE);
     centerPanel.setLayout(null);
     centerPanel.setSize(new Dimension(10000, 10000));
     
@@ -122,7 +121,7 @@ public class GUI extends JFrame {
         }
       });
 
-      colorEnabled = new HashMap<Board.Color, Boolean>();
+      colorEnabled = new HashMap<Color, Boolean>();
       
       JPanel panel_3 = new JPanel();
       panel.add(panel_3, BorderLayout.CENTER);
@@ -131,14 +130,14 @@ public class GUI extends JFrame {
       JLabel lblNewLabel = new JLabel("  Show Prism Sides of Color: ");
       panel_3.add(lblNewLabel);
       for(int i = 1; i < 1 + DIFFICULTY; i++){
-        JCheckBox ckb = new JCheckBox(Board.Color.values()[i].toString());
+        JCheckBox ckb = new JCheckBox(Color.values()[i].toString());
         panel_3.add(ckb);
-        colorEnabled.put(Board.Color.values()[i], true);
+        colorEnabled.put(Color.values()[i], true);
         ckb.setSelected(true);
         ckb.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent e) {
           JCheckBox c = (JCheckBox)e.getSource();
-          colorEnabled.put(Board.Color.valueOf(c.getText()), c.isSelected());
+          colorEnabled.put(Color.valueOf(c.getText()), c.isSelected());
           retile();
         }
       });
@@ -238,15 +237,15 @@ public class GUI extends JFrame {
           for(int k = i; k < i+2; k++){
             triangle.addPoint(poly.xpoints[Util.mod(k, Hex.SIDES)], poly.ypoints[Util.mod(k, Hex.SIDES)]);
           }
-          g.setColor(Color.BLACK);
+          g.setColor(java.awt.Color.BLACK);
           g.drawPolygon(triangle);
           if(colorEnabled.get(p.colorOfSide(i))){
-            g.setColor(Board.colorFromColor(p.colorOfSide(i)));
+            g.setColor(Colors.colorFromColor(p.colorOfSide(i)));
             g.fillPolygon(triangle);
           }
         }
-        if(p.isLit() != Board.Color.NONE){
-          g.setColor(Board.colorFromColor(p.isLit()));
+        if(p.isLit() != Color.NONE){
+          g.setColor(Colors.colorFromColor(p.isLit()));
           Graphics2D g2 = (Graphics2D)g;
           g2.setStroke(new BasicStroke(5));
           g.drawPolygon(poly);
@@ -254,18 +253,18 @@ public class GUI extends JFrame {
       }
       else if(h instanceof Spark){
         Spark s = (Spark)h;
-        g.setColor(Board.colorFromColor(s.getColor()));
+        g.setColor(Colors.colorFromColor(s.getColor()));
         g.fillPolygon(poly);
-        g.setColor(Color.YELLOW);
+        g.setColor(java.awt.Color.YELLOW);
         Graphics2D g2 = (Graphics2D)g;
         g2.setStroke(new BasicStroke(5));
         g.drawPolygon(poly);
       }
       else if (h instanceof Crystal){
         Crystal c = (Crystal)h;
-        g.setColor(Board.colorFromColor(c.isLit()));
+        g.setColor(Colors.colorFromColor(c.isLit()));
         g.fillPolygon(poly);
-        g.setColor(Color.LIGHT_GRAY);
+        g.setColor(java.awt.Color.LIGHT_GRAY);
         Graphics2D g2 = (Graphics2D)g;
         g2.setStroke(new BasicStroke(5));
         g.drawPolygon(poly);
@@ -278,7 +277,7 @@ public class GUI extends JFrame {
     for(int r = 0; r < b.getHeight(); r++){
       for(int c = 0; c < b.getWidth(); c++){
         if(r == 0 && c == 0){
-          new Spark(b, r, c, Board.subValues(1, DIFFICULTY));
+          new Spark(b, r, c, Colors.subValues(1, DIFFICULTY));
         } else if(r == 3 && c == 8){
           new Crystal(b, r, c);
         } else{

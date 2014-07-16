@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 
 import gui.*;
-import models.Board.Color;
 import util.*;
 
 
