@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import gui.*;
 import util.*;
 
 
@@ -212,13 +211,10 @@ public abstract class Hex{
     return Objects.hash(board, location);
   }
   
-  /** Signifies that this has been changed; tells the gui (if any) to update this. Call this whenever this is changed */
-  protected void draw(){
-    GUI gui = GUI.getInstance();
-    if(gui != null){
-      gui.updateScoreLabel();
-      gui.repaint();
-    }
+  /** Signifies that this has been changed; tells the game (if any) to update this, as necessary. Call this whenever this is changed */
+  protected void update(){
+    if(board != null && board.getGame() != null)
+      board.getGame().updateHex(this);
   }
   
 }

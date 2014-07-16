@@ -1,7 +1,7 @@
 package gui;
 
 import javax.swing.JFrame;
-import models.*;
+
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
@@ -11,18 +11,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
 
+import models.*;
+import game.*;
 import util.*;
 
 import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -41,7 +38,7 @@ public class GUI extends JFrame {
    */
   private static final long serialVersionUID = 5860367452991049874L;
 
-  private Board board;
+  private Game game;
   private static GUI instance = null; //Currently open instance. (only construct one of these at a time)
   
   private HashMap<Color, Boolean> colorEnabled;
@@ -55,15 +52,16 @@ public class GUI extends JFrame {
     return instance;
   }
   
-  /** Returns the board of this GUI */
-  public Board getBoard(){
-    return board;
+  /** Returns the game of this GUI */
+  public Game getGame(){
+    return game;
   }
   
-  /** Constructs a gui to display board b */
-  public GUI(Board b){
+  /** Constructs a gui to display game g */
+  public GUI(Game g){
     setAlwaysOnTop(true);
-    board = b;
+    game = g;
+    g.setGUI(this);
     instance = this;
     getContentPane().setLayout(new BorderLayout(0, 0));
     
@@ -114,10 +112,7 @@ public class GUI extends JFrame {
         @Override
         public void mouseClicked(MouseEvent e) {
           GUI self = GUI.instance;
-          GUI g = new GUI(makeBoard());
-          g.retile();
-          self.dispose();
-          self.setVisible(false);
+          self.game.reset();
         }
       });
 
@@ -129,7 +124,7 @@ public class GUI extends JFrame {
       
       JLabel lblNewLabel = new JLabel("  Show Prism Sides of Color: ");
       panel_3.add(lblNewLabel);
-      for(int i = 1; i < 1 + DIFFICULTY; i++){
+      for(int i = 1; i < 1 + game.getDifficulty(); i++){
         JCheckBox ckb = new JCheckBox(Color.values()[i].toString());
         panel_3.add(ckb);
         colorEnabled.put(Color.values()[i], true);
@@ -150,7 +145,7 @@ public class GUI extends JFrame {
   
   /** Updates the score label */
   public void updateScoreLabel(){
-    scoreLabel.setText("Moves: " + board.getMoves());
+    scoreLabel.setText("Moves: " + game.getBoard().getMoves());
   }
   
   /** Creates a hex panel for hex h - draws h */
@@ -166,7 +161,7 @@ public class GUI extends JFrame {
   /** Repopulates this Gui with the board */
   public void retile(){
     removeAllHexPanels();
-    for(Hex h : board.allHexes()){
+    for(Hex h : game.getBoard().allHexes()){
       createAndAddHexPanel(h);
     }
     repaint();
@@ -271,29 +266,6 @@ public class GUI extends JFrame {
       }
     } 
   }
-  
-  private static Board makeBoard(){
-    Board b = new Board(4,9);
-    for(int r = 0; r < b.getHeight(); r++){
-      for(int c = 0; c < b.getWidth(); c++){
-        if(r == 0 && c == 0){
-          new Spark(b, r, c, Colors.subValues(1, DIFFICULTY));
-        } else if(r == 3 && c == 8){
-          new Crystal(b, r, c);
-        } else{
-          new Prism(b, r, c, ColorCircle.randomArray(Hex.SIDES, DIFFICULTY));
-        }
-      }
-    }
-    b.relight();
-    return b;
-  }
-  
-  public static final int DIFFICULTY = 3;
-  
-  /** Creates a sample gui and allows playing with it */
-  public static void main(String[] args){
-    GUI g = new GUI(makeBoard());
-    g.retile();
-  }
+    
+
 }

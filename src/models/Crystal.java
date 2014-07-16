@@ -35,7 +35,7 @@ public class Crystal extends Hex {
     if(lighter == null) findLightProvider(Color.NONE); 
 
     //Redraw and return the color this is now lit
-    draw();
+    update();
     lit = isLit();
     return isLit();
   }

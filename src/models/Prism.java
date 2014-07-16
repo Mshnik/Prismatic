@@ -97,7 +97,7 @@ public class Prism extends Hex{
     }
 
     //Redraw (post recursion) and return the color this is now lit
-    draw();
+    update();
     return isLit();
   }
   

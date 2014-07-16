@@ -44,7 +44,7 @@ public class Spark extends Hex {
     lit = getColor();
     stopProvidingLight();
     provideLight();
-    draw();
+    update();
   }
   
   /** Returns the avaliable colors of this spark */

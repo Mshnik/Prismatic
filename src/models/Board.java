@@ -6,8 +6,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import org.junit.experimental.categories.Category;
+import game.Game;
 
 import util.*;
 
@@ -19,6 +18,9 @@ public class Board {
    * For illustration, see 
    */
   private Hex[][] board;
+  
+  /** The game this board belongs to */
+  private Game game;
   
   /** The number of moves made on this board. A move is a prism rotation. */
   protected int moves = 0;
@@ -36,6 +38,17 @@ public class Board {
   /** returns the height of the board */
   public int getHeight(){
     return board.length;
+  }
+  
+  /** Returns the game this board belongs to */
+  public Game getGame(){
+    return game;
+  }
+  
+  /** Sets the game this board belongs to. Throws a runtime exception if the game has already been set */
+  public void setGame(Game g) throws RuntimeException{
+    if(game != null) throw new RuntimeException("Can't set Game of " + this + " to " + g + " because it is already " + game);
+    game = g;
   }
   
   /** Returns the index (0 ... SIDES - 1) of the side of h1 that is facing h2. Returns -1 if the two are not neighbors or h==null */
@@ -127,10 +140,6 @@ public class Board {
   public Board(){
     this(DEFAULT_BOARD_SIZE, DEFAULT_BOARD_SIZE);
   }
-  
-  /** Called by a Hex when it changes (rotates, changes light color, etc).
-   * Tells each of the hex's neighbors that it has 
-   */
   
   @Override
   /** Two boards are equivalent if the refer to the same board (not equal boards */
