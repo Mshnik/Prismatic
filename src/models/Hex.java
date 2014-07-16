@@ -33,6 +33,7 @@ public abstract class Hex{
                       //Should be a neighbor. Visible to subclasses, though some may not use it.
   Color lit = Color.NONE;  //Used to remember the color this was lit while changing liters. identical to lighter.isLit outside of light changing process.
                            //Hexes can change the lighter of other prisms, but should leave changing lit to the hex it belongs to
+    
   
   /** Returns the color that links h1 and h2:
    *    1) The two hexes are neighbors (both non-null), otherwise returns none
@@ -55,6 +56,24 @@ public abstract class Hex{
   /** @See Hex.colorLinked(this, h) */
   public Color colorLinked(Hex h){
     return colorLinked(this, h);
+  }
+  
+  /** Returns the index (0 ... SIDES - 1) of the side of h1 that is facing h2. Returns -1 if the two are not neighbors or h==null */
+  public static int indexLink(Hex h1, Hex h2){
+    if(h1 == null || h2 == null) return -1;
+    Hex[] h1Neighbors = h1.getNeighborsWithBlanks();
+    for(int i = 0; i < SIDES; i++){
+      if(h2 == h1Neighbors[i]){
+        return i;
+      }
+    }
+    //h2 not a neighbor of h1
+    return -1;
+  }
+
+  /** @See indexLink(this, h) */
+  public int indexLink(Hex h){
+    return indexLink(this, h);
   }
   
   
@@ -231,6 +250,7 @@ public abstract class Hex{
   protected void draw(){
     GUI gui = GUI.getInstance();
     if(gui != null){
+      gui.updateScoreLabel();
       gui.repaint();
     }
   }

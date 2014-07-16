@@ -45,12 +45,12 @@ public class Crystal extends Hex {
   
   @Override
   /** Helper method for use in findLight implementations. Tries to find light among neighbors.
-   *  Overrides hex findLightProvider so that it can take any color of light, no matter the side color
+   *  Overrides hex findLightProvider so that it can take any color of light, no matter the side color.
    *  Only looks for preferred. If preferred is NONE, takes any color. */
   void findLightProvider(Color preferred){
     lighter = null;
     for(Hex h : getNeighbors()){
-      if(h.lit != Color.NONE && (preferred == Color.NONE || h.lit == preferred) && !h.lighterList().contains(this)){ 
+      if(h.lit != Color.NONE && (preferred == Color.NONE || h.lit == preferred) && h.colorOfSide(h.indexLink(this)) == h.lit){ 
         lighter = h;
         return;
       }

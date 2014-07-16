@@ -42,6 +42,16 @@ public class Board {
     }
   }
   
+  /** Returns a subArray of colors, starting at color n and giving l colors. Loops back around as nessary.
+   * (Thus giving n > Color.values().length with have duplicates in the return) */
+  public static Color[] subValues(int offset, int n){
+    Color[] c = new Color[n];
+    for(int i = offset; i < n + offset; i++){
+      c[i - offset] = Color.values()[Util.mod(i, Color.values().length)];
+    }
+    return c;
+  }
+  
   /** Returns an array of length l filled with Color.NONE */
   public static Color[] noneArray(int length){
     Color[] c = new Color[length];
@@ -56,6 +66,14 @@ public class Board {
    * For illustration, see 
    */
   private Hex[][] board;
+  
+  /** The number of moves made on this board. A move is a prism rotation. */
+  protected int moves = 0;
+  
+  /** Returns the number of moves on this board */
+  public int getMoves(){
+    return moves;
+  }
   
   /** Returns the width of the board */
   public int getWidth(){

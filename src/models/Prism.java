@@ -53,12 +53,14 @@ public class Prism extends Hex{
   
   /** Rotates this prism once clockwise (moves head back). Also causes the prism to look for light and redraw itself */
   public void rotate(){
+    board.moves++;
     colorCircle = colorCircle.prev;
     findLight(true);
   }
   
   /** Rotates this prism once counter clockwise (moves head forward). Also causes the prism to look for light and redraw itself */
   public void rotateCounter(){
+    board.moves++;
     colorCircle = colorCircle.next;
     findLight(true);
   }
