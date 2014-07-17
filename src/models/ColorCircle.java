@@ -1,5 +1,6 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import util.Util;
 
@@ -8,7 +9,9 @@ import util.Util;
  * @author MPatashnik
  *
  */
-public class ColorCircle{
+public class ColorCircle implements Serializable{
+
+  private static final long serialVersionUID = 6519613127863567763L;
   private Color color;
   private ColorCircle prev;
   private ColorCircle next;

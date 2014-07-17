@@ -1,7 +1,10 @@
 package game;
 
+import java.io.IOException;
+
 import models.*;
 import gui.*;
+import util.ObjectIO;
 
 /** Parent of all Game classes. Define generic game behavior */
 public abstract class Game {
@@ -14,9 +17,8 @@ public abstract class Game {
    * @param g - the gui belonging to this game, if it is run on the desktop
    */
   public Game(Board b, GUI g){
-    board = b;
-    board.setGame(this);
-    gui = g;
+    setBoard(b);
+    setGUI(g);
   }
   
   /** Constructor for a Game (no gui)
@@ -24,6 +26,12 @@ public abstract class Game {
    */
   public Game(Board b){
     this(b, null);
+  }
+  
+  /** Sets the board of this game - disposes of older board, if any. If new board is non-null, make it belong to this game */
+  public void setBoard(Board b){
+    if(board != null) board.dispose();
+    board = b;
   }
   
   /** Sets the gui to show this game on - disposes of older gui if any*/
@@ -51,4 +59,13 @@ public abstract class Game {
   /** Returns the difficulty of this game */
   public abstract int getDifficulty();
   
+  /** Saves the current board w/ random name*/
+  public void saveBoard(){
+    Board b = new Board(board);
+    try {
+      ObjectIO.write(b, "Sample Maps", ((int)(Math.random() * 1000)) + "");
+    } catch (IllegalArgumentException | IOException e) {
+      e.printStackTrace();
+    }
+  }
 }

@@ -8,6 +8,8 @@ import util.*;
 /** Represents a single prism */
 public class Prism extends Hex{
   
+  private static final long serialVersionUID = 1921228710574878868L;
+
   /** Defines default rotation behavior for all prisms - true for clockwise, false for couterclockwise */
   public static boolean ROTATE_CLOCKWISE = true;
   
@@ -34,6 +36,14 @@ public class Prism extends Hex{
    */
   public Prism(Board b, int row, int col, Color[] colors) throws IllegalArgumentException{
     this(b, new Location(row, col), colors);
+  }
+  
+  /** Constructs a copy of prism p for board b */
+  public Prism(Board b, Hex h) throws IllegalArgumentException{
+    super(b, h);
+    if(! (h instanceof Prism)) throw new IllegalArgumentException("Can't clone " + h + " as Prism");
+    Prism p = (Prism) h;
+    setColorCircle(p.colorArray());
   }
   
   /** Returns the colors of this prism, clockwise from the current top */

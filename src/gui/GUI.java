@@ -11,6 +11,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -18,9 +20,7 @@ import models.*;
 import game.*;
 import util.*;
 
-import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
@@ -28,6 +28,11 @@ import java.util.HashMap;
 
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import javax.swing.SwingConstants;
+import javax.swing.JCheckBoxMenuItem;
 
 
 /** GUI for testing purposes - shows board and allows for mutation */
@@ -77,28 +82,6 @@ public class GUI extends JFrame {
     JPanel panel = new JPanel();
     getContentPane().add(panel, BorderLayout.NORTH);
     panel.setLayout(new BorderLayout(0, 0));
-    
-    JPanel panel_1 = new JPanel();
-    panel.add(panel_1, BorderLayout.WEST);
-     
-     JLabel lblRotationDirection = new JLabel("  Rotation Direction:");
-     panel_1.add(lblRotationDirection);
-     
-      JButton btnNewButton = new JButton("Clockwise");
-      panel_1.add(btnNewButton);
-      btnNewButton.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-          JButton source = (JButton)e.getSource();
-          if(Prism.ROTATE_CLOCKWISE){
-            Prism.ROTATE_CLOCKWISE = false;
-            source.setText("Counter Clockwise");
-          } else{
-            Prism.ROTATE_CLOCKWISE = true;
-            source.setText("Clockwise");
-          }
-        }
-      });
       
       JPanel panel_2 = new JPanel();
       panel.add(panel_2, BorderLayout.EAST);
@@ -116,36 +99,83 @@ public class GUI extends JFrame {
         }
       });
 
-      colorEnabled = new HashMap<Color, Boolean>();
       
-      JPanel panel_3 = new JPanel();
-      panel.add(panel_3, BorderLayout.CENTER);
-      panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
-      
-      JLabel lblNewLabel = new JLabel("  Show Prism Sides of Color: ");
-      panel_3.add(lblNewLabel);
-      for(int i = 1; i < 1 + game.getDifficulty(); i++){
-        JCheckBox ckb = new JCheckBox(Color.values()[i].toString());
-        panel_3.add(ckb);
-        colorEnabled.put(Color.values()[i], true);
-        ckb.setSelected(true);
-        ckb.addChangeListener(new ChangeListener() {
-        public void stateChanged(ChangeEvent e) {
-          JCheckBox c = (JCheckBox)e.getSource();
-          colorEnabled.put(Color.valueOf(c.getText()), c.isSelected());
-          retile();
-        }
-      });
-      }
-    setSize(new Dimension(1200, 1000));
+    setMinimumSize(new Dimension(1200, 1000));
     
     setDefaultCloseOperation(EXIT_ON_CLOSE);
+    
+    JMenuBar menuBar = new JMenuBar();
+    setJMenuBar(menuBar);
+    
+    JMenu mnFile = new JMenu("File");
+    menuBar.add(mnFile);
+    
+    JMenuItem mntmSaveBoard = new JMenuItem("Save Board");
+    mntmSaveBoard.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        GUI self = GUI.instance;
+        self.game.saveBoard();
+      }
+    });
+    mnFile.add(mntmSaveBoard);
+    
+    JMenuItem mntmLoadBoard = new JMenuItem("Load Board");
+    mntmLoadBoard.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        GUI self = GUI.instance;
+        if(self.game instanceof LoadedGame){
+          LoadedGame g = (LoadedGame)self.game;
+          g.load();
+        }
+      }
+    });
+    mnFile.add(mntmLoadBoard);
+    
+    JMenu mnNewMenu = new JMenu("Color Filter");
+    menuBar.add(mnNewMenu);
+    
+    colorEnabled = new HashMap<Color, Boolean>();
+    for(int i = 1; i < 1 + game.getDifficulty(); i++){
+      JCheckBoxMenuItem ckb = new JCheckBoxMenuItem(Color.values()[i].toString());
+      mnNewMenu.add(ckb);
+      colorEnabled.put(Color.values()[i], true);
+      ckb.setSelected(true);
+      ckb.addChangeListener(new ChangeListener() {
+      public void stateChanged(ChangeEvent e) {
+        JCheckBoxMenuItem c = (JCheckBoxMenuItem)e.getSource();
+        colorEnabled.put(Color.valueOf(c.getText()), c.isSelected());
+        retile();
+      }
+    });
+    }
+    
+    JMenuItem mntmRotationClockwise = new JMenuItem("Rotation: Clockwise");
+    Prism.ROTATE_CLOCKWISE = true;
+    mntmRotationClockwise.setHorizontalAlignment(SwingConstants.LEFT);
+    mntmRotationClockwise.addMouseListener(new MouseAdapter(){
+      @Override
+      public void mouseClicked(MouseEvent e){
+        JMenuItem source = (JMenuItem)e.getSource();
+        if(Prism.ROTATE_CLOCKWISE){
+          source.setText("Rotation: Counter Clockwise");
+          Prism.ROTATE_CLOCKWISE = false;
+        } else{
+          source.setText("Rotation: Clockwise");
+          Prism.ROTATE_CLOCKWISE = true;
+        }
+      }
+    });
+    menuBar.add(mntmRotationClockwise);
+    
     setVisible(true);
+    setAlwaysOnTop(false);
   }
   
   /** Updates the score label */
   public void updateScoreLabel(){
-    scoreLabel.setText("Moves: " + game.getBoard().getMoves());
+    if(game.getBoard()!= null) scoreLabel.setText("Moves: " + game.getBoard().getMoves());
   }
   
   /** Creates a hex panel for hex h - draws h */
@@ -161,8 +191,10 @@ public class GUI extends JFrame {
   /** Repopulates this Gui with the board */
   public void retile(){
     removeAllHexPanels();
-    for(Hex h : game.getBoard().allHexes()){
-      createAndAddHexPanel(h);
+    if(game.getBoard() != null){
+      for(Hex h : game.getBoard().allHexes()){
+        createAndAddHexPanel(h);
+      }
     }
     repaint();
   }
@@ -266,6 +298,4 @@ public class GUI extends JFrame {
       }
     } 
   }
-    
-
 }

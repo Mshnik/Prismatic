@@ -15,7 +15,7 @@ public class RandomPuzzle extends Game {
   
   /** Constructs a new randompuzzle and shows on gui */
   public RandomPuzzle(int difficulty) {
-    super(makeBoard(difficulty), null);
+    super(null, null);
     this.difficulty = difficulty;
   }
   
@@ -62,8 +62,8 @@ public class RandomPuzzle extends Game {
   /** Creates a sample gui and allows playing with it */
   public static void main(String[] args){
     Game g = new RandomPuzzle(3);
-    GUI gui = new GUI(g);
-    gui.retile();
+    g.gui  = new GUI(g);
+    g.reset();
   }
 
 }

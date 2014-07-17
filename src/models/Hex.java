@@ -1,5 +1,6 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,8 +10,9 @@ import util.*;
 
 
 /** Abstract parent of all tiles */
-public abstract class Hex{
+public abstract class Hex implements Serializable{
 
+  private static final long serialVersionUID = 8566479292297887732L;
   public static final int SIDES = 6; //Sides per hex
   public static final Location[][] NEIGHBOR_COORDINATES = {
    {new Location(-1, 0), new Location(-1, 1), new Location(0, 1), new Location(1, 0), new Location(0, -1), new Location(-1, -1)},
@@ -59,6 +61,11 @@ public abstract class Hex{
   /** @see Hex(Board b, Location (row, col)) */
   public Hex(Board b, int row, int col) throws IllegalArgumentException{
     this(b, new Location(row, col));
+  }
+  
+  /** Creates a copy of a hex, but bound to a new board */
+  public Hex(Board b, Hex h) throws IllegalArgumentException{
+    this(b, h.location);
   }
   
   /** Returns the neighbors of this hex, clockwise from above. Will always return an array of lenght SIDES,

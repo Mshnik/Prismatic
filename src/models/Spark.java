@@ -6,6 +6,7 @@ import util.*;
 
 public class Spark extends Hex {
 
+  private static final long serialVersionUID = -4488651998928115173L;
   private ColorCircle avaliableColors; //The colors this spark can take on, 
                                        //with avaliableColor.color as the currently selected one
   
@@ -31,6 +32,14 @@ public class Spark extends Hex {
    */
   public Spark(Board b, int row, int col, Color[] colors) throws IllegalArgumentException{
     this(b, new Location(row, col), colors);
+  }
+  
+  /** Constructs a copy of Spark h for board b */
+  public Spark(Board b, Hex h) throws IllegalArgumentException{
+    super(b, h);
+    if(! (h instanceof Spark)) throw new IllegalArgumentException("Can't clone " + h + " as Spark");
+    Spark s = (Spark) h;
+    setAvaliableColors(s.getAvaliableColors());
   }
   
   /** Returns the current color of this Spark */

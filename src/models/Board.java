@@ -4,6 +4,7 @@ package models;
 /** Board is implemented using the odd-q layout on the above page */
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import game.Game;
@@ -12,7 +13,10 @@ import util.*;
 
 /** Represents the board of hexagonal tiles.
  * Upon construction is empty - to fill with hexes, construct hexes with this as an argument. */
-public class Board {
+public class Board implements Serializable{
+
+  private static final long serialVersionUID = -5927877006439609670L;
+
   /** The board of hexes for this board. Stored in "odd-q" layout to
    * make storing a hexagonal grid possible in a 2-D matrix.
    * For illustration, see 
@@ -49,6 +53,12 @@ public class Board {
   public void setGame(Game g) throws RuntimeException{
     if(game != null) throw new RuntimeException("Can't set Game of " + this + " to " + g + " because it is already " + game);
     game = g;
+  }
+  
+  /** Signifies that this board is no longer used - sets the game and board this belongs to to null */
+  public void dispose(){
+    game = null;
+    board = null;
   }
   
   /** Returns the index (0 ... SIDES - 1) of the side of h1 that is facing h2. Returns -1 if the two are not neighbors or h==null */
@@ -139,6 +149,22 @@ public class Board {
   /** Constructor for an empty default board, of sidze default_board_size ^2 */
   public Board(){
     this(DEFAULT_BOARD_SIZE, DEFAULT_BOARD_SIZE);
+  }
+  
+  /** Constructor for a board that mirrors board b, but isn't linked to a game and has 0 moves on it */
+  public Board(Board b){
+    board = new Hex[b.getHeight()][b.getWidth()];
+    for(Hex h : b.allHexes()){
+      if(h instanceof Prism){
+        new Prism(this, h);
+      }
+      else if(h instanceof Spark){
+        new Spark(this, h);
+      }
+      else if(h instanceof Crystal){
+        new Crystal(this, h);
+      }
+    }
   }
   
   @Override

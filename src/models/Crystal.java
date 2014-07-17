@@ -4,6 +4,8 @@ import util.*;
 
 public class Crystal extends Hex {
   
+  private static final long serialVersionUID = -1502067965351067014L;
+
   /** Constructs a Crystal and puts it into board b
    * @param b - the board this spark belongs to
    * @param l - the location of this crystal in (row, col) in the board
@@ -21,6 +23,12 @@ public class Crystal extends Hex {
    */
   public Crystal(Board b, int row, int col) throws IllegalArgumentException{
     this(b, new Location(row, col));
+  }
+  
+  /** Constructs a copy of Crystal c for board b */
+  public Crystal(Board b, Hex h) throws IllegalArgumentException{
+    super(b, h);
+    if(! (h instanceof Crystal)) throw new IllegalArgumentException("Can't clone " + h + " as Crystal");
   }
 
   @Override
