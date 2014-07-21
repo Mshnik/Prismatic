@@ -61,7 +61,7 @@ public class RandomPuzzle extends Game {
   
   /** Creates a sample gui and allows playing with it */
   public static void main(String[] args){
-    Game g = new RandomPuzzle(3);
+    Game g = new RandomPuzzle(4);
     g.gui  = new GUI(g);
     g.reset();
   }
