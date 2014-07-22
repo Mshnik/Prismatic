@@ -64,14 +64,14 @@ public class Prism extends Hex{
   public void rotate(){
     board.moves++;
     colorCircle = colorCircle.getPrevious();
-    findLight(true);
+    light();
   }
   
   /** Rotates this prism once counter clockwise (moves head forward). Also causes the prism to look for light and redraw itself */
   public void rotateCounter(){
     board.moves++;
     colorCircle = colorCircle.getNext();
-    findLight(true);
+    light();
   }
   
   @Override
@@ -86,29 +86,20 @@ public class Prism extends Hex{
    * Tries to stay the same color of light if multiple are avaliable. Otherwise chooses arbitrarily.
    * Returns the color this is lit at the end of the procedure, false otherwise
    */
-  protected Color findLight(boolean thisChanged) {
-    Color wasLit = lit;
-    //If this was providing light, stop providing light (RECURSION)
-    if(lit != Color.NONE){
-      lit = Color.NONE;
-      stopProvidingLight();
-    }
+  protected void light() {
+    //Check for any lighters that can't provide light to this anymore
+    pruneLighters();
+    //tell neighbors that they may not have light
+    stopProvidingLight();
     
-    //First try to find a provider of the previous color of light
-    findLightProvider(wasLit);
-    
-    //If that didn't work, try to find any provider of light.
-    if(lighter == null) findLightProvider(Color.NONE); 
-    
-    //Try to give light to neighbors (RECURSION)
-    if(isLit() != Color.NONE){
-      lit = isLit();
-      provideLight();
-    }
+    //Try to find new light, of any and all colors.
+    findLightProviders(Color.NONE);
+
+    //Provide light to neighbors
+    provideLight();
 
     //Redraw (post recursion) and return the color this is now lit
     update();
-    return isLit();
   }
   
   @Override
@@ -122,11 +113,11 @@ public class Prism extends Hex{
   public boolean equals(Object o){
     if (! (o instanceof Prism)) return false;
     Prism p = (Prism)o;
-    return super.equals(p) && (colorCircle == null && p.colorCircle == null || colorCircle.equals(p.colorCircle));
+    return super.equals(p);
   }
   
-  /** Hashes a prism based on their locations, boards, and colorCircles */
+  /** Hashes a prism based on their locations, boards */
   public int hashCode(){
-    return Objects.hash(board, location, colorCircle);
+    return Objects.hash(board, location);
   }
 }

@@ -196,6 +196,7 @@ public class GUI extends JFrame {
         createAndAddHexPanel(h);
       }
     }
+    validate();
     repaint();
   }
   
@@ -259,6 +260,8 @@ public class GUI extends JFrame {
       if(h instanceof Prism){
         Prism p = (Prism)h;
         for(int i = 0; i < Hex.SIDES; i++){
+          if(colorEnabled.get(p.colorOfSide(i)) == null) return;
+
           Polygon triangle = new Polygon();
           triangle.addPoint(HEX_RAD, HEX_RAD);
           for(int k = i; k < i+2; k++){
@@ -266,16 +269,19 @@ public class GUI extends JFrame {
           }
           g.setColor(java.awt.Color.BLACK);
           g.drawPolygon(triangle);
-          if(colorEnabled.get(p.colorOfSide(i))){
+          if(p != null && (colorEnabled == null || colorEnabled.get(p.colorOfSide(i)))){
             g.setColor(Colors.colorFromColor(p.colorOfSide(i)));
             g.fillPolygon(triangle);
           }
         }
-        if(p.isLit() != Color.NONE){
-          g.setColor(Colors.colorFromColor(p.isLit()));
+        if(! p.isLit().isEmpty()){
+          Color[] lit = p.isLit().toArray(new Color[0]);
           Graphics2D g2 = (Graphics2D)g;
           g2.setStroke(new BasicStroke(5));
-          g.drawPolygon(poly);
+          for(int i = 0; i < Hex.SIDES; i++){
+            g.setColor(Colors.colorFromColor(lit[i % lit.length]));
+            g.drawLine(poly.xpoints[i], poly.ypoints[i], poly.xpoints[(i+1)%Hex.SIDES], poly.ypoints[(i+1)%Hex.SIDES]);
+          }
         }
       }
       else if(h instanceof Spark){
@@ -289,7 +295,7 @@ public class GUI extends JFrame {
       }
       else if (h instanceof Crystal){
         Crystal c = (Crystal)h;
-        g.setColor(Colors.colorFromColor(c.isLit()));
+        g.setColor(Colors.colorFromColor(c.lit()));
         g.fillPolygon(poly);
         g.setColor(java.awt.Color.LIGHT_GRAY);
         Graphics2D g2 = (Graphics2D)g;

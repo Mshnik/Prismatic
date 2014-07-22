@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import game.Game;
 import gui.GUI;
 
 import java.util.HashSet;
@@ -20,16 +21,45 @@ public class ModelsTest {
    *
    */
   private static class SimpleHex extends Hex{
+    private static final long serialVersionUID = 1L;
     private SimpleHex(Board b, int r, int c){
       super(b, r, c);
     }
     @Override
-    protected Color findLight(boolean b) { return Color.NONE; }
+    protected void light() { }
     @Override
     public Color colorOfSide(int n) throws IllegalArgumentException { return null; }
     @Override
     public void click() {}
   };
+  
+  /** A direct subclass of Game with minimum additional functionality (only as required)
+   * Used to allow testing of the Game class - not to be used outside of testing
+   * @author MPatashnik
+   *
+   */
+  private static class SimpleGame extends Game{
+    private SimpleGame(Board b, GUI g){
+      super(b,g);
+    }
+    
+    @Override
+    public void updateHex(Hex h) {
+      if(gui != null){
+        gui.repaint();
+      }
+    }
+
+    @Override
+    public void reset() {
+      gui.retile();
+    }
+
+    @Override
+    public int getDifficulty() {
+      return Color.values().length -1;
+    }
+  }
   
   
   @Test
@@ -332,7 +362,7 @@ public class ModelsTest {
     assertEquals(Color.RED, one.getColor());
     
     //Check always-lit
-    assertEquals(Color.RED, one.isLit());
+    assertEquals(Color.RED, one.isLit().iterator().next());
     
     //Check in-bounds colorOfSide
     for(int i = 0; i < Hex.SIDES; i++){
@@ -422,8 +452,9 @@ public class ModelsTest {
     new Spark(b, 2, 2, colors[8]);
    
     //Show for debugging purposes - uncomment and step through rotations to see board.
-    //GUI g = new GUI(b);
-    //g.retile();
+    SimpleGame game = new SimpleGame(b, null);
+    game.setGUI(new GUI(game));
+    game.reset();
     
     //Set initial lighting
     b.relight();

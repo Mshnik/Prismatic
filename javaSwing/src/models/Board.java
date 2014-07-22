@@ -133,7 +133,7 @@ public class Board implements Serializable{
   /** Re-calcualtes light on whole board */
   public void relight(){
     for(Hex h : allHexes()){
-      h.findLight(false);
+      h.light();
     }
   }
   

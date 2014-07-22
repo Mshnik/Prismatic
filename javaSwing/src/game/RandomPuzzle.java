@@ -25,7 +25,7 @@ public class RandomPuzzle extends Game {
     Board b = new Board(4,9);
     for(int r = 0; r < b.getHeight(); r++){
       for(int c = 0; c < b.getWidth(); c++){
-        if(r == 0 && c == 0){
+        if(r == 0 && c == 0 || r == b.getHeight() - 1 && c == 0){
           new Spark(b, r, c, Colors.subValues(1, difficulty));
         } else if(r == 3 && c == 8){
           new Crystal(b, r, c);
@@ -61,7 +61,7 @@ public class RandomPuzzle extends Game {
   
   /** Creates a sample gui and allows playing with it */
   public static void main(String[] args){
-    Game g = new RandomPuzzle(4);
+    Game g = new RandomPuzzle(3);
     g.gui  = new GUI(g);
     g.reset();
   }

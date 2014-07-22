@@ -2,9 +2,12 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import util.*;
 
@@ -29,10 +32,8 @@ public abstract class Hex implements Serializable{
                                       //Managed by board. Also true initially.
   private Hex[] neighborHexes;    //Neighbors of this hex (as hexes). Calculated lazily as necessary
   
-  Hex lighter;        //The hex providing this hex with light. null if this is unlit. 
-                      //Should be a neighbor. Visible to subclasses, though some may not use it.
-  Color lit = Color.NONE;  //Used to remember the color this was lit while changing liters. identical to lighter.isLit outside of light changing process.
-                           //Hexes can change the lighter of other prisms, but should leave changing lit to the hex it belongs to
+  Map<Hex, Color> lighters;        //The hex(s) providing this hex with light, and the color provided. empty if this is unlit. 
+                                   //Should be neighbor(s). Visible to subclasses, though some may not use it.
   
   /** Stores Board b and Point p as board and location in this hex.
    * Throws IllegalArgumentException if b is null, point p is already occupied on board b,
@@ -56,6 +57,7 @@ public abstract class Hex implements Serializable{
     }    
     neighborsUpdated = true;
     board.setHex(this, l.row, l.col);
+    lighters = new HashMap<Hex, Color>();
   }
   
   /** @see Hex(Board b, Location (row, col)) */
@@ -113,41 +115,49 @@ public abstract class Hex implements Serializable{
     return board.indexLink(this, h);
   }
   
-  /** Returns the color this hex is lit, NONE otherwise */
-  public Color isLit(){
-    if(lighter != null)
-      return lighter.isLit();
-    else
-      return Color.NONE;
+  /** Returns the color(s) this hex is lit, empty set otherwise */
+  public Collection<Color> isLit(){
+    return lighters.values();
   }
   
-  /** Returns the chain of hexes providing this light */
-  public List<Hex> lighterList(){
-    Hex l = lighter;
-    List<Hex> lst = new LinkedList<Hex>();
-    while(l != null){
-      lst.add(l);
-      l = l.lighter;
+  /** Returns the a set of hexes, all eventually provide light to this on color c*/
+  public Set<Hex> lighterSet(Color c){
+   Set<Hex> s = new HashSet<Hex>();
+   if(lighters == null) return s;
+   for(Hex h : lighters.keySet()){
+     if(lighters.get(h) == c){
+       s.add(h);
+       s.addAll(h.lighterSet(c));
+     }
+   }
+   return s;
+  }
+  
+  /** Fixes light for this hex. May use helper methods implemented in Hex. */
+  abstract protected void light();
+  
+  /** Helper method for use in light implementations. Removes lighters that can't light this anymore from lighters map
+   * Returns true if at least one lighter was removed, false otherwise */
+  boolean pruneLighters(){
+    Set<Hex> oldLighters = new HashSet<Hex>();
+    oldLighters.addAll(lighters.keySet());
+    for(Hex h : oldLighters){
+      if(colorLinked(h) == Color.NONE || !h.isLit().contains(colorLinked(h))){
+        lighters.remove(h);
+      }
     }
-    return lst;
+    return oldLighters.size() != lighters.size();
   }
-  
-  /** Causes this hex to try to find light among it's neighbors.
-   * If it can, set lighter and return true (this remains lit). 
-   * Otherwise return false (this becomes unlit).
-   * Make sure to prevent recursions in implementations - receiving light from
-   * a hex this is lighting.
-   * 
-   * @param thisChanged - true if this hex underwent a change, false if it was some other hex
-   * @return The color this is lit after the change
-   */
-  abstract protected Color findLight(boolean thisChanged);
   
   /** Helper method for use in findLight implementations. Tells neighbors this is currently lighting to look elsewhere */
   void stopProvidingLight(){
+    Collection<Color> lit = isLit();
     for(Hex h : getNeighbors()){
-      if(h.lighter == this)
-        h.findLight(false);
+      boolean contains = h.lighters.keySet().contains(this);
+      boolean notLit = ! lit.contains(h.lighters.get(this));
+      boolean notLinked = colorLinked(h) != h.lighters.get(this);
+      if(contains && (notLit || notLinked))
+        h.light();
     }
   }
   
@@ -155,12 +165,21 @@ public abstract class Hex implements Serializable{
    * maybe get light from this, if not already or this getting light from that.
    * If this isn't lit, do nothing. 
    * 
-   * Note: Always try to provide light to crystal, never try to provide light to spark. Neither of these recurse, so no trouble*/
+   * Note: Always try to provide light to crystal, never try to provide light to spark. Neither of these recurse, so no trouble.
+   * Sparks can always provide light, others can only provide light if they have a lighter*/
   void provideLight(){
-    if(isLit() != Color.NONE){
+    if(this instanceof Spark || (lighters != null && lighters.size() > 0)){
+      Collection<Color> lit = isLit();
       for(Hex h : getNeighbors()){
-        if((h instanceof Crystal) || !(h instanceof Spark) && colorLinked(h) == isLit() && lighter != h && h.lighter != this && lit != h.lit)
-          h.findLight(false);
+        Collection<Color> hLit = h.isLit();
+        if( (! (h instanceof Spark)) && 
+            (
+              (h instanceof Crystal && h.isLit().size() == 0) ||
+              (h instanceof Prism && lit.contains(colorLinked(h)) && ! hLit.contains(colorLinked(h)))
+            )
+          ){
+          h.light();
+        }
       }
     }
   }
@@ -168,12 +187,11 @@ public abstract class Hex implements Serializable{
   /** Helper method for use in findLight implementations. Tries to find light among neighbors.
    *  If a link is found, sets that neighbor as lighter. If no link found, sets lighter to null.
    *  Only looks for preferred. If preferred is NONE, takes any color. */
-  void findLightProvider(Color preferred){
-    lighter = null;
+  void findLightProviders(Color preferred){
     for(Hex h : getNeighbors()){
-      if(h.lighter != this && h.lit != Color.NONE && colorLinked(h) == h.lit && (preferred == Color.NONE || h.lit == preferred) && !h.lighterList().contains(this)){ 
-        lighter = h;
-        return;
+      Collection<Color> hLit = h.isLit();
+      if(hLit.contains(colorLinked(h)) && (preferred == Color.NONE || colorLinked(h) == preferred) && ! h.lighterSet(colorLinked(h)).contains(this)){ 
+        lighters.put(h, colorLinked(h));
       }
     }
   }

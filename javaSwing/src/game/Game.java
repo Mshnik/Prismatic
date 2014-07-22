@@ -9,8 +9,8 @@ import util.ObjectIO;
 /** Parent of all Game classes. Define generic game behavior */
 public abstract class Game {
 
-  Board board;  //The board that belongs to this game
-  GUI gui;      //The GUI that belongs to this game, if any.
+  protected Board board;  //The board that belongs to this game
+  protected GUI gui;      //The GUI that belongs to this game, if any.
   
   /** Constructor for a Game with a gui
    * @param b - the board belonging to this game
@@ -30,13 +30,13 @@ public abstract class Game {
   
   /** Sets the board of this game - disposes of older board, if any. If new board is non-null, make it belong to this game */
   public void setBoard(Board b){
-    if(board != null) board.dispose();
+    if(board != null && board != b) board.dispose();
     board = b;
   }
   
   /** Sets the gui to show this game on - disposes of older gui if any*/
   public void setGUI(GUI g){
-    if(gui != null) gui.dispose();
+    if(gui != null && g != gui) gui.dispose();
     gui = g;
   }
   

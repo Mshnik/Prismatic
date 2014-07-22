@@ -92,10 +92,13 @@ public class ColorCircle implements Serializable{
     return temp.toArray(new Color[temp.size()]);
   }
   
-  /** Returns a string representation of the color of this link in the colorCircle */
+  /** Returns a string representation of the array starting with this */
   @Override
   public String toString(){
-    return color.toString().toLowerCase();
+    String s = "";
+    for(Color c : toArray())
+      s += c + " ";
+    return s;
   }
   
   /** Two color circles are equal if their sizes are equal and, for every colorCircle in the chain, the colors are equal */

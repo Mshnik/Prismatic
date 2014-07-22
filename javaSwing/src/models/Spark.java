@@ -1,5 +1,7 @@
-package models;
+cpackage models;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Objects;
 
 import util.*;
@@ -50,9 +52,7 @@ public class Spark extends Hex {
   /** Makes this spark use the next avaliable color, and redraw */
   public void useNextColor(){
     avaliableColors = avaliableColors.getNext();
-    lit = getColor();
-    stopProvidingLight();
-    provideLight();
+    light();
     update();
   }
   
@@ -68,13 +68,15 @@ public class Spark extends Hex {
     if(avaliableColors != null) throw new IllegalArgumentException("Can't set colorCirle of " + this);
     if(colors != null && colors.length == 0) throw new IllegalArgumentException("Can't set color array of size " + colors.length);
     avaliableColors = ColorCircle.fromArray(colors);
-    lit = getColor();
+    light();
+    update();
   }
   
   @Override
   /** Sparks always find light because they always light themselves. No setting of fields neccesary */
-  protected Color findLight(boolean thischanged) {
-    return getColor();
+  protected void light() {
+    stopProvidingLight();
+    provideLight();
   }
   
   @Override
@@ -85,8 +87,10 @@ public class Spark extends Hex {
   
   @Override
   /** Overrides Hex isLit() because Sparks are always lit */
-  public Color isLit(){
-    return getColor();
+  public Collection<Color> isLit(){
+    LinkedList<Color> l = new LinkedList<Color>();
+    l.add(getColor());
+    return l;
   }
   
   @Override
@@ -100,12 +104,12 @@ public class Spark extends Hex {
   public boolean equals(Object o){
     if (! (o instanceof Spark)) return false;
     Spark p = (Spark)o;
-    return super.equals(p) && (avaliableColors == null && p.avaliableColors == null || avaliableColors.equals(p.avaliableColors));
+    return super.equals(p);
   }
   
   /** Hashes a Spark based on their locations, boards, and avaliableColors */
   public int hashCode(){
-    return Objects.hash(board, location, avaliableColors);
+    return Objects.hash(board, location);
   }
 
 
