@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"next",
+				"next"
+			],
+			[
+				"ava",
+				"avaliableColors"
+			],
+			[
+				"null",
+				"null"
+			],
+			[
+				"getNei",
+				"getNeighborsWithBlanks"
+			],
+			[
+				"get",
+				"getNeighborsWithBlanks"
+			],
+			[
 				"bootra",
 				"bootstrap-3"
 			],
@@ -459,14 +479,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "src/hex.coffee",
-			"settings":
-			{
-				"buffer_size": 4,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -520,12 +532,31 @@
 	},
 	"file_history":
 	[
-		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Better CoffeeScript/CoffeeScript.sublime-settings",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Hex.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Prism.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Spark.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Crystal.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Board.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/game/Game.java",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/spark.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/color.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/crystal.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/hex.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/prism.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/colorCircle.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/board.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/game.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Color.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/util/Colors.java",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/hex.js",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/util/Location.java",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/location.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/location.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/prismatic.sublime-project",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Better CoffeeScript/CoffeeScript.sublime-settings",
 		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Package Control/Package Control.sublime-settings",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/asdgseta.coffee",
-		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Hex.java",
-		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Board.java",
 		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/User/CoffeeScript.sublime-settings",
 		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/brewCoffee.sh",
@@ -628,26 +659,7 @@
 		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/data/data.story.js",
 		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/models/Design.java",
 		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/utils/S3Utils.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/image/ImageConfig.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/controllers/api/API.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/image/ImageResizerUrlGenerator.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/image/ImageUrlGenerator.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/controllers/api/APICampaign.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/edit.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.campaign.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.customize.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/public/js/admin.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/lib-admin/dropzone.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/submission/create.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/profile/edit.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/lib-admin/elastic.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/service/FacebookPostPublisher.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/service/StoryService.java",
-		"/Applications/League of Legends.app/Contents/LOL/Config/input.ini",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/conf/test.conf",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/submission/show.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/campaign/show.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/controllers/api/APISubmission.java"
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/image/ImageConfig.java"
 	],
 	"find":
 	{
@@ -812,35 +824,13 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "src/hex.coffee",
-					"settings":
-					{
-						"buffer_size": 4,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4,
-								4
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
+			]
+		},
+		{
+			"sheets":
+			[
 			]
 		}
 	],
@@ -850,7 +840,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 31.0
 	},
 	"layout":
 	{
@@ -861,11 +851,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":
