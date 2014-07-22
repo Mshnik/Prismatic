@@ -1,0 +1,3 @@
+# Module prismatic_web
+# RPC service class, partial path of RPC policy file
+com.prismatic.client.GreetingService, 5BC350B1B01C95DD70FBF058BB9DC6D7.gwt.rpc

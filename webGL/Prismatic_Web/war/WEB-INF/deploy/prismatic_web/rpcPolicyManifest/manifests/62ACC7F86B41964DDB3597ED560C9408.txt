@@ -1,0 +1,2 @@
+serviceClass: com.prismatic.client.GreetingService
+path: 5BC350B1B01C95DD70FBF058BB9DC6D7.gwt.rpc
