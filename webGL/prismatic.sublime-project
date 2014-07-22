@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"path": "/Users/MPatashnik/Documents/Prismatic/webGL"
+		}
+	],
+
+  "settings":
+  {
+    "CoffeeScript":
+    {
+      "compileOnSave" : true,
+      "compileDir" : "../lib"
+    }
+  }
+}
