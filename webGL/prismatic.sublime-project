@@ -10,8 +10,7 @@
   {
     "CoffeeScript":
     {
-      "compileOnSave" : true,
-      "compileDir" : "../lib"
+      "compileOnSave" : false
     }
   }
 }

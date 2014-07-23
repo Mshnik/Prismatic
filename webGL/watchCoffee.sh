@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "watching and recompiling"
-coffee -o lib/ -cw src/
+echo "watching"
+coffee --watch --join lib/beans.js --compile src/*.coffee

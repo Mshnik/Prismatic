@@ -1,6 +1,6 @@
 class Board
 
-  ### Constructor for an empty board of size rs*cs ###
+  ### Constructor for an empty board of size rs*cs###
   constructor : (rs, cs) ->
     if (rs < 0 || cs < 0) 
       throw new IllegalArgumentException("Illegal Board Construction for Dimensions " + rs + ", " + cs)

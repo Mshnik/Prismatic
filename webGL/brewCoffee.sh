@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "recompiling"
-coffee --compile --output lib/ src/
+echo "compiling concatted file"
+coffee --join lib/beans.js --compile src/*.coffee
