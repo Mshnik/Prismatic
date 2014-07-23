@@ -28,6 +28,8 @@
     if (typeof hex.sprite === "undefined" || hex.sprite === null) {
       hexback = PIXI.Texture.fromImage("assets/img/hex-back.png");
       spr = new PIXI.Sprite(hexback);
+      spr.anchor.x = 0.5;
+      spr.anchor.y = 0.5;
       spr.position.x = hex.loc.col * 50;
       spr.position.y = hex.loc.row * 50;
       hex.sprite = spr;

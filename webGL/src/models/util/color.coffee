@@ -1,4 +1,6 @@
 class Color
+
+  # Actual colors - kinda an enum object.
   @_val = 
     NONE : 0
     RED : 1
@@ -20,12 +22,12 @@ class Color
   @YELLOW = @_val.YELLOW
   @PINK = @_val.PINK
 
-  @count : () -> Object.keys(Color).length
+  @count : () -> Object.keys(@_val).length
 
-  @values : () -> Object.keys(Color)
+  @values : () -> Object.keys(@_val)
 
   @subValues : (offset, n) ->
-    c = Color.count
+    c = Color.count()
     Color.values().splice(offset %% c, (offset + n) %% c)
 
   @noneArray : (length) ->

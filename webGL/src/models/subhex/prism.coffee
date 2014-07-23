@@ -17,12 +17,12 @@ class @Prism extends Hex
 
   ### Returns the colors of this prism, clockwise from the current top ###
   colorArray : () ->
-    colorCircle.toArray()
+    @colorCircle.toArray()
 
   ### Allows setting the ColorCircle, but only if it isn't set yet (is null).
      @throws IllegalArgumentException if the colorCircle is currently non-null ###
   setColorCircle : (colors) ->
-    if(@availableColors != undefined and @availableColors != null and @availableColors.length > 0)
+    if(@colorCircle != undefined and @colorCircle != null and @colorCircle.length > 0)
       return
     @colorCircle = ColorCircle.fromArray(colors)
     return

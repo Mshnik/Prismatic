@@ -40,16 +40,16 @@
     Color.PINK = Color._val.PINK;
 
     Color.count = function() {
-      return Object.keys(Color).length;
+      return Object.keys(this._val).length;
     };
 
     Color.values = function() {
-      return Object.keys(Color);
+      return Object.keys(this._val);
     };
 
     Color.subValues = function(offset, n) {
       var c;
-      c = Color.count;
+      c = Color.count();
       return Color.values().splice(__modulo(offset, c), __modulo(offset + n, c));
     };
 
@@ -67,13 +67,10 @@
   })();
 
   ColorCircle = (function() {
-    function ColorCircle() {}
-
 
     /* Creates a circularly linked list of colorCircles from an array of colors.
         Returns the first colorCircle (head). Returns null if the input is null or length 0
      */
-
     ColorCircle.fromArray = function(colors) {
       var c, cc, i, l, t, _i, _ref;
       if (colors === null || colors.length === 0) {
@@ -123,52 +120,47 @@
     };
 
 
-    /* Creates a random color circle of the given length. Uses at most maxColors (or 6 if maxColors > 6) colors, never uses NONE.
-        throws IllegalArgumentException if length <= 0 or maxColors <= 0
-     */
-
-    return ColorCircle;
-
-  })();
-
-  this.random = function(length, maxColors) {
-    var a;
-    a = this.fromArray(this.randomArray(length, maxColors));
-    return a;
-  };
-
-  ({
-
     /* Constructs a color circle with the given inputs. Should not be used outside of this file - use helpers */
-    constructor: function(col, prev, next) {
+
+    function ColorCircle(col, prev, next) {
       this.color = col;
       this.prev = prev;
       this.next = next;
-      return this.size = 0;
-    },
+      this.size = 0;
+    }
+
 
     /* Returns the color of this link */
-    getColor: function() {
+
+    ColorCircle.prototype.getColor = function() {
       return this.color;
-    },
+    };
+
 
     /* Returns the next link */
-    getNext: function() {
+
+    ColorCircle.prototype.getNext = function() {
       return this.next;
-    },
+    };
+
 
     /* Returns the previous link */
-    getPrevious: function() {
+
+    ColorCircle.prototype.getPrevious = function() {
       return this.previous;
-    },
+    };
+
 
     /* Returns the size of this circle */
-    getSize: function() {
+
+    ColorCircle.prototype.getSize = function() {
       return this.size;
-    },
+    };
+
 
     /* Converts this to an array of colors */
-    toArray: function() {
+
+    ColorCircle.prototype.toArray = function() {
       var a, arr;
       arr = [];
       a = this;
@@ -180,15 +172,19 @@
         }
       }
       return arr;
-    },
+    };
+
 
     /* Returns a string representation of the colorCircle starting with this */
-    toString: function() {
+
+    ColorCircle.prototype.toString = function() {
       return this.toArray.toString();
-    },
+    };
+
 
     /* Two color circles are equal if their sizes are equald and they have the same color at every position */
-    equals: function(o) {
+
+    ColorCircle.prototype.equals = function(o) {
       var c, d;
       if (!(o instanceof ColorCircle)) {
         return false;
@@ -209,8 +205,11 @@
         }
       }
       return true;
-    }
-  });
+    };
+
+    return ColorCircle;
+
+  })();
 
 
   /*A simple location class - nice int tuple.
@@ -903,7 +902,7 @@
     /* Returns the colors of this prism, clockwise from the current top */
 
     Prism.prototype.colorArray = function() {
-      return colorCircle.toArray();
+      return this.colorCircle.toArray();
     };
 
 
@@ -912,7 +911,7 @@
      */
 
     Prism.prototype.setColorCircle = function(colors) {
-      if (this.availableColors !== void 0 && this.availableColors !== null && this.availableColors.length > 0) {
+      if (this.colorCircle !== void 0 && this.colorCircle !== null && this.colorCircle.length > 0) {
         return;
       }
       this.colorCircle = ColorCircle.fromArray(colors);
@@ -1007,7 +1006,7 @@
 
     /* Returns the available colors of this spark. */
 
-    Spark.prototype.getavailableColors = function() {
+    Spark.prototype.getAvailableColors = function() {
       return this.availableColors.toArray();
     };
 

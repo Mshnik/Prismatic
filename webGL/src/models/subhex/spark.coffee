@@ -24,7 +24,7 @@ class @Spark extends Hex
     return
 
   ### Returns the available colors of this spark. ###
-  getavailableColors : () ->
+  getAvailableColors : () ->
     @availableColors.toArray()
 
   ###Allows setting the ColorCircle, but only if it isn't set yet (is null). Don't call otherwise
