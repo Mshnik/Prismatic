@@ -17,8 +17,9 @@
       h = _ref[_i];
       this.stage.addChild(spriteForHex(h));
     }
-    this.renderer.render(stage);
   };
+
+  this.hexRad = 53;
 
 
   /* Creates a single sprite for a hex and adds it to stage */
@@ -28,10 +29,12 @@
     if (typeof hex.sprite === "undefined" || hex.sprite === null) {
       hexback = PIXI.Texture.fromImage("assets/img/hex-back.png");
       spr = new PIXI.Sprite(hexback);
+      spr.scale.x = 0.078;
+      spr.scale.y = 0.078;
       spr.anchor.x = 0.5;
       spr.anchor.y = 0.5;
-      spr.position.x = hex.loc.col * 50;
-      spr.position.y = hex.loc.row * 50;
+      spr.position.x = hex.loc.col * this.hexRad + this.hexRad / 2;
+      spr.position.y = hex.loc.row * this.hexRad + this.hexRad / 2;
       hex.sprite = spr;
     }
     return hex.sprite;
