@@ -1,3 +1,5 @@
+##= require ./color
+
 class ColorCircle
 
   ### Creates a circularly linked list of colorCircles from an array of colors.

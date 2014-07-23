@@ -1,3 +1,5 @@
+##= require ./board
+##= require ./colorCircle
 
 ### Abstract parent of all tiles ###
 class Hex

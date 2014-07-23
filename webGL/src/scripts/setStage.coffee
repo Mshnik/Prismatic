@@ -1,6 +1,7 @@
 ### Set up a PIXI stage ###
-stage = new PIXI.STAGE(0x888888)
-renderer = PIXI.autoDetectRenderer(640,480)
-gameContainer = new PIXI.DisplayObjectContainer()
-stage.addChild(gameContainer)
-document.body.appendChild(renderer.view)
+@init = ->
+  console.log("Init Called")
+  stage = new PIXI.Stage(0x295266)
+  canvas = document.getElementById("game-canvas")
+  renderer = PIXI.autoDetectRenderer(canvas.width, canvas.height, canvas)
+  renderer.render(stage);

@@ -2,183 +2,9 @@
 (function() {
   var Board, Color, ColorCircle, Crystal, Game, Hex, Loc, Prism, Spark,
     __modulo = function(a, b) { return (a % b + +b) % b; },
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-  Board = (function() {
-
-    /* Constructor for an empty board of size rs*cs */
-    function Board(rs, cs) {
-      var c, r, _i, _j, _ref, _ref1;
-      if (rs < 0 || cs < 0) {
-        throw new IllegalArgumentException("Illegal Board Construction for Dimensions " + rs + ", " + cs);
-      }
-      this.height = rs;
-      this.width = cs;
-      this.board = [];
-      for (r = _i = 0, _ref = rs - 1; _i <= _ref; r = _i += 1) {
-        this.board.push([]);
-        for (c = _j = 0, _ref1 = cs - 1; _j <= _ref1; c = _j += 1) {
-          this.board[r].push(null);
-        }
-      }
-      this.game = null;
-    }
-
-
-    /* Returns the height of this board */
-
-    Board.prototype.getHeight = function() {
-      return this.height;
-    };
-
-
-    /* Returns the width of this board */
-
-    Board.prototype.getWidth = function() {
-      return this.width;
-    };
-
-
-    /* Returns the game this board belongs to (if any) */
-
-    Board.prototype.getGame = function() {
-      return this.game;
-    };
-
-
-    /* Sets the game this board belongs to. Throws a runtime exception if game is already set */
-
-    Board.prototype.setGame = function(g) {
-      if (this.game !== null) {
-        throw new RuntimeException("Can't set Game of " + this + " to " + g + " because it is already " + game);
-      }
-      this.game = g;
-    };
-
-
-    /* Gets rid of this board - signifies that it is no longer used */
-
-    Board.prototype.dispose = function() {
-      this.game = null;
-      this.board = null;
-    };
-
-
-    /* Returns the index (0 ... Hex.SIDES - 1) of the side of h1 that is facing h2. 
-        Returns -1 if either are null or are not neighbors
-     */
-
-    Board.prototype.indexLink = function(h1, h2) {
-      var h1Neighbors, i, _i, _ref;
-      if (h1 === null || h2 === null) {
-        return -1;
-      }
-      h1Neighbors = h1.getNeighborsWithBlanks();
-      for (i = _i = 0, _ref = Hex.SIDES; _i <= _ref; i = _i += 1) {
-        if (h2 === h1Neighbors[i]) {
-          return i;
-        }
-      }
-      return -1;
-    };
-
-
-    /* Returns the color that links h1 and h2. 
-        Returns none if either is null or they are not neighbors, or they are not color linked
-     */
-
-    Board.prototype.colorLinked = function(h1, h2) {
-      var c1, c2, index;
-      index = this.indexLink(h1, h2);
-      if (index === -1) {
-        return Color.NONE;
-      }
-      c1 = h1.colorOfSide(index);
-      c2 = h2.colorOfSide(__modulo(index + Hex.SIDES / 2, Hex.SIDES));
-      if (c1 === c2) {
-        return c1;
-      } else {
-        return Color.NONE;
-      }
-    };
-
-
-    /* Returns the hex at the given location */
-
-    Board.prototype.getHex = function(loc) {
-      return this.getHex(loc.row, loc.col);
-    };
-
-
-    /* Returns the hex at the given row, col */
-
-    Board.prototype.getHex = function(row, col) {
-      return this.board[row][col];
-    };
-
-
-    /* Returns a flattened version of the board - all hexes in no particular order */
-
-    Board.prototype.allHexes = function() {
-      var a, arr, h, _i, _j, _len, _len1, _ref;
-      arr = [];
-      _ref = this.board;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        a = _ref[_i];
-        for (_j = 0, _len1 = a.length; _j < _len1; _j++) {
-          h = a[_j];
-          arr.push(h);
-        }
-      }
-      return arr;
-    };
-
-
-    /* Sets the hex at position (r,c). Also sets all neighbor hexes as needing a neighbor update.
-        Hex must have this as its board. Used in hex construciton, not much elsewhere
-     */
-
-    Board.prototype.setHex = function(h, r, c) {
-      var n, _i, _len, _ref;
-      if (h.board !== this) {
-        throw new IllegalArgumentException("Can't put hex belonging to " + h.board + " in board " + this);
-      }
-      this.board[r][c] = h;
-      _ref = h.getNeighbors();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        n = _ref[_i];
-        n.neighborsUpdated = true;
-      }
-    };
-
-    return Board;
-
-  })();
-
-  ({
-
-    /* Re-calculates light on whole board */
-    relight: function() {
-      var h, _i, _len, _ref;
-      _ref = this.allHexes;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        h = _ref[_i];
-        h.light();
-      }
-    },
-
-    /* Two boards are equal if they have the same board */
-    equals: function(o) {
-      var b;
-      if (!(o instanceof Board)) {
-        return false;
-      }
-      b = Board(o);
-      return b.board === this.board;
-    }
-  });
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Color = (function() {
     function Color() {}
@@ -390,85 +216,210 @@
 
   })();
 
-  Crystal = (function(_super) {
-    __extends(Crystal, _super);
 
+  /*A simple location class - nice int tuple.
+   Using this over the Point class because constantly shifting from (x,y) to (col,row) is confusing
+   */
 
-    /* Constructs a Crystal and puts it into board b
-        @param b - the board this spark belongs to
-        @param l - the location of this crystal in (row, col) in the board
-        @throws IllegalArgumentException - if there is already hex at row,col, or row,col is OOB.
-     */
+  Loc = (function() {
+    function Loc(row, col) {
+      this.row = row;
+      this.col = col;
+    }
 
-    function Crystal(board, loc) {
-      Crystal.__super__.constructor.call(this, board, loc);
-      this.lit = Color.NONE;
+    Loc.prototype.equals = function(o) {
+      var l;
+      if (!o instanceof Loc) {
+        return false;
+      } else {
+        l = Loc(o);
+        return this.row === l.row && this.col === l.col;
+      }
+    };
+
+    Loc.prototype.toString = function() {
+      return "(" + this.row + "," + this.col + ")";
+    };
+
+    Loc.NOWHERE = new Loc(-9999, -9999);
+
+    return Loc;
+
+  })();
+
+  Board = (function() {
+
+    /* Constructor for an empty board of size rs*cs */
+    function Board(rs, cs) {
+      var c, r, _i, _j, _ref, _ref1;
+      if (rs < 0 || cs < 0) {
+        throw new IllegalArgumentException("Illegal Board Construction for Dimensions " + rs + ", " + cs);
+      }
+      this.height = rs;
+      this.width = cs;
+      this.board = [];
+      for (r = _i = 0, _ref = rs - 1; _i <= _ref; r = _i += 1) {
+        this.board.push([]);
+        for (c = _j = 0, _ref1 = cs - 1; _j <= _ref1; c = _j += 1) {
+          this.board[r].push(null);
+        }
+      }
+      this.game = null;
     }
 
 
-    /* @Override
-        Try to find light like a prism, but don't ever provide light. Thus only look for a provider, don't need to recurse.
-        Only find single light color.
-     */
+    /* Returns the height of this board */
 
-    Crystal.prototype.light = function() {
-      var lighterChanged, lit;
-      lighterChanged = this.pruneLighters();
-      if (lighterChanged) {
-        this.findLightProviders(lit);
-        if (this.isLit().length === 0) {
-          this.findLightProviders(Color.NONE);
-        }
-      }
-      if (this.isLit().length === 0) {
-        lit = Color.NONE;
-      } else {
-        lit = this.isLit()[0];
-      }
-      update();
+    Board.prototype.getHeight = function() {
+      return this.height;
     };
 
 
-    /* @Override
-        Helper method for use in findLight implementations. Tries to find light among neighbors.
-        Overrides hex findLightProvider so that it can take any color of light, no matter the side color.
-        Only looks for preferred. If preferred is NONE, takes any color. Only takes on e color
+    /* Returns the width of this board */
+
+    Board.prototype.getWidth = function() {
+      return this.width;
+    };
+
+
+    /* Returns the game this board belongs to (if any) */
+
+    Board.prototype.getGame = function() {
+      return this.game;
+    };
+
+
+    /* Sets the game this board belongs to. Throws a runtime exception if game is already set */
+
+    Board.prototype.setGame = function(g) {
+      if (this.game !== null) {
+        throw new RuntimeException("Can't set Game of " + this + " to " + g + " because it is already " + game);
+      }
+      this.game = g;
+    };
+
+
+    /* Gets rid of this board - signifies that it is no longer used */
+
+    Board.prototype.dispose = function() {
+      this.game = null;
+      this.board = null;
+    };
+
+
+    /* Returns the index (0 ... Hex.SIDES - 1) of the side of h1 that is facing h2. 
+        Returns -1 if either are null or are not neighbors
      */
 
-    Crystal.prototype.findLightProviders = function(preferred) {
-      var c, h, hLit, _i, _len, _ref;
-      _ref = this.getNeighbors();
+    Board.prototype.indexLink = function(h1, h2) {
+      var h1Neighbors, i, _i, _ref;
+      if (h1 === null || h2 === null) {
+        return -1;
+      }
+      h1Neighbors = h1.getNeighborsWithBlanks();
+      for (i = _i = 0, _ref = Hex.SIDES; _i <= _ref; i = _i += 1) {
+        if (h2 === h1Neighbors[i]) {
+          return i;
+        }
+      }
+      return -1;
+    };
+
+
+    /* Returns the color that links h1 and h2. 
+        Returns none if either is null or they are not neighbors, or they are not color linked
+     */
+
+    Board.prototype.colorLinked = function(h1, h2) {
+      var c1, c2, index;
+      index = this.indexLink(h1, h2);
+      if (index === -1) {
+        return Color.NONE;
+      }
+      c1 = h1.colorOfSide(index);
+      c2 = h2.colorOfSide(__modulo(index + Hex.SIDES / 2, Hex.SIDES));
+      if (c1 === c2) {
+        return c1;
+      } else {
+        return Color.NONE;
+      }
+    };
+
+
+    /* Returns the hex at the given location */
+
+    Board.prototype.getHex = function(loc) {
+      return this.getHex(loc.row, loc.col);
+    };
+
+
+    /* Returns the hex at the given row, col */
+
+    Board.prototype.getHex = function(row, col) {
+      return this.board[row][col];
+    };
+
+
+    /* Returns a flattened version of the board - all hexes in no particular order */
+
+    Board.prototype.allHexes = function() {
+      var a, arr, h, _i, _j, _len, _len1, _ref;
+      arr = [];
+      _ref = this.board;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        a = _ref[_i];
+        for (_j = 0, _len1 = a.length; _j < _len1; _j++) {
+          h = a[_j];
+          arr.push(h);
+        }
+      }
+      return arr;
+    };
+
+
+    /* Sets the hex at position (r,c). Also sets all neighbor hexes as needing a neighbor update.
+        Hex must have this as its board. Used in hex construciton, not much elsewhere
+     */
+
+    Board.prototype.setHex = function(h, r, c) {
+      var n, _i, _len, _ref;
+      if (h.board !== this) {
+        throw new IllegalArgumentException("Can't put hex belonging to " + h.board + " in board " + this);
+      }
+      this.board[r][c] = h;
+      _ref = h.getNeighbors();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        n = _ref[_i];
+        n.neighborsUpdated = true;
+      }
+    };
+
+    return Board;
+
+  })();
+
+  ({
+
+    /* Re-calculates light on whole board */
+    relight: function() {
+      var h, _i, _len, _ref;
+      _ref = this.allHexes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         h = _ref[_i];
-        hLit = h.isLit();
-        c = h.colorOfSide(h.indexLink(this));
-        if ((hLit.length > 0 && (preferred === Color.NONE || preferred in hLit)) && c in hLit) {
-          lighters[h.loc] = c;
-          return;
-        }
+        h.light();
       }
-    };
+    },
 
-
-    /* @Override
-        All sides of this crystal are the color of its lighter. (Not that this can provide light)
-     */
-
-    Crystal.prototype.colorOfSide = function(n) {
-      if (n < 0 || n > Hex.SIDES - 1) {
-        throw new IllegalArgumentException("Can't find color of side " + n + " of " + this);
+    /* Two boards are equal if they have the same board */
+    equals: function(o) {
+      var b;
+      if (!(o instanceof Board)) {
+        return false;
       }
-      return lit;
-    };
-
-
-    /* Interacting with a Crystal does nothing - do nothing here */
-
-    Crystal.prototype.click = function() {};
-
-    return Crystal;
-
-  })(Hex);
+      b = Board(o);
+      return b.board === this.board;
+    }
+  });
 
   Game = (function() {
 
@@ -809,36 +760,85 @@
 
   })();
 
+  Crystal = (function(_super) {
+    __extends(Crystal, _super);
 
-  /*A simple location class - nice int tuple.
-   Using this over the Point class because constantly shifting from (x,y) to (col,row) is confusing
-   */
 
-  Loc = (function() {
-    function Loc(row, col) {
-      this.row = row;
-      this.col = col;
+    /* Constructs a Crystal and puts it into board b
+        @param b - the board this spark belongs to
+        @param l - the location of this crystal in (row, col) in the board
+        @throws IllegalArgumentException - if there is already hex at row,col, or row,col is OOB.
+     */
+
+    function Crystal(board, loc) {
+      Crystal.__super__.constructor.call(this, board, loc);
+      this.lit = Color.NONE;
     }
 
-    Loc.prototype.equals = function(o) {
-      var l;
-      if (!o instanceof Loc) {
-        return false;
+
+    /* @Override
+        Try to find light like a prism, but don't ever provide light. Thus only look for a provider, don't need to recurse.
+        Only find single light color.
+     */
+
+    Crystal.prototype.light = function() {
+      var lighterChanged, lit;
+      lighterChanged = this.pruneLighters();
+      if (lighterChanged) {
+        this.findLightProviders(lit);
+        if (this.isLit().length === 0) {
+          this.findLightProviders(Color.NONE);
+        }
+      }
+      if (this.isLit().length === 0) {
+        lit = Color.NONE;
       } else {
-        l = Loc(o);
-        return this.row === l.row && this.col === l.col;
+        lit = this.isLit()[0];
+      }
+      update();
+    };
+
+
+    /* @Override
+        Helper method for use in findLight implementations. Tries to find light among neighbors.
+        Overrides hex findLightProvider so that it can take any color of light, no matter the side color.
+        Only looks for preferred. If preferred is NONE, takes any color. Only takes on e color
+     */
+
+    Crystal.prototype.findLightProviders = function(preferred) {
+      var c, h, hLit, _i, _len, _ref;
+      _ref = this.getNeighbors();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        h = _ref[_i];
+        hLit = h.isLit();
+        c = h.colorOfSide(h.indexLink(this));
+        if ((hLit.length > 0 && (preferred === Color.NONE || preferred in hLit)) && c in hLit) {
+          lighters[h.loc] = c;
+          return;
+        }
       }
     };
 
-    Loc.prototype.toString = function() {
-      return "(" + this.row + "," + this.col + ")";
+
+    /* @Override
+        All sides of this crystal are the color of its lighter. (Not that this can provide light)
+     */
+
+    Crystal.prototype.colorOfSide = function(n) {
+      if (n < 0 || n > Hex.SIDES - 1) {
+        throw new IllegalArgumentException("Can't find color of side " + n + " of " + this);
+      }
+      return lit;
     };
 
-    Loc.NOWHERE = new Loc(-9999, -9999);
 
-    return Loc;
+    /* Interacting with a Crystal does nothing - do nothing here */
 
-  })();
+    Crystal.prototype.click = function() {};
+
+    return Crystal;
+
+  })(Hex);
 
   Prism = (function(_super) {
     __extends(Prism, _super);

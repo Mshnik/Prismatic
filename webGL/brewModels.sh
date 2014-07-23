@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "watching"
-coffee --watch --join lib/models.js --compile src/models/*.coffee
+echo "compining and joining..."
+coffee --join lib/models.js --compile src/models/util/*.coffee src/models/*.coffee src/models/*/*.coffee

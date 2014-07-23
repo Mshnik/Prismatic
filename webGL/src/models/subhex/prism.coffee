@@ -1,3 +1,5 @@
+##= require ./hex
+
 class Prism extends Hex
 
   ## Defines the default rotation direction for prisms - clockwise if true, counterclockwise otw

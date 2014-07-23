@@ -1,3 +1,5 @@
+##= require ./hex
+
 class Spark extends Hex
 
   ### Constructs a Spark and puts it into board b
