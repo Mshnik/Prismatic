@@ -480,12 +480,16 @@
 	"buffers":
 	[
 	],
-	"build_system": "",
+	"build_system": "Packages/Better CoffeeScript/CoffeeScript.sublime-build",
 	"command_palette":
 	{
-		"height": 47.0,
+		"height": 287.0,
 		"selected_items":
 		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
 			[
 				"instal",
 				"Package Control: Install Package"
@@ -507,15 +511,11 @@
 				"Package Control: Enable Package"
 			],
 			[
-				"install",
-				"Package Control: Install Package"
-			],
-			[
 				"insta",
 				"Package Control: Install Package"
 			]
 		],
-		"width": 449.0
+		"width": 485.0
 	},
 	"console":
 	{
@@ -532,6 +532,25 @@
 	},
 	"file_history":
 	[
+		"/Users/MPatashnik/Documents/Prismatic/webGL/index.html",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/scripts/setStage.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/scripts/drawBoard.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/color.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/prismatic.sublime-project",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/models.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/board.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/brewModels.sh",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/brewScripts.sh",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/SublimeOnSaveBuild/SublimeOnSaveBuild.sublime-settings",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/User/SublimeOnSaveBuild.sublime-settings",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/User/CoffeeScript_Me.sublime-build",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/SublimeOnSaveBuild/README.md",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/User/CoffeeScript.sublime-settings",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Better CoffeeScript/CoffeeScript.sublime-settings",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/board.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/beans.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/watchCoffee.sh",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/brewCoffee.sh",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Hex.java",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Prism.java",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Spark.java",
@@ -545,7 +564,6 @@
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/hex.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/prism.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/colorCircle.coffee",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/src/board.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/game.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Color.java",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/util/Colors.java",
@@ -553,13 +571,9 @@
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/util/Location.java",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/location.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/location.js",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/prismatic.sublime-project",
-		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Better CoffeeScript/CoffeeScript.sublime-settings",
 		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Package Control/Package Control.sublime-settings",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/asdgseta.coffee",
-		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/User/CoffeeScript.sublime-settings",
 		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/brewCoffee.sh",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/models/hex.js",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/models/util/Loc.js",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/models/util/Util.js",
@@ -645,21 +659,7 @@
 		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_pageSelector.scala.html",
 		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/modules/_tabs.scss",
 		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/front/_tabs.scss",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/models/User.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/lib-admin/ng-quick-date.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/lib-admin/jquery.validate.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/models/assets/BaseAsset.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/models/assets/Asset.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/image/ImageUtils.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/conf/routes",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/service/DesignService.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/controllers/api/APIAsset.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/data/data.asset.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/api/resulthandlers/AssetJsonWrapper.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/data/data.story.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/models/Design.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/utils/S3Utils.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/image/ImageConfig.java"
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/models/User.java"
 	],
 	"find":
 	{
@@ -677,6 +677,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"graphics",
 			"t",
 			"clear",
 			");\n",
@@ -803,8 +804,7 @@
 			"getCus",
 			"get",
 			"submission",
-			"nth-child",
-			"nth"
+			"nth-child"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -872,6 +872,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 25.0
+	},
 	"replace":
 	{
 		"height": 64.0

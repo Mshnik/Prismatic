@@ -8,7 +8,7 @@
 
   Board = (function() {
 
-    /* Constructor for an empty board of size rs*cs argle */
+    /* Constructor for an empty board of size rs*cs */
     function Board(rs, cs) {
       var c, r, _i, _j, _ref, _ref1;
       if (rs < 0 || cs < 0) {
@@ -180,40 +180,65 @@
     }
   });
 
-  Color = {
-    NONE: 0,
-    RED: 1,
-    BLUE: 2,
-    GREEN: 3,
-    ORANGE: 4,
-    PURPLE: 5,
-    CYAN: 6,
-    YELLOW: 7,
-    PINK: 8
-  };
+  Color = (function() {
+    function Color() {}
 
-  Color.count()(function() {
-    return Object.keys(Color).length;
-  });
+    Color._val = {
+      NONE: 0,
+      RED: 1,
+      BLUE: 2,
+      GREEN: 3,
+      ORANGE: 4,
+      PURPLE: 5,
+      CYAN: 6,
+      YELLOW: 7,
+      PINK: 8
+    };
 
-  Color.values()(function() {
-    return Object.keys(Color);
-  });
+    Color.NONE = Color._val.NONE;
 
-  Color.subValues(offset, n)(function() {
-    var c;
-    c = Color.count;
-    return Color.values.splice(__modulo(offset, c), __modulo(offset + n, c));
-  });
+    Color.RED = Color._val.RED;
 
-  Color.noneArray(length)(function() {
-    var i, _i, _ref, _results;
-    _results = [];
-    for (i = _i = 0, _ref = length - 1; _i < _ref; i = _i += 1) {
-      _results.push(Color.NONE);
-    }
-    return _results;
-  });
+    Color.BLUE = Color._val.BLUE;
+
+    Color.GREEN = Color._val.GREEN;
+
+    Color.ORANGE = Color._val.ORANGE;
+
+    Color.PURPLE = Color._val.PURPLE;
+
+    Color.CYAN = Color._val.CYAN;
+
+    Color.YELLOW = Color._val.YELLOW;
+
+    Color.PINK = Color._val.PINK;
+
+    Color.count = function() {
+      return Object.keys(Color).length;
+    };
+
+    Color.values = function() {
+      return Object.keys(Color);
+    };
+
+    Color.subValues = function(offset, n) {
+      var c;
+      c = Color.count;
+      return Color.values.splice(__modulo(offset, c), __modulo(offset + n, c));
+    };
+
+    Color.noneArray = function(length) {
+      var i, _i, _ref, _results;
+      _results = [];
+      for (i = _i = 0, _ref = length - 1; _i < _ref; i = _i += 1) {
+        _results.push(Color.NONE);
+      }
+      return _results;
+    };
+
+    return Color;
+
+  })();
 
   ColorCircle = (function() {
 
