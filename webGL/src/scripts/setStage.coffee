@@ -9,6 +9,7 @@
     renderer.render(@stage)
     return
   requestAnimFrame( @animate )
+  PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST
 # stage = new PIXI.Stage(0x66FF99);
 #   renderer = PIXI.autoDetectRenderer(400, 300);
 #   document.body.appendChild(renderer.view);

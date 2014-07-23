@@ -13,6 +13,7 @@
       renderer.render(this.stage);
     };
     requestAnimFrame(this.animate);
+    PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
   };
 
 }).call(this);
