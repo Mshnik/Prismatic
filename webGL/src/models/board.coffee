@@ -1,9 +1,9 @@
-class Board
+class @Board
 
   ### Constructor for an empty board of size rs*cs ###
   constructor : (rs, cs) ->
     if (rs < 0 || cs < 0) 
-      throw new IllegalArgumentException("Illegal Board Construction for Dimensions " + rs + ", " + cs)
+      throw ("Illegal Board Construction for Dimensions " + rs + ", " + cs)
     @height = rs
     @width = cs
     @board = [] # Board as a matrix of hexes
@@ -26,7 +26,7 @@ class Board
   ### Sets the game this board belongs to. Throws a runtime exception if game is already set ###
   setGame : (g) -> 
     if(@game != null)
-      throw new RuntimeException("Can't set Game of " + this + " to " + g + " because it is already " + game)
+      throw ("Can't set Game of " + this + " to " + g + " because it is already " + game)
     @game = g
     return
 
@@ -65,12 +65,7 @@ class Board
 
   ### Returns the hex at the given location ###
   getHex : (loc) ->
-    @getHex(loc.row, loc.col)
-
-  ### Returns the hex at the given row, col ###
-  getHex : (row, col) ->
-    @board[row][col]
-
+    @board[loc.row][loc.col]
 
   ### Returns a flattened version of the board - all hexes in no particular order ###
   allHexes : () ->
@@ -85,7 +80,7 @@ class Board
       Hex must have this as its board. Used in hex construciton, not much elsewhere ###
   setHex : (h, r, c) ->
     if(h.board isnt this)
-      throw new IllegalArgumentException("Can't put hex belonging to " + h.board + " in board " + this)
+      throw ("Can't put hex belonging to " + h.board + " in board " + this)
 
     @board[r][c] = h
     for n in h.getNeighbors()
@@ -93,16 +88,49 @@ class Board
 
     return
 
- ### Re-calculates light on whole board ###
- relight : () ->
-    for h in @allHexes
-      h.light();
-    return
+   ### Re-calculates light on whole board ###
+   relight : () ->
+      for h in @allHexes
+        h.light();
+      return
 
-  ### Two boards are equal if they have the same board ###
-  equals : (o) ->
-    if (! (o instanceof Board))
-      return false
+    ### Two boards are equal if they have the same board ###
+    equals : (o) ->
+      if (! (o instanceof Board))
+        return false
 
-    b = (Board) o
-    b.board == @board
+      b = (Board) o
+      b.board == @board
+
+    ### Returns a string representation of this board as an ascii matrix ###
+    toString : () ->
+      s = ""
+      for r in @board
+        for el in r
+          if(el is null)
+            s = s + "   |"
+          else if (el instanceof Prism)
+            s = s + " p |"
+          else if (el instanceof Spark)
+            s = s + " s |"
+          else
+            s = s + " c |"
+        s = s + "\n"
+        for el in r 
+          s = s + "----"
+        s = s + "\n"
+      return s
+
+    ### Makes a random board with the given dimentions. Mainly for testing. Sparks/Crystals at corners, prisms otw ###
+    @makeBoard = (rs, cs, cls) ->
+      b = new Board(rs,cs);
+      for r in [0 .. rs - 1] by 1
+        for c in [0 .. cs - 1] by 1
+          if r is 0 and c is 0 or r is (rs-1) and c is 0
+            new Spark(b, new Loc(r,c), Color.subValues(1, cls))
+          else if r is 0 and c is (cs - 1) or r is (rs-1) and c is (cs - 1)
+            new Crystal(b, new Loc(r, c))
+          else
+            new Prism(b, new Loc(r, c), ColorCircle.randomArray(Hex.SIDES, cls))
+      # b.relight()    
+      return b

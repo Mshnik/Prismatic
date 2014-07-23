@@ -1,6 +1,6 @@
 ##= require ./hex
 
-class Spark extends Hex
+class @Spark extends Hex
 
   ### Constructs a Spark and puts it into board b
      @param b - the board this spark belongs to
@@ -12,33 +12,27 @@ class Spark extends Hex
     super(board, loc)
     @setAvailableColors(colors)
 
-
   ### Returns the current color of this spark ###
   getColor : () ->
-    @avaliableColors.getColor()
+    @availableColors.getColor()
 
-  ### Makes this spark use the next avaliable color. Relights and redraws ###
+  ### Makes this spark use the next available color. Relights and redraws ###
   useNextColor : () ->
-    @avaliableColors = @avaliableColors.getNext()
+    @availableColors = @availableColors.getNext()
     @light()
     @update()
     return
 
-  ### Returns the avaliable colors of this spark. ###
-  getAvaliableColors : () ->
-    @avaliableColors.toArray()
+  ### Returns the available colors of this spark. ###
+  getavailableColors : () ->
+    @availableColors.toArray()
 
-  ###Allows setting the ColorCircle, but only if it isn't set yet (is null).
-      @throws IllegalArgumentException if the colorCircle is currently non-null
+  ###Allows setting the ColorCircle, but only if it isn't set yet (is null). Don't call otherwise
   ###
-  setAvaliableColors : (colors) ->
-    if(@avaliableColors != null) 
-      throw new IllegalArgumentException("Can't set colorCirle of " + this);
-    if(colors isnt null and colors.length is 0) 
-      throw new IllegalArgumentException("Can't set color array of size " + colors.length);
-    @avaliableColors = ColorCircle.fromArray(colors);
-    @light();
-    @update();
+  setAvailableColors : (colors) ->
+    if(@availableColors != undefined and @availableColors != null and @availableColors.length > 0)
+      return
+    @availableColors = ColorCircle.fromArray(colors);
     return
   
   ### @Override
@@ -49,7 +43,7 @@ class Spark extends Hex
     return
   
   ### @Override
-      Default behavior for a spark is to switch to the next avaliable color ###
+      Default behavior for a spark is to switch to the next available color ###
   click : () ->
     @useNextColor()
     return

@@ -4,12 +4,11 @@
 
 (function() {
   this.init = function() {
-    var canvas, renderer, stage;
     console.log("Init Called");
-    stage = new PIXI.Stage(0x295266);
-    canvas = document.getElementById("game-canvas");
-    renderer = PIXI.autoDetectRenderer(canvas.width, canvas.height, canvas);
-    return renderer.render(stage);
+    this.stage = new PIXI.Stage(0x295266);
+    this.canvas = document.getElementById("game-canvas");
+    this.renderer = PIXI.autoDetectRenderer(canvas.width, canvas.height, canvas);
+    return this.renderer.render(stage);
   };
 
 }).call(this);

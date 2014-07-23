@@ -2,7 +2,7 @@
 ##= require ./colorCircle
 
 ### Abstract parent of all tiles ###
-class Hex
+class @Hex
 
   @SIDES = 6; #Sides per hex
   @NEIGHBOR_COORDINATES = [
@@ -18,12 +18,12 @@ class Hex
   constructor : (board, loc) ->
     try
       if(board == null)
-        throw new IllegalArgumentException("Can't put hex into null board")
-      if(b.getHex(loc) != null) 
-        throw new IllegalArgumentException("Board " + board + " already has hex at position " +
+        throw ("Can't put hex into null board")
+      if(board.getHex(loc) != null) 
+        throw ("Board " + board + " already has hex at position " +
             "(" + loc.row + "," + loc.col + "), can't construct new hex there.")
     catch a
-      throw new IllegalArgumentException("Can't construct hex in " + board + " at " + loc  + ": " + a.getMessage())
+      throw ("Can't construct hex in " + board.toString + " at " + loc  + ": " + a.message)
 
     #Passes checks
       # Board this hex belongs to
@@ -94,7 +94,7 @@ class Hex
     arr
 
   ### Fixes light for this hex. Must be implemented in subclasses. ###
-  light : () -> throw new RuntimeException("Cannot instantiate Hex Class - light method must be overriden")
+  light : () -> throw ("Cannot instantiate Hex Class - light method must be overriden")
 
   ### Helper method for use in light implementations. Removes lighters that can't light this anymore from lighters map
       Returns true if at least one lighter was removed, false otherwise ###
@@ -147,10 +147,10 @@ class Hex
 
   ### Returns the color of side n of this hex (where side 0 is the top).
      IllegalArgumentException if n < 0, n > SIDES - 1 ###
-  colorOfSide : (n) -> throw new RuntimeException("Cannot instantiate Hex Class - colorOfSide method must be overriden")
+  colorOfSide : (n) -> ("Cannot instantiate Hex Class - colorOfSide method must be overriden")
 
   ### Perform default behavior for interacting with this hex ###
-  click : (n) -> throw new RuntimeException("Cannot instantiate Hex Class - click method must be overriden")
+  click : () -> ("Cannot instantiate Hex Class - click method must be overriden")
 
   ### Returns the location of this hex as the string for this hex ###
   toString : () -> @loc.toString()

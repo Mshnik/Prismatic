@@ -1,4 +1,4 @@
-class Crystal extends Hex
+class @Crystal extends Hex
 
   ### Constructs a Crystal and puts it into board b
       @param b - the board this spark belongs to
@@ -47,7 +47,7 @@ class Crystal extends Hex
       All sides of this crystal are the color of its lighter. (Not that this can provide light) ###
   colorOfSide : (n) -> 
     if(n < 0 || n > Hex.SIDES - 1) 
-      throw new IllegalArgumentException("Can't find color of side " + n + " of " + this);
+      throw ("Can't find color of side " + n + " of " + this)
     return lit;
   
 

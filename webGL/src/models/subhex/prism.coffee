@@ -1,6 +1,6 @@
 ##= require ./hex
 
-class Prism extends Hex
+class @Prism extends Hex
 
   ## Defines the default rotation direction for prisms - clockwise if true, counterclockwise otw
   @ROTATE_CLOCKWISE = true
@@ -22,10 +22,8 @@ class Prism extends Hex
   ### Allows setting the ColorCircle, but only if it isn't set yet (is null).
      @throws IllegalArgumentException if the colorCircle is currently non-null ###
   setColorCircle : (colors) ->
-    if(colorCircle != null) 
-      throw new IllegalArgumentException("Can't set colorCirle of " + this.toString())
-    if(colors != null && colors.length != Hex.SIDES) 
-      throw new IllegalArgumentException("Can't set color array of size " + colors.length)
+    if(@availableColors != undefined and @availableColors != null and @availableColors.length > 0)
+      return
     @colorCircle = ColorCircle.fromArray(colors)
     return
 
@@ -47,7 +45,7 @@ class Prism extends Hex
       Returns the colorCircle at the correct index for the color of a given side ###
   colorOfSide : (n) ->
     if(n < 0 || n > Hex.SIDES - 1) 
-      throw new IllegalArgumentException ("Illegal Side Number " + n)
+      throw ("Illegal Side Number " + n)
     return @colorCircle.toArray()[n]
 
   ### @Override

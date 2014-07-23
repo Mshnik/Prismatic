@@ -26,7 +26,7 @@ class Color
 
   @subValues : (offset, n) ->
     c = Color.count
-    Color.values.splice(offset %% c, (offset + n) %% c)
+    Color.values().splice(offset %% c, (offset + n) %% c)
 
   @noneArray : (length) ->
     Color.NONE for i in [0 ... (length - 1)] by 1

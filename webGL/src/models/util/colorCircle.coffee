@@ -9,7 +9,7 @@ class ColorCircle
       return null
     l = colors.length
     t = (new ColorCircle(c, null, null) for c in colors)
-    for i in [0 .. (l -1)] by 1
+    for i in [0 .. (l - 1)] by 1
       cc = t[i]
       cc.size = l
       cc.prev = t[(i-1) %% l]
@@ -20,16 +20,18 @@ class ColorCircle
       throws IllegalArgumentException if length <= 0 or maxColors <= 0 ###
   @randomArray : (length, maxColors) -> 
     if (length <= 0) 
-      throw new IllegalArgumentException("Can't make Color Array of length " + length + " for color circle");
+      throw ("Can't make Color Array of length " + length + " for color circle")
     if(maxColors <= 0) 
-      throw new IllegalArgumentException("Can't make Color Array of length using at most " + maxColors + " colors");
-    for i in [0 .. (length-1)] by 1
-      Color.values()[1 + (int)(Math.random() * (Math.min(maxColors, Color.values().length - 1)))]
+      throw ("Can't make Color Array of length using at most " + maxColors + " colors")
+    a = for i in [0 .. (length-1)] by 1
+      Color.values()[1 + Math.floor((Math.random() * (Math.min(maxColors, Color.values().length - 1))))]
+    a
   
    ### Creates a random color circle of the given length. Uses at most maxColors (or 6 if maxColors > 6) colors, never uses NONE.
        throws IllegalArgumentException if length <= 0 or maxColors <= 0###
-   @random : (length, maxColors) ->
-    @fromArray(@randomArray(length, maxColors))
+  @random = (length, maxColors) ->
+    a = @fromArray(@randomArray(length, maxColors))
+    a
 
   ### Constructs a color circle with the given inputs. Should not be used outside of this file - use helpers ###
   constructor : (col, prev, next) ->
