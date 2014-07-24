@@ -16,7 +16,7 @@ class @Crystal extends Hex
   light : () ->
     lighterChanged = @pruneLighters()
     #First try to find a provider of the previous color of light
-    if(lighterChanged)
+    if(lighterChanged || @lit is 0)
       @findLightProviders(lit);
       if(@isLit().length == 0)
         @findLightProviders(Color.NONE)
@@ -38,10 +38,10 @@ class @Crystal extends Hex
   findLightProviders : (preferred) ->
     for h in @getNeighbors()
       hLit = h.isLit()
-      c = h.colorOfSide(h.indexLink(this))
-      if((hLit.length > 0 and (preferred is Color.NONE or preferred of hLit)) and c of hLit)
-        lighters[h.loc] = c
-        return
+      c = h.colorOfSide(h.indexLinked(this))
+      if((hLit.length > 0 and (preferred is Color.NONE or preferred in hLit)) and c in hLit)
+        @lighters[h.loc.toString()] = c        
+    return
   
   ### @Override
       All sides of this crystal are the color of its lighter. (Not that this can provide light) ###

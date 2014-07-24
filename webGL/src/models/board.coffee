@@ -38,7 +38,7 @@ class @Board
 
   ### Returns the index (0 ... Hex.SIDES - 1) of the side of h1 that is facing h2. 
       Returns -1 if either are null or are not neighbors ###
-  indexLink : (h1, h2) ->
+  indexLinked : (h1, h2) ->
     if(h1 is null or h2 is null)
       return -1
 
@@ -53,7 +53,7 @@ class @Board
   ### Returns the color that links h1 and h2. 
       Returns none if either is null or they are not neighbors, or they are not color linked ###
   colorLinked : (h1, h2) ->
-    index = @indexLink(h1, h2)
+    index = @indexLinked(h1, h2)
     if (index is -1)
       return Color.NONE 
     c1 = h1.colorOfSide(index)
@@ -131,7 +131,7 @@ class @Board
       for r in [0 .. rs - 1] by 1
         for c in [0 .. cs - 1] by 1
           if r is 0 and c is 0 or r is (rs-1) and c is 0
-            new Spark(b, new Loc(r,c), Color.subValues(1, cls))
+            new Spark(b, new Loc(r,c), Color.subValues(1, cls-1))
           else if r is 0 and c is (cs - 1) or r is (rs-1) and c is (cs - 1)
             new Crystal(b, new Loc(r, c))
           else

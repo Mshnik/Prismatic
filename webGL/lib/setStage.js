@@ -101,7 +101,7 @@
   /* Creates a dummy board and adds to scope. Mainly for testing */
 
   this.createDummyBoard = function() {
-    this.BOARD = this.Board.makeBoard(4, 9, 3);
+    this.BOARD = this.Board.makeBoard(4, 4, 1);
     this.BOARD.relight();
   };
 

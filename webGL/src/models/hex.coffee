@@ -137,20 +137,20 @@ class @Hex
         c = @colorLinked(h)
         if !isNaN(c)
           c = Color.asString(c)
-        if( ! (h instanceof Spark) and ((h instanceof Crystal and hlit.length == 0) or (h instanceof Prism and c in lit and c not in hLit)))
+        if( ! (h instanceof Spark) and ((h instanceof Crystal and hLit.length == 0) or (h instanceof Prism and c in lit and c not in hLit)))
           h.light()
     return
 
   ### Helper method for use in findLight implementations. Tries to find light among neighbors.
       If a link is found, sets that neighbor as lighter. If no link found, sets lighter to null.
-      Only looks for preferred. If preferred is NONE, takes any color. ###
+      Only looks for preferred. If preferred is NONE, takes any color. Doesn't take the same color twice. ###
   findLightProviders : (preferred) ->
     for h in @getNeighbors()
       hLit = h.isLit()
       c = @colorLinked(h)
       if !isNaN(c)
         c = Color.asString(c)
-      if(c in hLit and (preferred is Color.NONE || preferred is c) and (not h.lighterSet(c)? or this not in h.lighterSet(c)))
+      if(c in hLit and (preferred is Color.NONE || preferred is c) and c not in @isLit() and (not h.lighterSet(c)? or this not in h.lighterSet(c)))
         @lighters[h.loc.toString()] = c
     return
 

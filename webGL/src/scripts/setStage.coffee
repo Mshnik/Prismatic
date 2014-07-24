@@ -90,7 +90,7 @@
 
 ### Creates a dummy board and adds to scope. Mainly for testing ###
 @createDummyBoard = () ->
-  @BOARD = @Board.makeBoard(4,9,3)
+  @BOARD = @Board.makeBoard(4,4,1)
   @BOARD.relight()
   return
 

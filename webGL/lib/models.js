@@ -337,7 +337,7 @@
         Returns -1 if either are null or are not neighbors
      */
 
-    Board.prototype.indexLink = function(h1, h2) {
+    Board.prototype.indexLinked = function(h1, h2) {
       var h1Neighbors, i, _i, _ref;
       if (h1 === null || h2 === null) {
         return -1;
@@ -358,7 +358,7 @@
 
     Board.prototype.colorLinked = function(h1, h2) {
       var c1, c2, index;
-      index = this.indexLink(h1, h2);
+      index = this.indexLinked(h1, h2);
       if (index === -1) {
         return Color.NONE;
       }
@@ -484,7 +484,7 @@
       for (r = _i = 0, _ref = rs - 1; _i <= _ref; r = _i += 1) {
         for (c = _j = 0, _ref1 = cs - 1; _j <= _ref1; c = _j += 1) {
           if (r === 0 && c === 0 || r === (rs - 1) && c === 0) {
-            new Spark(b, new Loc(r, c), Color.subValues(1, cls));
+            new Spark(b, new Loc(r, c), Color.subValues(1, cls - 1));
           } else if (r === 0 && c === (cs - 1) || r === (rs - 1) && c === (cs - 1)) {
             new Crystal(b, new Loc(r, c));
           } else {
@@ -774,7 +774,7 @@
           if (!isNaN(c)) {
             c = Color.asString(c);
           }
-          if (!(h instanceof Spark) && ((h instanceof Crystal && hlit.length === 0) || (h instanceof Prism && __indexOf.call(lit, c) >= 0 && __indexOf.call(hLit, c) < 0))) {
+          if (!(h instanceof Spark) && ((h instanceof Crystal && hLit.length === 0) || (h instanceof Prism && __indexOf.call(lit, c) >= 0 && __indexOf.call(hLit, c) < 0))) {
             h.light();
           }
         }
@@ -784,7 +784,7 @@
 
     /* Helper method for use in findLight implementations. Tries to find light among neighbors.
         If a link is found, sets that neighbor as lighter. If no link found, sets lighter to null.
-        Only looks for preferred. If preferred is NONE, takes any color.
+        Only looks for preferred. If preferred is NONE, takes any color. Doesn't take the same color twice.
      */
 
     Hex.prototype.findLightProviders = function(preferred) {
@@ -797,7 +797,7 @@
         if (!isNaN(c)) {
           c = Color.asString(c);
         }
-        if (__indexOf.call(hLit, c) >= 0 && (preferred === Color.NONE || preferred === c) && ((h.lighterSet(c) == null) || __indexOf.call(h.lighterSet(c), this) < 0)) {
+        if (__indexOf.call(hLit, c) >= 0 && (preferred === Color.NONE || preferred === c) && __indexOf.call(this.isLit(), c) < 0 && ((h.lighterSet(c) == null) || __indexOf.call(h.lighterSet(c), this) < 0)) {
           this.lighters[h.loc.toString()] = c;
         }
       }
@@ -876,7 +876,7 @@
     Crystal.prototype.light = function() {
       var lighterChanged, lit;
       lighterChanged = this.pruneLighters();
-      if (lighterChanged) {
+      if (lighterChanged || this.lit === 0) {
         this.findLightProviders(lit);
         if (this.isLit().length === 0) {
           this.findLightProviders(Color.NONE);
@@ -903,10 +903,9 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         h = _ref[_i];
         hLit = h.isLit();
-        c = h.colorOfSide(h.indexLink(this));
-        if ((hLit.length > 0 && (preferred === Color.NONE || preferred in hLit)) && c in hLit) {
-          lighters[h.loc] = c;
-          return;
+        c = h.colorOfSide(h.indexLinked(this));
+        if ((hLit.length > 0 && (preferred === Color.NONE || __indexOf.call(hLit, preferred) >= 0)) && __indexOf.call(hLit, c) >= 0) {
+          this.lighters[h.loc.toString()] = c;
         }
       }
     };
