@@ -11,15 +11,12 @@
   /* Set up a PIXI stage - part before asset loading */
 
   this.initStart = function() {
-    var canvas, renderer;
-    this.stage = new PIXI.Stage(0x295266);
+    var canvas;
+    this.stage = new PIXI.Stage(0x295266, true);
+    this.stage.scale.x = 0.5;
+    this.stage.scale.y = 0.5;
     canvas = document.getElementById("game-canvas");
-    renderer = PIXI.autoDetectRenderer(canvas.width, canvas.height, canvas);
-    this.animate = function() {
-      requestAnimFrame(this.animate);
-      renderer.render(this.stage);
-    };
-    requestAnimFrame(this.animate);
+    this.renderer = PIXI.autoDetectRenderer(canvas.width, canvas.height, canvas);
     PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
     PIXI.scaleModes.DEFAULT = PIXI.scaleModes.LINEAR;
     preloadImages();
@@ -37,9 +34,39 @@
   };
 
 
+  /* Animates the board and requests another frame */
+
+
   /* Finish initing after assets are loaded */
 
   this.initFinish = function() {
+    var animate;
+    animate = function() {
+      var h, inc, radTo60Degree, rotSpeed, tolerance, _i, _len, _ref;
+      rotSpeed = 1 / 10;
+      tolerance = 0.000001;
+      radTo60Degree = 1.04719755;
+      if ((this.BOARD != null)) {
+        _ref = this.BOARD.allHexes();
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          h = _ref[_i];
+          if (h instanceof Prism && h.currentRotation !== h.targetRotation) {
+            inc = (h.targetRotation - h.prevRotation) * rotSpeed;
+            h.panel.rotation += inc * radTo60Degree;
+            h.currentRotation += inc;
+            if (Math.abs(h.targetRotation - h.currentRotation) < tolerance) {
+              inc = h.targetRotation - h.currentRotation;
+              h.panel.rotation += inc * radTo60Degree;
+              h.currentRotation += inc;
+              h.prevRotation = h.currentRotation;
+            }
+          }
+        }
+      }
+      requestAnimFrame(animate);
+      this.renderer.render(this.stage);
+    };
+    requestAnimFrame(animate);
     window.createDummyBoard();
     window.drawBoard();
   };
@@ -59,7 +86,7 @@
     _ref = this.BOARD.allHexes();
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       h = _ref[_i];
-      this.spriteForHex(h);
+      this.createSpriteForHex(h);
     }
   };
 
@@ -68,25 +95,33 @@
 
   /* Creates a single sprite for a hex and adds it to stage */
 
-  this.spriteForHex = function(hex) {
-    var spr;
-    if (typeof hex.sprite === "undefined" || hex.sprite === null) {
+  this.createSpriteForHex = function(hex) {
+    var panel, spr;
+    if (typeof hex.panel === "undefined" || hex.panel === null) {
+      panel = new PIXI.DisplayObjectContainer();
+      panel.position.x = hex.loc.col * this.hexRad * 3 / 4 * 1.11 + this.hexRad / 2;
+      panel.position.y = hex.loc.row * this.hexRad + this.hexRad / 2;
+      if (hex.loc.col % 2 === 1) {
+        panel.position.y += this.hexRad / 2;
+      }
+      panel.scale.x = 0.078;
+      panel.scale.y = 0.078;
+      panel.pivot.x = 0.5;
+      panel.pivot.y = 0.5;
       spr = PIXI.Sprite.fromImage("assets/img/hex-back.png");
       spr.anchor.x = 0.5;
       spr.anchor.y = 0.5;
-      spr.scale.x = 0.078;
-      spr.scale.y = 0.078;
-      spr.position.x = hex.loc.col * this.hexRad * 3 / 4 * 1.11 + this.hexRad / 2;
-      spr.position.y = hex.loc.row * this.hexRad + this.hexRad / 2;
-      if (hex.loc.col % 2 === 1) {
-        spr.position.y += this.hexRad / 2;
-      }
-      spr.pivot.x = 0.5;
-      spr.pivot.y = 0.5;
-      this.stage.addChild(spr);
-      hex.sprite = spr;
+      panel.addChild(spr);
+      panel.hex = spr;
+      hex.panel = panel;
+      panel.hex = hex;
+      panel.interactive = true;
+      panel.click = function() {
+        hex.click();
+      };
+      this.stage.addChild(panel);
     }
-    return hex.sprite;
+    return hex.panel;
   };
 
 }).call(this);

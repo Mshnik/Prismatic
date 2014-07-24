@@ -45,6 +45,7 @@ class @Spark extends Hex
   ### @Override
       Default behavior for a spark is to switch to the next available color ###
   click : () ->
+    console.log("clicked")
     @useNextColor()
     return
   

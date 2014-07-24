@@ -14,6 +14,9 @@ class @Prism extends Hex
   constructor : (board, loc, colors) ->
     super(board, loc)
     @setColorCircle(colors)
+    @prevRotation = 0       ## The rotation this was in (side on top, after modding by 6)
+    @currentRotation = 0    ## The rotation this is currently in (side on top, after modding by 6)
+    @targetRotation = 0     ## The rotation this wants to be in (side on top, after moding by 6)
 
   ### Returns the colors of this prism, clockwise from the current top ###
   colorArray : () ->
@@ -30,15 +33,17 @@ class @Prism extends Hex
   ## Rotates this prism once clockwise (moves head back). Also causes the prism to look for light and redraw itself ###
   rotate : () ->
     @board.moves++
-    @colorCircle = @colorCircle.getPrevious()
-    @light()
+    @colorCircle = @colorCircle.prev
+    @targetRotation++
+    #@light()
     return
 
   ## Rotates this prism once counter-clockwise (moves head forward). Also causes the prism to look for light and redraw itself ###
   rotateCounter : () ->
     @board.moves++
-    @colorCircle = @colorCircle.getNext()
-    @light()
+    @colorCircle = @colorCircle.next
+    @targetRotation--
+    #@light()
     return
 
   ### @Override
@@ -70,8 +75,9 @@ class @Prism extends Hex
 
   ### Default behavior for a Prism is to rotate. Rotates clockwise if ROTATE_CLOCKWISE, rotates counterclockwise otherwise. ###
   click : () -> 
-    if(Prism.ROTATE_CLOCKWISE)
-      @rotate()
-    else
-      @rotateCounter()
+    if @targetRotation is @currentRotation
+      if(Prism.ROTATE_CLOCKWISE)
+        @rotate()
+      else
+        @rotateCounter()
     return

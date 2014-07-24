@@ -896,6 +896,9 @@
     function Prism(board, loc, colors) {
       Prism.__super__.constructor.call(this, board, loc);
       this.setColorCircle(colors);
+      this.prevRotation = 0;
+      this.currentRotation = 0;
+      this.targetRotation = 0;
     }
 
 
@@ -919,14 +922,14 @@
 
     Prism.prototype.rotate = function() {
       this.board.moves++;
-      this.colorCircle = this.colorCircle.getPrevious();
-      this.light();
+      this.colorCircle = this.colorCircle.prev;
+      this.targetRotation++;
     };
 
     Prism.prototype.rotateCounter = function() {
       this.board.moves++;
-      this.colorCircle = this.colorCircle.getNext();
-      this.light();
+      this.colorCircle = this.colorCircle.next;
+      this.targetRotation--;
     };
 
 
@@ -960,10 +963,12 @@
     /* Default behavior for a Prism is to rotate. Rotates clockwise if ROTATE_CLOCKWISE, rotates counterclockwise otherwise. */
 
     Prism.prototype.click = function() {
-      if (Prism.ROTATE_CLOCKWISE) {
-        this.rotate();
-      } else {
-        this.rotateCounter();
+      if (this.targetRotation === this.currentRotation) {
+        if (Prism.ROTATE_CLOCKWISE) {
+          this.rotate();
+        } else {
+          this.rotateCounter();
+        }
       }
     };
 
@@ -1037,6 +1042,7 @@
      */
 
     Spark.prototype.click = function() {
+      console.log("clicked");
       this.useNextColor();
     };
 
