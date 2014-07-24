@@ -21,6 +21,7 @@
     };
     requestAnimFrame(this.animate);
     PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
+    PIXI.scaleModes.DEFAULT = PIXI.scaleModes.LINEAR;
     preloadImages();
   };
 

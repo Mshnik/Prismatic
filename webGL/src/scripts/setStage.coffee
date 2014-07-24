@@ -29,6 +29,7 @@
   # @hexPanel.addChild(dS)
 
   # @renderer.render(stage);
+  PIXI.scaleModes.DEFAULT = PIXI.scaleModes.LINEAR
   preloadImages()
   return
 
