@@ -375,7 +375,14 @@
     /* Returns the hex at the given location */
 
     Board.prototype.getHex = function(loc) {
-      return this.board[loc.row][loc.col];
+      var e;
+      try {
+        return this.board[loc.row][loc.col];
+      } catch (_error) {
+        e = _error;
+        loc = Loc.fromString(loc);
+        return this.board[loc.row][loc.col];
+      }
     };
 
 
@@ -582,7 +589,7 @@
       this.neighborsUpdated = true;
       this.neighborHexes = [];
       this.board.setHex(this, loc);
-      this.lighters = [];
+      this.lighters = {};
     }
 
 
@@ -713,8 +720,11 @@
         l = oldArr[_i];
         h = this.board.getHex(l);
         c = this.colorLinked(h);
-        if (c === Color.NONE || __indexOf.call(h.isLit(), c) < 0) {
-          delete this.lighters.l;
+        if (!isNaN(c)) {
+          c = Color.asString(c);
+        }
+        if ((!h.canLight) || c === Color.asString(Color.NONE) || __indexOf.call(h.isLit(), c) < 0 || __indexOf.call(h.lighterSet(c), this) >= 0) {
+          delete this.lighters[l];
         }
       }
       return oldArr.length !== Object.keys(this.lighters).length;
@@ -724,13 +734,18 @@
     /* Helper method for use in findLight implementations. Tells neighbors this is currently lighting to look elsewhere */
 
     Hex.prototype.stopProvidingLight = function() {
-      var c, cond1, cond2, cond3, h, _i, _len, _ref;
+      var c, cond1, cond2, cond3, h, i, _i, _j, _len, _ref, _ref1, _ref2;
       c = this.isLit();
-      _ref = this.getNeighbors();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        h = _ref[_i];
+      for (i = _i = 0, _ref = c.length - 1; _i <= _ref; i = _i += 1) {
+        if (!isNaN(c[i])) {
+          c[i] = Color.asString(c);
+        }
+      }
+      _ref1 = this.getNeighbors();
+      for (_j = 0, _len = _ref1.length; _j < _len; _j++) {
+        h = _ref1[_j];
         cond1 = this.loc in h.lighters;
-        cond2 = !(h.lighters[this.loc] in c);
+        cond2 = (_ref2 = h.lighters[this.loc], __indexOf.call(c, _ref2) < 0);
         cond3 = this.colorLinked(h) !== h.lighters[this.loc];
         if (cond1 && (cond2 || cond3)) {
           h.light();
@@ -756,7 +771,10 @@
           h = _ref[_i];
           hLit = h.isLit();
           c = this.colorLinked(h);
-          if (!(h instanceof Spark) && ((h instanceof Crystal && hlit.length === 0) || (h instanceof Prism && c in lit && !c in hLit))) {
+          if (!isNaN(c)) {
+            c = Color.asString(c);
+          }
+          if (!(h instanceof Spark) && ((h instanceof Crystal && hlit.length === 0) || (h instanceof Prism && __indexOf.call(lit, c) >= 0 && __indexOf.call(hLit, c) < 0))) {
             h.light();
           }
         }
@@ -780,7 +798,7 @@
           c = Color.asString(c);
         }
         if (__indexOf.call(hLit, c) >= 0 && (preferred === Color.NONE || preferred === c) && ((h.lighterSet(c) == null) || __indexOf.call(h.lighterSet(c), this) < 0)) {
-          this.lighters[h.loc] = c;
+          this.lighters[h.loc.toString()] = c;
         }
       }
     };
@@ -997,7 +1015,7 @@
         this.findLightProviders(Color.NONE);
         this.provideLight();
       } else {
-        this.lighters = [];
+        this.lighters = {};
         this.stopProvidingLight();
       }
       this.update();

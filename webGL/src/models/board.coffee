@@ -65,7 +65,11 @@ class @Board
 
   ### Returns the hex at the given location ###
   getHex : (loc) ->
-    @board[loc.row][loc.col]
+    try
+      @board[loc.row][loc.col]
+    catch e ## Maybe wrapped in string?
+      loc = Loc.fromString(loc)
+      @board[loc.row][loc.col]
 
   ### Returns a flattened version of the board - all hexes in no particular order ###
   allHexes : () ->

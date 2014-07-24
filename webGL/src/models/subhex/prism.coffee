@@ -73,7 +73,7 @@ class @Prism extends Hex
       @provideLight()
     else
       #Get rid of all lighters
-      @lighters = []
+      @lighters = {}
       # tell neighbors they may not have light
       @stopProvidingLight()
 

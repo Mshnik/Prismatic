@@ -41,7 +41,7 @@ class @Hex
       # Puts this hex in board
     @board.setHex(this, loc)
       #Map of location (hex) -> color of hexes that provide this with light
-    @lighters = []
+    @lighters = {}
 
   ###Returns the neighbors of this hex, clockwise from above. Will always return an array of lenght SIDES,
      but may contain nulls.
@@ -103,16 +103,21 @@ class @Hex
     for l in oldArr
       h = @board.getHex(l) # Look up corresponding hex
       c = @colorLinked(h)
-      if( c == Color.NONE || c not in h.isLit())
-        delete @lighters.l
+      if !isNaN(c)
+       c = Color.asString(c)
+      if( (not h.canLight) || c == Color.asString(Color.NONE) || c not in h.isLit() || this in h.lighterSet(c))
+        delete @lighters[l]
     oldArr.length != Object.keys(@lighters).length
 
   ### Helper method for use in findLight implementations. Tells neighbors this is currently lighting to look elsewhere ###
   stopProvidingLight : () ->
     c = @isLit()
+    for i in [0 .. (c.length - 1)] by 1
+      if !isNaN(c[i])
+        c[i] = Color.asString(c)
     for h in @getNeighbors()
       cond1 = @loc of h.lighters
-      cond2 = h.lighters[@loc] not of c
+      cond2 = h.lighters[@loc] not in c
       cond3 = @colorLinked(h) isnt h.lighters[@loc] 
       if (cond1 and (cond2 or cond3))
         h.light()
@@ -130,7 +135,9 @@ class @Hex
       for h in @getNeighbors()
         hLit = h.isLit()
         c = @colorLinked(h)
-        if( ! (h instanceof Spark) and ((h instanceof Crystal and hlit.length == 0) or (h instanceof Prism and c of lit and ! c of hLit)))
+        if !isNaN(c)
+          c = Color.asString(c)
+        if( ! (h instanceof Spark) and ((h instanceof Crystal and hlit.length == 0) or (h instanceof Prism and c in lit and c not in hLit)))
           h.light()
     return
 
@@ -144,7 +151,7 @@ class @Hex
       if !isNaN(c)
         c = Color.asString(c)
       if(c in hLit and (preferred is Color.NONE || preferred is c) and (not h.lighterSet(c)? or this not in h.lighterSet(c)))
-        @lighters[h.loc] = c
+        @lighters[h.loc.toString()] = c
     return
 
   ### Returns the color of side n of this hex (where side 0 is the top).
