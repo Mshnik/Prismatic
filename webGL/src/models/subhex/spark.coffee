@@ -11,6 +11,7 @@ class @Spark extends Hex
   constructor : (board, loc, colors) ->
     super(board, loc)
     @setAvailableColors(colors)
+    @toColor = ""       ## Color to change this to on next redraw. Empty if current color is ok
 
   ### Returns the current color of this spark ###
   getColor : () ->
@@ -46,6 +47,7 @@ class @Spark extends Hex
       Default behavior for a spark is to switch to the next available color ###
   click : () ->
     @useNextColor()
+    @toColor = @getColor()
     return
   
   ### @Override

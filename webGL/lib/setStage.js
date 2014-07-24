@@ -42,7 +42,7 @@
   this.initFinish = function() {
     var animate;
     animate = function() {
-      var h, inc, radTo60Degree, rotSpeed, tolerance, _i, _len, _ref;
+      var h, i, inc, radTo60Degree, rotSpeed, tex, tolerance, _i, _j, _len, _ref, _ref1;
       rotSpeed = 1 / 10;
       tolerance = 0.000001;
       radTo60Degree = 1.04719755;
@@ -79,6 +79,13 @@
               h.canLight = true;
               h.light();
             }
+          }
+          if (h instanceof Spark && h.toColor !== "") {
+            tex = PIXI.Texture.fromImage("assets/img/circle_" + h.toColor + ".png");
+            for (i = _j = 1, _ref1 = Hex.SIDES; _j <= _ref1; i = _j += 1) {
+              h.panel.children[i].texture = tex;
+            }
+            h.toColor = "";
           }
         }
       }

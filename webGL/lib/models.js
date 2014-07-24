@@ -1052,6 +1052,7 @@
     function Spark(board, loc, colors) {
       Spark.__super__.constructor.call(this, board, loc);
       this.setAvailableColors(colors);
+      this.toColor = "";
     }
 
 
@@ -1105,6 +1106,7 @@
 
     Spark.prototype.click = function() {
       this.useNextColor();
+      this.toColor = this.getColor();
     };
 
 

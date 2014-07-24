@@ -74,6 +74,11 @@
             h.prevRotation = h.currentRotation
             h.canLight = true
             h.light()
+        if h instanceof Spark and h.toColor isnt ""
+          tex = PIXI.Texture.fromImage("assets/img/circle_" + h.toColor + ".png")
+          for i in [1 .. Hex.SIDES] by 1
+            h.panel.children[i].texture = tex
+          h.toColor = ""
     requestAnimFrame(animate )
     @renderer.render(@stage)
     return
