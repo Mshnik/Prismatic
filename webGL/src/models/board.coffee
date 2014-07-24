@@ -78,11 +78,11 @@ class @Board
 
   ### Sets the hex at position (r,c). Also sets all neighbor hexes as needing a neighbor update.
       Hex must have this as its board. Used in hex construciton, not much elsewhere ###
-  setHex : (h, r, c) ->
+  setHex : (h, l) ->
     if(h.board isnt this)
       throw ("Can't put hex belonging to " + h.board + " in board " + this)
 
-    @board[r][c] = h
+    @board[l.row][l.col] = h
     for n in h.getNeighbors()
       n.neighborsUpdated = true
 
@@ -90,7 +90,7 @@ class @Board
 
    ### Re-calculates light on whole board ###
    relight : () ->
-      for h in @allHexes
+      for h in @allHexes()
         h.light();
       return
 

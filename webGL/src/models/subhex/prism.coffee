@@ -17,6 +17,7 @@ class @Prism extends Hex
     @prevRotation = 0       ## The rotation this was in (side on top, after modding by 6)
     @currentRotation = 0    ## The rotation this is currently in (side on top, after modding by 6)
     @targetRotation = 0     ## The rotation this wants to be in (side on top, after moding by 6)
+    @canLight = true        ## True if this can participate in lighting, false otherwise (false while rotating)
 
   ### Returns the colors of this prism, clockwise from the current top ###
   colorArray : () ->
@@ -58,16 +59,23 @@ class @Prism extends Hex
      Tries to stay the same color of light if multiple are avaliable. Otherwise chooses arbitrarily.
      Returns the color this is lit at the end of the procedure, false otherwise ###
   light : () ->
-    # Check for any lighters that can't provide light to this anymore
-    @pruneLighters()
-    # tell neighbors that they may not have light
-    @stopProvidingLight()
-    
-    # Try to find new light, of any and all colors.
-    @findLightProviders(Color.NONE)
+    #Check if this can participate in lighting (would be false if this is currently rotating)
+    if @canLight
+      # Check for any lighters that can't provide light to this anymore
+      @pruneLighters()
+      # tell neighbors that they may not have light
+      @stopProvidingLight()
+      
+      # Try to find new light, of any and all colors.
+      @findLightProviders(Color.NONE)
 
-    # Provide light to neighbors
-    @provideLight()
+      # Provide light to neighbors
+      @provideLight()
+    else
+      #Get rid of all lighters
+      @lighters = []
+      # tell neighbors they may not have light
+      @stopProvidingLight()
 
     # Redraw (post recursion) and return the color this is now lit
     @update()

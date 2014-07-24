@@ -28,7 +28,7 @@ class @Crystal extends Hex
       lit = @isLit()[0]
 
     ##Redraw 
-    update()
+    @update()
     return
 
   ### @Override
@@ -48,8 +48,10 @@ class @Crystal extends Hex
   colorOfSide : (n) -> 
     if(n < 0 || n > Hex.SIDES - 1) 
       throw ("Can't find color of side " + n + " of " + this)
-    return lit;
-  
+    if @lit?
+      return @lit
+    else
+      return Color.NONE
 
   ### Interacting with a Crystal does nothing - do nothing here ###
   click : () -> return

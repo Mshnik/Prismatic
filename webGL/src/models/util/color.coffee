@@ -1,4 +1,4 @@
-class Color
+class @Color
 
   # Actual colors - kinda an enum object.
   @_val = 
@@ -32,3 +32,24 @@ class Color
 
   @noneArray : (length) ->
     Color.NONE for i in [0 ... (length - 1)] by 1
+
+  @asString : (color) ->
+    switch color
+      when 1
+        return "red"
+      when 2
+        return "blue"
+      when 3
+        return "green"
+      when 4
+        return "orange"
+      when 5
+        return "purple"
+      when 6
+        return "cyan"
+      when 7
+        return "yellow"
+      when 8
+        return "pink"
+      else
+        return "none"

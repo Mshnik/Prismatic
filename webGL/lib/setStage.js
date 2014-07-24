@@ -27,7 +27,7 @@
 
   this.preloadImages = function() {
     var assets, loader;
-    assets = ["assets/img/hex-back.png"];
+    assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/circle_blue.png", "assets/img/circle_red.png", "assets/img/circle_green.png"];
     loader = new PIXI.AssetLoader(assets);
     loader.onComplete = this.initFinish;
     loader.load();
@@ -50,7 +50,22 @@
         _ref = this.BOARD.allHexes();
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           h = _ref[_i];
+          if (h.isLit().length > 0 && !h.panel.children[0].lit) {
+            h.panel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-lit.png");
+          }
+          if (h.isLit().length === 0 && h.panel.children[0].lit) {
+            h.panel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-back.png");
+          }
+
+          /* Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
+              If this is the first notification that this prism wants to rotate, stops providing light.
+              If the prism is now done rotating, starts providing light again
+           */
           if (h instanceof Prism && h.currentRotation !== h.targetRotation) {
+            if (h.canLight) {
+              h.canLight = false;
+              h.light();
+            }
             inc = (h.targetRotation - h.prevRotation) * rotSpeed;
             h.panel.rotation += inc * radTo60Degree;
             h.currentRotation += inc;
@@ -59,6 +74,8 @@
               h.panel.rotation += inc * radTo60Degree;
               h.currentRotation += inc;
               h.prevRotation = h.currentRotation;
+              h.canLight = true;
+              h.light();
             }
           }
         }
@@ -76,6 +93,7 @@
 
   this.createDummyBoard = function() {
     this.BOARD = this.Board.makeBoard(4, 9, 3);
+    this.BOARD.relight();
   };
 
 
@@ -96,7 +114,7 @@
   /* Creates a single sprite for a hex and adds it to stage */
 
   this.createSpriteForHex = function(hex) {
-    var panel, spr;
+    var c, cr, i, nudge, panel, point, shrink, spr, _i, _ref;
     if (typeof hex.panel === "undefined" || hex.panel === null) {
       panel = new PIXI.DisplayObjectContainer();
       panel.position.x = hex.loc.col * this.hexRad * 3 / 4 * 1.11 + this.hexRad / 2;
@@ -104,15 +122,33 @@
       if (hex.loc.col % 2 === 1) {
         panel.position.y += this.hexRad / 2;
       }
-      panel.scale.x = 0.078;
-      panel.scale.y = 0.078;
       panel.pivot.x = 0.5;
       panel.pivot.y = 0.5;
       spr = PIXI.Sprite.fromImage("assets/img/hex-back.png");
+      spr.lit = false;
       spr.anchor.x = 0.5;
       spr.anchor.y = 0.5;
+      spr.scale.x = 0.078;
+      spr.scale.y = 0.078;
       panel.addChild(spr);
       panel.hex = spr;
+      for (i = _i = 0, _ref = Hex.SIDES - 1; _i <= _ref; i = _i += 1) {
+        c = hex.colorOfSide(i);
+        if (!isNaN(c)) {
+          c = Color.asString(c);
+        }
+        nudge = 0.54;
+        shrink = 4;
+        point = new PIXI.Point((this.hexRad / 2 - shrink) * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + nudge), (this.hexRad / 2 - shrink) * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + nudge));
+        cr = PIXI.Sprite.fromImage("assets/img/circle_" + c.toLowerCase() + ".png");
+        cr.anchor.x = 0.5;
+        cr.anchor.y = 0.5;
+        cr.scale.x = 0.078;
+        cr.scale.y = 0.078;
+        cr.position.x = point.x;
+        cr.position.y = point.y;
+        panel.addChild(cr);
+      }
       hex.panel = panel;
       panel.hex = hex;
       panel.interactive = true;

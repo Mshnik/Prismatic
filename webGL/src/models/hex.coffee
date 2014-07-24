@@ -39,7 +39,7 @@ class @Hex
       # Actual neighbor hexes. Calculated lazily
     @neighborHexes = []
       # Puts this hex in board
-    @board.setHex(this, loc.row, loc.col)
+    @board.setHex(this, loc)
       #Map of location (hex) -> color of hexes that provide this with light
     @lighters = []
 
@@ -49,14 +49,14 @@ class @Hex
      Part of lazy calculation of neighborHexes - only updates if neighborsUpdated is true.
      Otherwise returns the (already calculated) neighborHexes ###
   getNeighborsWithBlanks : () ->
-    if(neighborsUpdated)
+    if(@neighborsUpdated)
       @neighborHexes =
         for l in @neighbors
           try
-            board.getHex(l.row, l.col);
+            @board.getHex(l);
           catch e
             null
-      neighborsUpdated = false
+      @neighborsUpdated = false
       return @neighborHexes
     else
       return @neighborHexes
@@ -65,9 +65,9 @@ class @Hex
   ###Returns the neighbors of this hex, clockwise from above, with nulls removed. 
      Thus no null elements, but resulting array has length 0 <= x <= SIDES ###
   getNeighbors : () ->
-    a = @getNeighborsWithBlanks
+    a = @getNeighborsWithBlanks()
     for h in a
-      if( h not null)
+      if(h isnt undefined and h isnt null)
         h
       else
         #Do Nothing
@@ -113,7 +113,7 @@ class @Hex
     for h in @getNeighbors()
       cond1 = @loc of h.lighters
       cond2 = h.lighters[@loc] not of c
-      cond3 = colorLinked(h) not h.lighters[@loc] 
+      cond3 = @colorLinked(h) isnt h.lighters[@loc] 
       if (cond1 and (cond2 or cond3))
         h.light()
     return
@@ -127,7 +127,7 @@ class @Hex
   provideLight : () ->
     if (this instanceof Spark or (Object.keys(@lighters).length > 0))
       lit = @isLit()
-      for h in getNeighbors()
+      for h in @getNeighbors()
         hLit = h.isLit()
         c = @colorLinked(h)
         if( ! (h instanceof Spark) and ((h instanceof Crystal and hlit.length == 0) or (h instanceof Prism and c of lit and ! c of hLit)))
@@ -137,12 +137,12 @@ class @Hex
   ### Helper method for use in findLight implementations. Tries to find light among neighbors.
       If a link is found, sets that neighbor as lighter. If no link found, sets lighter to null.
       Only looks for preferred. If preferred is NONE, takes any color. ###
-  findLightProvider : (preferred) ->
+  findLightProviders : (preferred) ->
     for h in @getNeighbors()
       hLit = h.isLit()
       c = @colorLinked(h)
-      if(c of hLit and (preferred is Color.NONE || preferred is c) and this not in h.lighterSet(c))
-        lighters[h.loc] = c
+      if(c of hLit and (preferred is Color.NONE || preferred is c) and (not h.lighterSet(c)? or this not in h.lighterSet(c)))
+        @lighters[h.loc] = c
     return
 
   ### Returns the color of side n of this hex (where side 0 is the top).
@@ -166,6 +166,6 @@ class @Hex
 
   ### Signifies that this has been changed; tells the game (if any) to update this as necessary. ###
   update : () -> 
-    if((@board not null) and (@board.getGame() not null))
+    if((@board isnt null) and (@board.getGame() isnt null))
       @board.getGame().updateHex(this)
     return
