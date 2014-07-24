@@ -85,11 +85,11 @@ class @Hex
   ### Returns a set of locations (hexes) that all eventually provide light to this of a given color.
       Can be used to prevent cycles from forming. ###
   lighterSet : (c) ->
-    arr = null
+    arr = []
     for key, val of @lighters
       if (val == c)
         arr.push key
-        arr.push k for k in key.lighterSet (c)
+        arr.push k for k in @board.getHex(Loc.fromString(key)).lighterSet (c)
       else
     arr
 
@@ -141,7 +141,9 @@ class @Hex
     for h in @getNeighbors()
       hLit = h.isLit()
       c = @colorLinked(h)
-      if(c of hLit and (preferred is Color.NONE || preferred is c) and (not h.lighterSet(c)? or this not in h.lighterSet(c)))
+      if !isNaN(c)
+        c = Color.asString(c)
+      if(c in hLit and (preferred is Color.NONE || preferred is c) and (not h.lighterSet(c)? or this not in h.lighterSet(c)))
         @lighters[h.loc] = c
     return
 

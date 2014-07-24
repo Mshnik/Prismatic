@@ -53,8 +53,10 @@
         ## Update lighting of all hexes
         if h.isLit().length > 0 and not h.panel.children[0].lit
           h.panel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-lit.png")
+          h.panel.children[0].lit = true
         if h.isLit().length is 0 and h.panel.children[0].lit
           h.panel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-back.png")
+          h.panel.children[0].lit = false
         ### Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
             If this is the first notification that this prism wants to rotate, stops providing light.
             If the prism is now done rotating, starts providing light again ###
