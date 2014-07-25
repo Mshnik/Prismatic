@@ -421,14 +421,18 @@
     };
 
 
-    /* Re-calculates light on whole board */
+    /* Re-calculates light on whole board - tells each spark to light itself and give light out.
+        This should hit the whole board.
+     */
 
     Board.prototype.relight = function() {
       var h, _i, _len, _ref;
       _ref = this.allHexes();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         h = _ref[_i];
-        h.light();
+        if (h instanceof Spark) {
+          h.light();
+        }
       }
     };
 
@@ -904,7 +908,7 @@
         h = _ref[_i];
         hLit = h.isLit();
         c = h.colorOfSide(h.indexLinked(this));
-        if ((hLit.length > 0 && (preferred === Color.NONE || __indexOf.call(hLit, preferred) >= 0)) && __indexOf.call(hLit, c) >= 0) {
+        if ((hLit.length > 0 && (preferred === Color.NONE || __indexOf.call(hLit, preferred) >= 0)) && __indexOf.call(this.isLit(), c) < 0 && __indexOf.call(hLit, c) >= 0) {
           this.lighters[h.loc.toString()] = c;
         }
       }

@@ -39,7 +39,7 @@ class @Crystal extends Hex
     for h in @getNeighbors()
       hLit = h.isLit()
       c = h.colorOfSide(h.indexLinked(this))
-      if((hLit.length > 0 and (preferred is Color.NONE or preferred in hLit)) and c in hLit)
+      if((hLit.length > 0 and (preferred is Color.NONE or preferred in hLit)) and c not in @isLit() and c in hLit)
         @lighters[h.loc.toString()] = c        
     return
   

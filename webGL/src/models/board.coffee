@@ -92,10 +92,12 @@ class @Board
 
     return
 
-   ### Re-calculates light on whole board ###
+   ### Re-calculates light on whole board - tells each spark to light itself and give light out.
+       This should hit the whole board. ###
    relight : () ->
       for h in @allHexes()
-        h.light();
+        if(h instanceof Spark)
+          h.light()
       return
 
     ### Two boards are equal if they have the same board ###

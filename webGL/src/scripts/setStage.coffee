@@ -6,11 +6,11 @@
 @initStart = ->
   
   @stage = new PIXI.Stage(0x295266, true)
-  @stage.scale.x = 0.5
-  @stage.scale.y = 0.5
-  canvas = document.getElementById("game-canvas")
-  @renderer = PIXI.autoDetectRenderer(canvas.width, canvas.height, canvas)
+  margin = 20
+  @renderer = PIXI.autoDetectRenderer(window.innerWidth - margin, window.innerHeight - margin)
   PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST
+  @container = new PIXI.DisplayObjectContainer()
+  @stage.addChild(@container)
 # stage = new PIXI.Stage(0x66FF99);
 #   renderer = PIXI.autoDetectRenderer(400, 300);
 #   document.body.appendChild(renderer.view);
@@ -39,7 +39,16 @@
   loader.load()
   return
 
-### Animates the board and requests another frame ###
+### Resizes the stage correctly ###
+@resize = () ->
+  scale = (1 / 120) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth())
+  window.container.scale.x = scale
+  window.container.scale.y = scale
+  return
+
+### Detect when the window is resized - jquery ftw! ###
+window.onresize = () ->
+  window.resize()
 
 
 ### Finish initing after assets are loaded ###
@@ -47,7 +56,7 @@
   animate = () ->
     rotSpeed = 1/10
     tolerance = 0.000001 ## For floating point errors - difference below this is considered 'equal'
-    radTo60Degree = 1.04719755 ## 1 rad * this = 60 degrees
+    radTo60Degree = 1.04719755 ## 1 radian * this coefficient = 60 degrees
     if (@BOARD?)
       for h in @BOARD.allHexes()
         ## Update lighting of all hexes
@@ -84,13 +93,17 @@
     return
   requestAnimFrame(animate )
   window.createDummyBoard()
+  ## Fit the canvas to the window
+  document.body.appendChild(renderer.view)
+  ## Scale the pieces based on the board size relative to the canvas size
+  window.resize()
   window.drawBoard()
   return
 
 
 ### Creates a dummy board and adds to scope. Mainly for testing ###
 @createDummyBoard = () ->
-  @BOARD = @Board.makeBoard(4,4,1)
+  @BOARD = @Board.makeBoard(4, 12,3)
   @BOARD.relight()
   return
 
@@ -101,7 +114,7 @@
   @createSpriteForHex(h)
  return
 
-@hexRad = 53
+@hexRad = 110
 
 ### Creates a single sprite for a hex and adds it to stage ###
 @createSpriteForHex = (hex) ->
@@ -109,8 +122,8 @@
     
     ## Create panel that holds hex and all associated sprites
     panel = new PIXI.DisplayObjectContainer()
-    panel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad/2
-    panel.position.y = hex.loc.row * @hexRad + @hexRad/2
+    panel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
+    panel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
     panel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
     panel.pivot.x = 0.5
     panel.pivot.y = 0.5
@@ -120,8 +133,6 @@
     spr.lit = false ## Initially unlit
     spr.anchor.x = 0.5
     spr.anchor.y = 0.5
-    spr.scale.x = 0.078
-    spr.scale.y = 0.078
     panel.addChild(spr)
     panel.hex = spr
 
@@ -133,14 +144,14 @@
       if(not isNaN(c))
         c = Color.asString(c)
       nudge = 0.54
-      shrink = 4
+      shrink = 8
       point = new PIXI.Point( (@hexRad / 2 - shrink) * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + nudge), 
                              (@hexRad / 2 - shrink) * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + nudge))
       cr = PIXI.Sprite.fromImage("assets/img/circle_" + c.toLowerCase() + ".png")
       cr.anchor.x = 0.5
       cr.anchor.y = 0.5
-      cr.scale.x = 0.078
-      cr.scale.y = 0.078
+      cr.scale.x = 0.15
+      cr.scale.y = 0.15
       cr.position.x = point.x
       cr.position.y = point.y
       panel.addChild(cr)
@@ -156,5 +167,5 @@
       hex.click()
       return
 
-    @stage.addChild(panel)
+    @container.addChild(panel)
   return hex.panel

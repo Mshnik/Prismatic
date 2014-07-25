@@ -7,6 +7,6 @@
 }
 
 #game-canvas{
-  width: 1400px;
-  height: 700px;
+  width: 750px !important;
+  height: 750px !important;
 }

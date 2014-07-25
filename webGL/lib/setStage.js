@@ -11,13 +11,13 @@
   /* Set up a PIXI stage - part before asset loading */
 
   this.initStart = function() {
-    var canvas;
+    var margin;
     this.stage = new PIXI.Stage(0x295266, true);
-    this.stage.scale.x = 0.5;
-    this.stage.scale.y = 0.5;
-    canvas = document.getElementById("game-canvas");
-    this.renderer = PIXI.autoDetectRenderer(canvas.width, canvas.height, canvas);
+    margin = 20;
+    this.renderer = PIXI.autoDetectRenderer(window.innerWidth - margin, window.innerHeight - margin);
     PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
+    this.container = new PIXI.DisplayObjectContainer();
+    this.stage.addChild(this.container);
     PIXI.scaleModes.DEFAULT = PIXI.scaleModes.LINEAR;
     preloadImages();
   };
@@ -34,7 +34,21 @@
   };
 
 
-  /* Animates the board and requests another frame */
+  /* Resizes the stage correctly */
+
+  this.resize = function() {
+    var scale;
+    scale = (1 / 120) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth());
+    window.container.scale.x = scale;
+    window.container.scale.y = scale;
+  };
+
+
+  /* Detect when the window is resized - jquery ftw! */
+
+  window.onresize = function() {
+    return window.resize();
+  };
 
 
   /* Finish initing after assets are loaded */
@@ -94,6 +108,8 @@
     };
     requestAnimFrame(animate);
     window.createDummyBoard();
+    document.body.appendChild(renderer.view);
+    window.resize();
     window.drawBoard();
   };
 
@@ -101,7 +117,7 @@
   /* Creates a dummy board and adds to scope. Mainly for testing */
 
   this.createDummyBoard = function() {
-    this.BOARD = this.Board.makeBoard(4, 4, 1);
+    this.BOARD = this.Board.makeBoard(4, 12, 3);
     this.BOARD.relight();
   };
 
@@ -117,7 +133,7 @@
     }
   };
 
-  this.hexRad = 53;
+  this.hexRad = 110;
 
 
   /* Creates a single sprite for a hex and adds it to stage */
@@ -126,8 +142,8 @@
     var c, cr, i, nudge, panel, point, shrink, spr, _i, _ref;
     if (typeof hex.panel === "undefined" || hex.panel === null) {
       panel = new PIXI.DisplayObjectContainer();
-      panel.position.x = hex.loc.col * this.hexRad * 3 / 4 * 1.11 + this.hexRad / 2;
-      panel.position.y = hex.loc.row * this.hexRad + this.hexRad / 2;
+      panel.position.x = hex.loc.col * this.hexRad * 3 / 4 * 1.11 + this.hexRad * (5 / 8);
+      panel.position.y = hex.loc.row * this.hexRad + this.hexRad * (5 / 8);
       if (hex.loc.col % 2 === 1) {
         panel.position.y += this.hexRad / 2;
       }
@@ -137,8 +153,6 @@
       spr.lit = false;
       spr.anchor.x = 0.5;
       spr.anchor.y = 0.5;
-      spr.scale.x = 0.078;
-      spr.scale.y = 0.078;
       panel.addChild(spr);
       panel.hex = spr;
       for (i = _i = 0, _ref = Hex.SIDES - 1; _i <= _ref; i = _i += 1) {
@@ -147,13 +161,13 @@
           c = Color.asString(c);
         }
         nudge = 0.54;
-        shrink = 4;
+        shrink = 8;
         point = new PIXI.Point((this.hexRad / 2 - shrink) * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + nudge), (this.hexRad / 2 - shrink) * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + nudge));
         cr = PIXI.Sprite.fromImage("assets/img/circle_" + c.toLowerCase() + ".png");
         cr.anchor.x = 0.5;
         cr.anchor.y = 0.5;
-        cr.scale.x = 0.078;
-        cr.scale.y = 0.078;
+        cr.scale.x = 0.15;
+        cr.scale.y = 0.15;
         cr.position.x = point.x;
         cr.position.y = point.y;
         panel.addChild(cr);
@@ -164,7 +178,7 @@
       panel.click = function() {
         hex.click();
       };
-      this.stage.addChild(panel);
+      this.container.addChild(panel);
     }
     return hex.panel;
   };
