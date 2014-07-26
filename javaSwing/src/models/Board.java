@@ -23,6 +23,11 @@ public class Board implements Serializable{
    */
   private Hex[][] board;
   
+  /** A collection of all hexes in this board.
+   * Calculated lazily. If this is null, specifies that it needs to be recalculated.
+   */
+  private Collection<Hex> allHexes;
+  
   /** The game this board belongs to */
   private Game game;
   
@@ -62,7 +67,7 @@ public class Board implements Serializable{
   }
   
   /** Returns the index (0 ... SIDES - 1) of the side of h1 that is facing h2. Returns -1 if the two are not neighbors or h==null */
-  public int indexLink(Hex h1, Hex h2){
+  public int indexLinked(Hex h1, Hex h2){
     if(h1 == null || h2 == null) return -1;
     Hex[] h1Neighbors = h1.getNeighborsWithBlanks();
     for(int i = 0; i < Hex.SIDES; i++){
@@ -79,17 +84,15 @@ public class Board implements Serializable{
    *    2) The colors of the adjacent sides are the same
    */
   public Color colorLinked(Hex h1, Hex h2){
-    if(h1 == null || h2 == null) return Color.NONE;
-    Hex[] h1Neighbors = h1.getNeighborsWithBlanks();
-    for(int i = 0; i < Hex.SIDES; i++){
-      if(h2 == h1Neighbors[i]){
-        int j = Util.mod(i+(Hex.SIDES/2), Hex.SIDES); //side of h2 that is h1.
-        if(h1.colorOfSide(i) == h2.colorOfSide(j)) return h1.colorOfSide(i);
-        else return Color.NONE;
-      }
-    }
-    //h2 not a neighbor of h1
-    return Color.NONE;
+    int index = indexLinked(h1, h2);
+    if(index == -1)
+      return Color.NONE;
+    Color c1 = h1.colorOfSide(index);
+    Color c2 = h2.colorOfSide(Util.mod(index + Hex.SIDES/2, Hex.SIDES));
+    if(c1 == c2)
+      return c1;
+    else
+      return Color.NONE;
   }
   
   /** @See getHex(row, col) */
@@ -102,15 +105,18 @@ public class Board implements Serializable{
     return board[r][c];
   }
   
-  /** Returns all hexes in no particular order - useful for collection purposes. */
+  /** Returns all hexes in no particular order - useful for collection purposes.
+   * Returns the lazily calculated allHexes. */
   public Collection<Hex> allHexes(){
-    ArrayList<Hex> h = new ArrayList<Hex>();
-    for(Hex[] hRow : board){
-      for(Hex hex : hRow){
-        h.add(hex);
+    if(allHexes == null){
+      allHexes = new ArrayList<Hex>();
+      for(Hex[] hRow : board){
+        for(Hex hex : hRow){
+          allHexes.add(hex);
+        }
       }
     }
-    return h;
+    return allHexes;
   }
   
   /** Sets the hex at position (r,c). Also sets all neighbor hexes as needing a neighbor update.
@@ -120,7 +126,8 @@ public class Board implements Serializable{
     if(h.board != this) throw new IllegalArgumentException("Can't put hex belonging to " + h.board + " in board " + this);
     
     board[r][c] = h; //ArrayIndexOutOfBounds may be thrown here
-    
+    allHexes = null;  //Resets allHexes because a new hex was just added.
+
     //For each neighbor of this hex, tell it that it's neighbors have changed.
     for(Location l : h.neighbors){
       try{
@@ -133,7 +140,12 @@ public class Board implements Serializable{
   /** Re-calcualtes light on whole board */
   public void relight(){
     for(Hex h : allHexes()){
-      h.light();
+      h.lighters.clear(); // Remove all lighters from board
+    }
+    for(Hex h : allHexes()){
+      if(h instanceof Spark){
+        h.light();    //Make sparks relight. By recursion relights the board.
+      }
     }
   }
   

@@ -32,6 +32,8 @@ public abstract class Hex implements Serializable{
                                       //Managed by board. Also true initially.
   private Hex[] neighborHexes;    //Neighbors of this hex (as hexes). Calculated lazily as necessary
   
+  boolean canLight;               //True if this hex is allowed to provide light (other rules applying). If false, can't ever supply light.
+  
   Map<Hex, Color> lighters;        //The hex(s) providing this hex with light, and the color provided. empty if this is unlit. 
                                    //Should be neighbor(s). Visible to subclasses, though some may not use it.
   
@@ -57,6 +59,7 @@ public abstract class Hex implements Serializable{
     }    
     neighborsUpdated = true;
     board.setHex(this, l.row, l.col);
+    canLight = true;
     lighters = new HashMap<Hex, Color>();
   }
   
@@ -111,8 +114,8 @@ public abstract class Hex implements Serializable{
   }
 
   /** @See indexLink(this, h) */
-  public int indexLink(Hex h){
-    return board.indexLink(this, h);
+  public int indexLinked(Hex h){
+    return board.indexLinked(this, h);
   }
   
   /** Returns the color(s) this hex is lit, empty set otherwise */
@@ -142,7 +145,8 @@ public abstract class Hex implements Serializable{
     Set<Hex> oldLighters = new HashSet<Hex>();
     oldLighters.addAll(lighters.keySet());
     for(Hex h : oldLighters){
-      if(colorLinked(h) == Color.NONE || !h.isLit().contains(colorLinked(h))){
+      Color c = colorLinked(h);
+      if(!h.canLight || c == Color.NONE || !h.isLit().contains(c) || h.lighterSet(c).contains(this)){
         lighters.remove(h);
       }
     }
@@ -172,7 +176,7 @@ public abstract class Hex implements Serializable{
       Collection<Color> lit = isLit();
       for(Hex h : getNeighbors()){
         Collection<Color> hLit = h.isLit();
-        if( (! (h instanceof Spark)) && 
+        if( (! (h instanceof Spark || isLit().isEmpty())) && 
             (
               (h instanceof Crystal && h.isLit().size() == 0) ||
               (h instanceof Prism && lit.contains(colorLinked(h)) && ! hLit.contains(colorLinked(h)))
@@ -186,12 +190,13 @@ public abstract class Hex implements Serializable{
   
   /** Helper method for use in findLight implementations. Tries to find light among neighbors.
    *  If a link is found, sets that neighbor as lighter. If no link found, sets lighter to null.
-   *  Only looks for preferred. If preferred is NONE, takes any color. */
+   *  Only looks for preferred. If preferred is NONE, takes any color. Doesn't take the same color twice */
   void findLightProviders(Color preferred){
     for(Hex h : getNeighbors()){
       Collection<Color> hLit = h.isLit();
-      if(hLit.contains(colorLinked(h)) && (preferred == Color.NONE || colorLinked(h) == preferred) && ! h.lighterSet(colorLinked(h)).contains(this)){ 
-        lighters.put(h, colorLinked(h));
+      Color c = colorLinked(h);
+      if(hLit.contains(c) && (preferred == Color.NONE || c == preferred) && ! h.lighterSet(c).contains(this) && !isLit().contains(c)){ 
+        lighters.put(h, c);
       }
     }
   }

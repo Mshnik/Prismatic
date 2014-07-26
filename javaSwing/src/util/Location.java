@@ -28,6 +28,12 @@ public class Location implements Serializable{
     return "(" + row + "," + col + ")";
   }
   
+  /** Returns the location object stored in string s. Assumes that s follows the toString pattern in the location class **/
+  public static Location fromString(String s){
+    int i = s.indexOf(",");
+    return new Location(Integer.parseInt(s.substring(1,i)), Integer.parseInt(s.substring(i+1, s.length() - 1)));
+  }
+  
   /** Compares equality of Locations by their coordinates */
   @Override
   public boolean equals(Object o){

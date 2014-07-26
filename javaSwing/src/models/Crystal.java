@@ -18,6 +18,7 @@ public class Crystal extends Hex {
   public Crystal(Board b, Location l) throws IllegalArgumentException{
     super(b, l);
     lit = Color.NONE;
+    canLight = false;   //Can never provide light.
   }
   
   /** Constructs a Crystal and puts it into board b
@@ -47,7 +48,7 @@ public class Crystal extends Hex {
   protected void light() {
     boolean lighterChanged = pruneLighters();
     //First try to find a provider of the previous color of light
-    if(lighterChanged){
+    if(lighterChanged || lit == Color.NONE){
       findLightProviders(lit);
       if(isLit().size() == 0){
         findLightProviders(Color.NONE);
@@ -72,8 +73,8 @@ public class Crystal extends Hex {
   void findLightProviders(Color preferred){
     for(Hex h : getNeighbors()){
       Collection<Color> hLit = h.isLit();
-      if(hLit.size() > 0 && (preferred == Color.NONE || hLit.contains(preferred)) && hLit.contains(h.colorOfSide(h.indexLink(this)))){ 
-        lighters.put(h, h.colorOfSide(h.indexLink(this)));
+      if(hLit.size() > 0 && (preferred == Color.NONE || hLit.contains(preferred)) && hLit.contains(h.colorOfSide(h.indexLinked(this)))){ 
+        lighters.put(h, h.colorOfSide(h.indexLinked(this)));
         return;
       }
     }

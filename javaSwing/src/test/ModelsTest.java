@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import game.Game;
 import gui.GUI;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 import models.*;
@@ -415,15 +416,29 @@ public class ModelsTest {
     helpLink(four, s, Color.GREEN);
   }
  
+  /** Checks if col contains each element in arr
+   * @param <T> - type of elements in containsEach
+   * 
+   */
+  public static <T> boolean containsEach(Collection<T> col, T[] arr){
+    for(T t : arr){
+      if(! col.contains(t)) return false;
+    }
+    return true;
+  }
+  
   /** Checks if each hex in b is lit the corresponding color of lit. Empty board spaces should be null */
-  private void helpLight(Board b, Color[][] lit){
+  public static void helpLight(Board b, Color[][][] lit){
     for(int i = 0; i < b.getHeight(); i++){
       for(int j = 0; j < b.getWidth(); j++){
         Hex h = b.getHex(i,j);
         if(h == null)
           assertEquals("No hex at (" + i + "," + j + ")", lit[i][j], h);
-        else
-          assertEquals("Hex at (" + i + "," + j + ") lit ", lit[i][j], h.isLit());
+        else{
+          Collection<Color> c = h.isLit();
+          assertTrue("Hex at (" + i + "," + j + ") lit ", lit[i][j].length == c.size() && containsEach(c, lit[i][j]));
+        }
+          
       }
     }
   }
@@ -435,11 +450,11 @@ public class ModelsTest {
                          {Color.NONE, Color.NONE, Color.NONE, Color.RED, Color.NONE, Color.RED},  //(0,1)
                          {Color.NONE, Color.NONE, Color.RED, Color.RED, Color.NONE, Color.NONE},  //(0,2)
                          {Color.RED, Color.BLUE},                                                 //(1,0)
-                         {Color.RED, Color.NONE, Color.RED, Color.NONE, Color.BLUE, Color.NONE},  //(1,1)
+                         {Color.RED, Color.NONE, Color.RED, Color.NONE, Color.BLUE, Color.BLUE},  //(1,1)
                          {Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED},      //(1,2)
-                         {Color.RED, Color.NONE, Color.NONE, Color.NONE, Color.NONE, Color.NONE}, //(2,0)
-                         {Color.BLUE, Color.NONE, Color.NONE, Color.NONE, Color.NONE, Color.BLUE},//(2,1)
-                         {Color.BLUE}                                                             //(2,2)
+                         {Color.RED, Color.BLUE, Color.BLUE, Color.NONE, Color.NONE, Color.NONE}, //(2,0)
+                         {Color.BLUE, Color.NONE, Color.NONE, Color.NONE, Color.BLUE, Color.BLUE},//(2,1)
+                         {Color.BLUE, Color.GREEN}                                                //(2,2)
                        };
     new Prism(b, 0, 0, colors[0]);
     new Prism(b, 0, 1, colors[1]);
@@ -452,19 +467,21 @@ public class ModelsTest {
     new Spark(b, 2, 2, colors[8]);
    
     //Show for debugging purposes - uncomment and step through rotations to see board.
-    SimpleGame game = new SimpleGame(b, null);
-    game.setGUI(new GUI(game));
-    game.reset();
+//    SimpleGame game = new SimpleGame(null, null);
+//    game.setGUI(new GUI(game, false));
+//    b.setGame(game);
+//    game.setBoard(b);
+//    game.reset();
     
     //Set initial lighting
     b.relight();
     
-    Color[][] lighting = {{Color.NONE, Color.NONE, Color.NONE},{Color.RED, Color.NONE, Color.NONE},{Color.RED, Color.NONE, Color.BLUE}};
+    Color[][][] lighting = {{ {}, {}, {}},{{Color.RED}, {}, {}},{{Color.RED}, {}, {Color.BLUE}}};
     helpLight(b, lighting);
     
     //Test rotating a prism propigates light
     b.getHex(1, 1).asPrism().rotateCounter();
-    Color[][] lightingTwo = {{Color.NONE, Color.NONE, Color.RED},{Color.RED, Color.RED, Color.RED},{Color.RED, Color.NONE, Color.BLUE}};
+    Color[][][] lightingTwo = {{{}, {}, {Color.RED}},{{Color.RED}, {Color.RED}, {Color.RED}},{{Color.RED}, {}, {Color.BLUE}}};
     helpLight(b, lightingTwo);
     
     //Test undoing rotation removes light
@@ -477,7 +494,7 @@ public class ModelsTest {
     b.getHex(0, 1).asPrism().rotateCounter();
     b.getHex(1, 1).asPrism().rotateCounter();
     
-    Color[][] lightingThree = {{Color.NONE, Color.RED, Color.RED},{Color.RED, Color.RED, Color.RED},{Color.RED, Color.NONE, Color.BLUE}};
+    Color[][][] lightingThree = {{{}, {Color.RED}, {Color.RED}},{{Color.RED}, {Color.RED}, {Color.RED}},{{Color.RED}, {}, {Color.BLUE}}};
     helpLight(b, lightingThree);
     
     //Remove top path
@@ -489,15 +506,21 @@ public class ModelsTest {
     b.getHex(1,2).asPrism().rotate();
     helpLight(b, lightingTwo);
     
-    //Test adding second color of light doesn't overpower currently lit color of light
+    //Test adding second color of light adds to currently lit prism
     b.getHex(2, 1).asPrism().rotate();
-    Color[][] lightingFour = {{Color.NONE, Color.NONE, Color.RED},{Color.RED, Color.RED, Color.RED},{Color.RED, Color.BLUE, Color.BLUE}};
+    Color[][][] lightingFour = {{{}, {}, {Color.RED}},{{Color.RED}, {Color.RED, Color.BLUE}, {Color.RED}},{{Color.RED, Color.BLUE}, {Color.BLUE}, {Color.BLUE}}};
     helpLight(b, lightingFour);
+
     
     //Test turning off Spark removes light
     b.getHex(1,0).asSpark().useNextColor();
-    Color[][] lightingFive = {{Color.NONE, Color.NONE, Color.NONE},{Color.BLUE, Color.BLUE, Color.NONE},{Color.NONE, Color.BLUE, Color.BLUE}};
+    Color[][][] lightingFive = {{{}, {}, {}},{{Color.BLUE}, {Color.BLUE}, {}},{{Color.BLUE}, {Color.BLUE}, {Color.BLUE}}};
     helpLight(b, lightingFive);
+    
+    //Test turning off spark removes light even from cycle.
+    b.getHex(2,2).asSpark().useNextColor();
+    Color[][][] lightingSix = {{{}, {}, {}}, {{Color.BLUE}, {}, {}}, {{}, {}, {Color.GREEN}}};
+    helpLight(b, lightingSix);
   }
   
   @Test
@@ -518,29 +541,33 @@ public class ModelsTest {
     new Prism(b, 1, 1, colors[4]);
     new Prism(b, 1, 2, colors[5]);
     
-    //GUI g = new GUI(b);
-    //g.retile();
+    //Show for debugging purposes - uncomment and step through rotations to see board.
+    SimpleGame game = new SimpleGame(null, null);
+    game.setGUI(new GUI(game, false));
+    b.setGame(game);
+    game.setBoard(b);
+    game.reset();
     
     //Set initial lighting
     b.relight();                
     
-    Color[][] lighting = { {Color.RED, Color.NONE, Color.NONE}, {Color.BLUE, Color.NONE, Color.NONE}};
+    Color[][][] lighting = { {{Color.RED}, {}, {}}, {{Color.BLUE}, {}, {}}};
     helpLight(b, lighting);
     
     //Light the crystal
     b.getHex(0,1).asPrism().rotate();
     
-    Color[][] lightingTwo = {{Color.RED, Color.RED, Color.RED},  {Color.BLUE, Color.NONE, Color.NONE}};
+    Color[][][] lightingTwo = {{{Color.RED}, {Color.RED}, {Color.RED}},  {{Color.BLUE}, {}, {}}};
     helpLight(b, lightingTwo);
     
     //Add an input of a different color - crystal shouldn't change color.
     b.getHex(1,1).asPrism().rotate();
-    Color[][] lightingThree = {{Color.RED, Color.RED, Color.RED}, {Color.BLUE, Color.BLUE, Color.BLUE}};
+    Color[][][] lightingThree = {{{Color.RED}, {Color.RED}, {Color.RED}}, {{Color.BLUE}, {Color.BLUE}, {Color.BLUE}}};
     helpLight(b, lightingThree);
     
     //Remove first light - crystal should pick up new color.
     b.getHex(0,1).asPrism().rotate();
-    Color[][] lightingFour = {{Color.RED, Color.NONE, Color.BLUE}, {Color.BLUE, Color.BLUE, Color.BLUE}};
+    Color[][][] lightingFour = {{{Color.RED}, {}, {Color.BLUE}}, {{Color.BLUE}, {Color.BLUE}, {Color.BLUE}}};
     helpLight(b,lightingFour); 
   }
 

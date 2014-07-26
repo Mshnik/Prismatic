@@ -479,6 +479,94 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/scripts/setStage.coffee",
+			"settings":
+			{
+				"buffer_size": 5867,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/util/color.coffee",
+			"settings":
+			{
+				"buffer_size": 1024,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/hex.coffee",
+			"settings":
+			{
+				"buffer_size": 7202,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/prism.coffee",
+			"settings":
+			{
+				"buffer_size": 3575,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/spark.coffee",
+			"settings":
+			{
+				"buffer_size": 2020,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/crystal.coffee",
+			"settings":
+			{
+				"buffer_size": 2074,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/board.coffee",
+			"settings":
+			{
+				"buffer_size": 4202,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/util/location.coffee",
+			"settings":
+			{
+				"buffer_size": 808,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 302,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/main.css",
+			"settings":
+			{
+				"buffer_size": 198,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/MPatashnik/Documents/Prismatic/javaSwing/src/gui/GUI.java",
+			"settings":
+			{
+				"buffer_size": 9205,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "Packages/Better CoffeeScript/CoffeeScript.sublime-build",
 	"command_palette":
@@ -532,14 +620,34 @@
 	},
 	"file_history":
 	[
-		"/Users/MPatashnik/Documents/Prismatic/webGL/index.html",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/setStage.js",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Board.java",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/spark.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/scripts/setStage.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/index.html",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/main.css",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/scripts/drawBoard.coffee",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/color.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/gui/GUI.java",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/prismatic.sublime-project",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/models.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/prism.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/colorCircle.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/color.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/brew.sh",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/game.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/hex.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/board.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/crystal.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/location.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/brewModels.sh",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/models.js",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/game/RandomPuzzle.java",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/a.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/drawBoard.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/crystal.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/prism.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/spark.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/colorCircle.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/color.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/brewScripts.sh",
 		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/SublimeOnSaveBuild/SublimeOnSaveBuild.sublime-settings",
 		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/User/SublimeOnSaveBuild.sublime-settings",
@@ -556,7 +664,6 @@
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Spark.java",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Crystal.java",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
-		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Board.java",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/game/Game.java",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/spark.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/color.coffee",
@@ -640,26 +747,7 @@
 		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/user/UserController.scala",
 		"/Users/MPatashnik/Documents/Originate/training-website/app/models/Configable.scala",
 		"/Users/MPatashnik/Documents/Originate/training-website/app/models/users/User.scala",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/user_control/UserController.scala",
-		"/Users/MPatashnik/Documents/Originate/PlayApps/tictac/app/views/index.scala.html",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/home/Home.scala",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/views/class/show.scala.html",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/views/home/show.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/controllers/CampaignController.java",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/views/home/bootstrap_demo.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/layouts/manager.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/layouts/main.scala.html",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/views/home/home.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/dashboard.scala.html",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/home/Home",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/controllers/admin/api/APICampaign.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/controllers/admin/api/APIStory.java.orig",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/controllers/admin/api/APIStory.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/styles.scss",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_pageSelector.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/modules/_tabs.scss",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/front/_tabs.scss",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/models/User.java"
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/user_control/UserController.scala"
 	],
 	"find":
 	{
@@ -677,6 +765,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"avaliable",
+			"Loc = (f",
+			"Loc ",
+			"Loc = {",
+			"Loc",
 			"graphics",
 			"t",
 			"clear",
@@ -799,12 +892,7 @@
 			"tabs",
 			"tab",
 			"$scope",
-			"tab",
-			"oppor",
-			"getCus",
-			"get",
-			"submission",
-			"nth-child"
+			"tab"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -812,6 +900,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"available",
 			"Course",
 			"getMoreS"
 		],
@@ -824,13 +913,319 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/scripts/setStage.coffee",
+					"settings":
+					{
+						"buffer_size": 5867,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1429,
+								1429
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 255.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/models/util/color.coffee",
+					"settings":
+					{
+						"buffer_size": 1024,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								688,
+								688
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/models/hex.coffee",
+					"settings":
+					{
+						"buffer_size": 7202,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6138,
+								6159
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1404.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/models/subhex/prism.coffee",
+					"settings":
+					{
+						"buffer_size": 3575,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3120,
+								3120
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/models/subhex/spark.coffee",
+					"settings":
+					{
+						"buffer_size": 2020,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1744,
+								1744
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/models/subhex/crystal.coffee",
+					"settings":
+					{
+						"buffer_size": 2074,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								848,
+								848
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/models/board.coffee",
+					"settings":
+					{
+						"buffer_size": 4202,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2816,
+								2816
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 787.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/models/util/location.coffee",
+					"settings":
+					{
+						"buffer_size": 808,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								724,
+								724
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		},
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 8,
+					"file": "index.html",
+					"settings":
+					{
+						"buffer_size": 302,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								285,
+								285
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "assets/main.css",
+					"settings":
+					{
+						"buffer_size": 198,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								195,
+								195
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "/Users/MPatashnik/Documents/Prismatic/javaSwing/src/gui/GUI.java",
+					"settings":
+					{
+						"buffer_size": 9205,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6412,
+								6572
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2693.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],

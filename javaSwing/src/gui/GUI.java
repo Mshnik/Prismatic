@@ -24,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import javax.swing.event.ChangeListener;
@@ -33,6 +34,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.SwingUtilities;
 
 
 /** GUI for testing purposes - shows board and allows for mutation */
@@ -45,6 +47,7 @@ public class GUI extends JFrame {
 
   private Game game;
   private static GUI instance = null; //Currently open instance. (only construct one of these at a time)
+  private boolean interactive;
   
   private HashMap<Color, Boolean> colorEnabled;
   
@@ -62,10 +65,11 @@ public class GUI extends JFrame {
     return game;
   }
   
-  /** Constructs a gui to display game g */
-  public GUI(Game g){
+  /** Constructs a gui to display game g. Interactive if interactive. */
+  public GUI(Game g, boolean interactive){
     setAlwaysOnTop(true);
     game = g;
+    this.interactive = interactive;
     g.setGUI(this);
     instance = this;
     getContentPane().setLayout(new BorderLayout(0, 0));
@@ -89,15 +93,17 @@ public class GUI extends JFrame {
       scoreLabel = new JLabel("Moves: 0");
       panel_2.add(scoreLabel);
       
-      JButton btnNewButton_1 = new JButton("Reset Game");
-      panel_2.add(btnNewButton_1);
-      btnNewButton_1.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-          GUI self = GUI.instance;
-          self.game.reset();
-        }
-      });
+      if(interactive){
+        JButton btnNewButton_1 = new JButton("Reset Game");
+        panel_2.add(btnNewButton_1);
+        btnNewButton_1.addMouseListener(new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            GUI self = GUI.instance;
+            self.game.reset();
+          }
+        });
+      }
 
       
     setMinimumSize(new Dimension(1200, 1000));
@@ -107,36 +113,40 @@ public class GUI extends JFrame {
     JMenuBar menuBar = new JMenuBar();
     setJMenuBar(menuBar);
     
-    JMenu mnFile = new JMenu("File");
-    menuBar.add(mnFile);
-    
-    JMenuItem mntmSaveBoard = new JMenuItem("Save Board");
-    mntmSaveBoard.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        GUI self = GUI.instance;
-        self.game.saveBoard();
-      }
-    });
-    mnFile.add(mntmSaveBoard);
-    
-    JMenuItem mntmLoadBoard = new JMenuItem("Load Board");
-    mntmLoadBoard.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        GUI self = GUI.instance;
-        if(self.game instanceof LoadedGame){
-          LoadedGame g = (LoadedGame)self.game;
-          g.load();
+    if(interactive){
+      JMenu mnFile = new JMenu("File");
+      menuBar.add(mnFile);
+      
+      JMenuItem mntmSaveBoard = new JMenuItem("Save Board");
+      mntmSaveBoard.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          GUI self = GUI.instance;
+          self.game.saveBoard();
         }
-      }
-    });
-    mnFile.add(mntmLoadBoard);
+      });
+      mnFile.add(mntmSaveBoard);
+      
+      JMenuItem mntmLoadBoard = new JMenuItem("Load Board");
+      mntmLoadBoard.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          GUI self = GUI.instance;
+          if(self.game instanceof LoadedGame){
+            LoadedGame g = (LoadedGame)self.game;
+            g.load();
+          }
+        }
+      });
+      mnFile.add(mntmLoadBoard);
+    }
     
     JMenu mnNewMenu = new JMenu("Color Filter");
     menuBar.add(mnNewMenu);
+
     
     colorEnabled = new HashMap<Color, Boolean>();
+    colorEnabled.put(Color.NONE, false);
     for(int i = 1; i < 1 + game.getDifficulty(); i++){
       JCheckBoxMenuItem ckb = new JCheckBoxMenuItem(Color.values()[i].toString());
       mnNewMenu.add(ckb);
@@ -151,23 +161,25 @@ public class GUI extends JFrame {
     });
     }
     
-    JMenuItem mntmRotationClockwise = new JMenuItem("Rotation: Clockwise");
-    Prism.ROTATE_CLOCKWISE = true;
-    mntmRotationClockwise.setHorizontalAlignment(SwingConstants.LEFT);
-    mntmRotationClockwise.addMouseListener(new MouseAdapter(){
-      @Override
-      public void mouseClicked(MouseEvent e){
-        JMenuItem source = (JMenuItem)e.getSource();
-        if(Prism.ROTATE_CLOCKWISE){
-          source.setText("Rotation: Counter Clockwise");
-          Prism.ROTATE_CLOCKWISE = false;
-        } else{
-          source.setText("Rotation: Clockwise");
-          Prism.ROTATE_CLOCKWISE = true;
+    if(interactive){
+      JMenuItem mntmRotationClockwise = new JMenuItem("Rotation: Clockwise");
+      Prism.ROTATE_CLOCKWISE = true;
+      mntmRotationClockwise.setHorizontalAlignment(SwingConstants.LEFT);
+      mntmRotationClockwise.addMouseListener(new MouseAdapter(){
+        @Override
+        public void mouseClicked(MouseEvent e){
+          JMenuItem source = (JMenuItem)e.getSource();
+          if(Prism.ROTATE_CLOCKWISE){
+            source.setText("Rotation: Counter Clockwise");
+            Prism.ROTATE_CLOCKWISE = false;
+          } else{
+            source.setText("Rotation: Clockwise");
+            Prism.ROTATE_CLOCKWISE = true;
+          }
         }
-      }
-    });
-    menuBar.add(mntmRotationClockwise);
+      });
+      menuBar.add(mntmRotationClockwise);
+    }
     
     setVisible(true);
     setAlwaysOnTop(false);
@@ -180,7 +192,7 @@ public class GUI extends JFrame {
   
   /** Creates a hex panel for hex h - draws h */
   public void createAndAddHexPanel(Hex h){
-    centerPanel.add(new HexPanel(h));
+    centerPanel.add(new HexPanel(h, this));
   }
   
   /** Removes all hexpanels (perhaps so they can be redrawn) */
@@ -190,14 +202,17 @@ public class GUI extends JFrame {
   
   /** Repopulates this Gui with the board */
   public void retile(){
-    removeAllHexPanels();
-    if(game.getBoard() != null){
-      for(Hex h : game.getBoard().allHexes()){
-        createAndAddHexPanel(h);
+    SwingUtilities.invokeLater(new Runnable(){
+      public void run(){
+        removeAllHexPanels();
+        if(game.getBoard() != null){
+          for(Hex h : game.getBoard().allHexes()){
+            createAndAddHexPanel(h);
+          }
+        }
+        repaint();
       }
-    }
-    validate();
-    repaint();
+    });
   }
   
 
@@ -212,9 +227,11 @@ public class GUI extends JFrame {
     private final int yIndex;
     private final Point center;
     private final Polygon poly;
+    private boolean interactive;
     
-    public HexPanel(Hex h){
+    public HexPanel(Hex h, GUI g){
       this.h = h;
+      interactive = g.interactive;
       xIndex = h.location.col;
       yIndex = h.location.row;
       int yOffset = 0;
@@ -228,14 +245,19 @@ public class GUI extends JFrame {
       //setBorder(BorderFactory.createLineBorder(Color.BLACK));
       setLayout(null);
       setBounds(center.x - HEX_RAD, center.y - HEX_RAD, HEX_RAD * 2, HEX_RAD * 2);
-      addMouseListener(new RotationListener());
+      addMouseListener(new RotationListener(interactive));
     }
     
     private class RotationListener implements MouseListener{
 
+      private boolean interactive;
+      public RotationListener(boolean b){
+        interactive = b;
+      }
+      
       @Override
       public void mouseClicked(MouseEvent e) {
-        if(poly.contains(e.getPoint())){
+        if(poly.contains(e.getPoint()) && interactive){
           HexPanel h = (HexPanel)e.getSource();
           h.h.click();
         }
@@ -269,10 +291,9 @@ public class GUI extends JFrame {
           }
           g.setColor(java.awt.Color.BLACK);
           g.drawPolygon(triangle);
-          if(p != null && (colorEnabled == null || colorEnabled.get(p.colorOfSide(i)))){
-            g.setColor(Colors.colorFromColor(p.colorOfSide(i)));
-            g.fillPolygon(triangle);
-          }
+          java.awt.Color c = Colors.colorFromColor(p.colorOfSide(i));
+          g.setColor(c);
+          g.fillPolygon(triangle);
         }
         if(! p.isLit().isEmpty()){
           Color[] lit = p.isLit().toArray(new Color[0]);

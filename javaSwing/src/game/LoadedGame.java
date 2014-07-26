@@ -42,14 +42,14 @@ public class LoadedGame extends Game {
     Board b = (Board)ObjectIO.load(Board.class, "Sample Maps");
     b.setGame(this);
     initialBoard = b;
-    gui = new GUI(this);
+    gui = new GUI(this, true);
     reset();
   }
 
   /** Creates a sample gui and allows playing with it */
   public static void main(String[] args){
     Game g = new LoadedGame();
-    g.gui  = new GUI(g);
+    g.gui  = new GUI(g, true);
     g.reset();
   }
   
