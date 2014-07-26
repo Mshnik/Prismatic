@@ -7,6 +7,11 @@ package models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+
 import game.Game;
 
 import util.*;
@@ -23,10 +28,10 @@ public class Board implements Serializable{
    */
   private Hex[][] board;
   
-  /** A collection of all hexes in this board.
-   * Calculated lazily. If this is null, specifies that it needs to be recalculated.
+  /** Collections of all hexes in this board by their class.
+   * Calculated and added to lazily. If an entry is not present, specifies that it needs to be recalculated
    */
-  private Collection<Hex> allHexes;
+  private HashMap<Class<? extends Hex>, Collection<Hex>> allHexesByClass;
   
   /** The game this board belongs to */
   private Game game;
@@ -105,19 +110,34 @@ public class Board implements Serializable{
     return board[r][c];
   }
   
-  /** Returns all hexes in no particular order - useful for collection purposes.
-   * Returns the lazily calculated allHexes. */
-  public Collection<Hex> allHexes(){
-    if(allHexes == null){
-      allHexes = new ArrayList<Hex>();
-      for(Hex[] hRow : board){
-        for(Hex hex : hRow){
-          allHexes.add(hex);
+  /** Returns all colors on this board.
+   * Does this by looking at all sparks and finding the union of their colors */
+  public Set<Color> allColors(){
+    HashSet<Color> s = new HashSet<Color>();
+    for(Hex h : allHexes()){
+      if(h instanceof Spark){
+        for(Color c : h.asSpark().getAvaliableColors()){
+          s.add(c);
         }
       }
     }
-    return allHexes;
+    return s;
   }
+  
+  /** Returns all hexes in no particular order - useful for collection purposes. */
+  public Collection<Hex> allHexes(){
+    ArrayList<Hex> a = new ArrayList<Hex>();
+    for(Collection<Hex> c : allHexesByClass.values()){
+      a.addAll(c);
+    }
+    return a;
+  }
+  
+  /** Returns all hexes in no particular order */
+  public Collection<Hex> allHexesOfClass(Class<? extends Hex> t){
+    return allHexesByClass.get(t);
+  }
+  
   
   /** Sets the hex at position (r,c). Also sets all neighbor hexes as needing a neighbor update.
    * Hex must have this as its board - otherwise throws illegalargexception
@@ -126,8 +146,14 @@ public class Board implements Serializable{
     if(h.board != this) throw new IllegalArgumentException("Can't put hex belonging to " + h.board + " in board " + this);
     
     board[r][c] = h; //ArrayIndexOutOfBounds may be thrown here
-    allHexes = null;  //Resets allHexes because a new hex was just added.
-
+    Collection<Hex> collec = allHexesByClass.get(h.getClass());  //Add h to the correct collection in allHexesByClass.
+    if(collec == null){
+      collec = new LinkedList<Hex>();
+      allHexesByClass.put(h.getClass(), collec);
+    }
+    collec.add(h);
+      
+    
     //For each neighbor of this hex, tell it that it's neighbors have changed.
     for(Location l : h.neighbors){
       try{
@@ -153,6 +179,7 @@ public class Board implements Serializable{
   public Board(int rs, int cs) throws IllegalArgumentException {
     if (rs < 0 || cs < 0) throw new IllegalArgumentException("Illegal Board Construction for Dimensions " + rs + ", " + cs);
     board = new Hex[rs][cs];
+    allHexesByClass = new HashMap<Class<? extends Hex>, Collection<Hex>>();
   }
   
   /** Default size for constructing a default (square) board */
@@ -165,7 +192,7 @@ public class Board implements Serializable{
   
   /** Constructor for a board that mirrors board b, but isn't linked to a game and has 0 moves on it */
   public Board(Board b){
-    board = new Hex[b.getHeight()][b.getWidth()];
+    this(b.getHeight(), b.getWidth());
     for(Hex h : b.allHexes()){
       if(h instanceof Prism){
         new Prism(this, h);
@@ -177,6 +204,24 @@ public class Board implements Serializable{
         new Crystal(this, h);
       }
     }
+  }
+  
+  /** Makes a random board using difficulty colors. Puts sparks/crystals at opposing corners */
+  public static Board makeBoard(int rs, int cs, int difficulty){
+    Board b = new Board(rs,cs);
+    for(int r = 0; r < b.getHeight(); r++){
+      for(int c = 0; c < b.getWidth(); c++){
+        if(r == 0 && c == 0 || r == b.getHeight() - 1 && c == 0){
+          new Spark(b, r, c, Colors.subValues(1, difficulty));
+        } else if(r == b.getHeight()-1 && c == b.getWidth()-1 || r == 0 && c == b.getWidth()-1){
+          new Crystal(b, r, c);
+        } else{
+          new Prism(b, r, c, ColorCircle.randomArray(Hex.SIDES, difficulty));
+        }
+      }
+    }
+    b.relight();
+    return b;
   }
   
   @Override

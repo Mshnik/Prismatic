@@ -20,24 +20,6 @@ public class RandomPuzzle extends Game {
   }
   
   
-
-  private static Board makeBoard(int difficulty){
-    Board b = new Board(4,9);
-    for(int r = 0; r < b.getHeight(); r++){
-      for(int c = 0; c < b.getWidth(); c++){
-        if(r == 0 && c == 0 || r == b.getHeight() - 1 && c == 0){
-          new Spark(b, r, c, Colors.subValues(1, difficulty));
-        } else if(r == 3 && c == 8 || r == 0 && c == 8){
-          new Crystal(b, r, c);
-        } else{
-          new Prism(b, r, c, ColorCircle.randomArray(Hex.SIDES, difficulty));
-        }
-      }
-    }
-    b.relight();
-    return b;
-  }
-  
   @Override
   public void updateHex(Hex h) {
       if(gui != null){
@@ -48,7 +30,7 @@ public class RandomPuzzle extends Game {
 
   @Override
   public void reset() {
-    board = makeBoard(difficulty);
+    board = Board.makeBoard(4,9,difficulty);
     board.setGame(this);
     gui.retile();
     gui.updateScoreLabel();

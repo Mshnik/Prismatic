@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import models.*;
+import models.Hex.SimpleHex;
 
 import org.junit.Test;
 
@@ -21,24 +22,13 @@ public class ModelsTest {
    * @author MPatashnik
    *
    */
-  private static class SimpleHex extends Hex{
-    private static final long serialVersionUID = 1L;
-    private SimpleHex(Board b, int r, int c){
-      super(b, r, c);
-    }
-    @Override
-    protected void light() { }
-    @Override
-    public Color colorOfSide(int n) throws IllegalArgumentException { return null; }
-    @Override
-    public void click() {}
-  };
   
   /** A direct subclass of Game with minimum additional functionality (only as required)
    * Used to allow testing of the Game class - not to be used outside of testing
    * @author MPatashnik
    *
    */
+  @SuppressWarnings("unused")
   private static class SimpleGame extends Game{
     private SimpleGame(Board b, GUI g){
       super(b,g);
@@ -542,11 +532,11 @@ public class ModelsTest {
     new Prism(b, 1, 2, colors[5]);
     
     //Show for debugging purposes - uncomment and step through rotations to see board.
-    SimpleGame game = new SimpleGame(null, null);
-    game.setGUI(new GUI(game, false));
-    b.setGame(game);
-    game.setBoard(b);
-    game.reset();
+//    SimpleGame game = new SimpleGame(null, null);
+//    game.setGUI(new GUI(game, false));
+//    b.setGame(game);
+//    game.setBoard(b);
+//    game.reset();
     
     //Set initial lighting
     b.relight();                

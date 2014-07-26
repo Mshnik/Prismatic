@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
@@ -22,6 +24,27 @@ public abstract class Hex implements Serializable{
    {new Location(-1, 0), new Location(0, 1), new Location(1,1), new Location(1, 0), new Location(1, -1), new Location(0, -1)}
   }; //Location of neighbors in board, if they exist. These are actually vectors.
      //First array is for even col number, second is for odd col number.
+  
+  /** A direct subclass of Hex with as little as possible extra functionality.
+   * Mainly used for testing/algs.
+   * @author MPatashnik
+   *
+   */
+  public static class SimpleHex extends Hex{
+    private static final long serialVersionUID = 1L;
+    public SimpleHex(Board b, Location l){
+      super(b, l);
+    }
+    public SimpleHex(Board b, int r, int c){
+      super(b, r, c);
+    }
+    @Override
+    protected void light() { }
+    @Override
+    public Color colorOfSide(int n) throws IllegalArgumentException { return null; }
+    @Override
+    public void click() {}
+  };
   
   public final Board board;        //The board this Hex is on
   public final Location location;  //The location of this Hex in the board.
@@ -118,9 +141,39 @@ public abstract class Hex implements Serializable{
     return board.indexLinked(this, h);
   }
   
+  /** Looks at all neighbors, and finds a list of neighbors that could be usefully powered by this were they rotated.
+   * This requires the neighbor to have at least two of color C on it, and that this has the correct color facing that neighbor.
+   * Shouldn't check if anything requiring this to rotate.
+   * Also doesn't return any neighbors that are part of this' lighter set.
+   * 
+   * Only returns prisms.
+   * 
+   * Does not actually rotate any hexes or modify the board in any way.
+   */
+  public LinkedList<Hex> children(Color c){
+    LinkedList<Hex> q = new LinkedList<Hex>();
+    Hex[] neighbors = getNeighbors();
+    for(Hex h : neighbors){
+      if( (! lighterSet(c).contains(h)) && h instanceof Prism && h.asPrism().colorCount(c) >= 2 && c == colorOfSide(indexLinked(h))){
+        q.add(h);
+      }
+    }
+    return q;
+  }
+  
   /** Returns the color(s) this hex is lit, empty set otherwise */
   public Collection<Color> isLit(){
     return lighters.values();
+  }
+  
+  /** Returns the the hex that is currently directly providing this with light.
+   * Returns null if no hex is providing this with c. */
+  public Hex lighter(Color c){
+    for(Entry<Hex, Color> e : lighters.entrySet()){
+      if(e.getValue() == c)
+        return e.getKey();
+    }
+    return null;
   }
   
   /** Returns the a set of hexes, all eventually provide light to this on color c*/
@@ -195,7 +248,7 @@ public abstract class Hex implements Serializable{
     for(Hex h : getNeighbors()){
       Collection<Color> hLit = h.isLit();
       Color c = colorLinked(h);
-      if(hLit.contains(c) && (preferred == Color.NONE || c == preferred) && ! h.lighterSet(c).contains(this) && !isLit().contains(c)){ 
+      if(h.canLight && hLit.contains(c) && (preferred == Color.NONE || c == preferred) && ! h.lighterSet(c).contains(this) && !isLit().contains(c)){ 
         lighters.put(h, c);
       }
     }
@@ -219,6 +272,12 @@ public abstract class Hex implements Serializable{
   public Spark asSpark() throws RuntimeException{
     if(! (this instanceof Spark)) throw new RuntimeException("Can't cast " + this + " to a Spark");
     return (Spark)this;
+  }
+  
+  /** Returns this as a Crystal, if the cast is allowed. Throws runtimeexception otherwise */
+  public Crystal asCrystal() throws RuntimeException{
+    if(! (this instanceof Crystal)) throw new RuntimeException("Can't cast " + this + " to a Crystal");
+    return (Crystal)this;
   }
   
   @Override

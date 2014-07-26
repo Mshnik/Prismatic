@@ -81,6 +81,14 @@ public class Prism extends Hex{
     return colorCircle.toArray()[n];
   }
   
+  /** Returns the number of sides of this that are the specified color */
+  public int colorCount(Color c){
+    int count = 0;
+    for(Color col : colorArray())
+      if(col == c) count++;
+    return count;
+  }
+  
   @Override
   /** Tries to find light by looking at all neighbor hexes that this isn't providing light to
    * Tries to stay the same color of light if multiple are avaliable. Otherwise chooses arbitrarily.
@@ -106,6 +114,12 @@ public class Prism extends Hex{
   /** Default behavior for a Prism is to rotate. Rotates clockwise if ROTATE_CLOCKWISE, rotates counterclockwise otherwise. */
   public void click(){
     if(ROTATE_CLOCKWISE) rotate();
+    else rotateCounter();
+  }
+  
+  /** Does the opposite of default behavior (rotates in other direction) */
+  public void antiClick(){
+    if(! ROTATE_CLOCKWISE) rotate();
     else rotateCounter();
   }
   
