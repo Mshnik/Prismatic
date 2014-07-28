@@ -48,7 +48,7 @@ public class ModelsTest {
 
     @Override
     public int getDifficulty() {
-      return Color.values().length -1;
+      return Color.values().length -Colors.SPECIAL_OFFSET;
     }
   }
   
@@ -60,6 +60,59 @@ public class ModelsTest {
       assertEquals(Hex.SIDES, arr.length);
     }
     assertTrue(Board.DEFAULT_BOARD_SIZE > 0);
+  }
+  
+  @Test
+  public void testLocations(){
+    //Test conversion to and from cube coordinates.
+    Location l1 = new Location(3,1);
+    int[] cube1 = l1.cubeCoordinates();
+    assertEquals(1, cube1[0]);    //x
+    assertEquals(3, cube1[2]);    //z
+    assertEquals(-4, cube1[1]);   //y
+    
+    //Test conversion back
+    Location l2 = Location.fromCubeCoordinates(l1.cubeCoordinates());
+    assertEquals(l1.row, l2.row);
+    assertEquals(l1.col, l2.col);
+    
+    Location l3 = new Location(5, 7);
+    int cube3[] = l3.cubeCoordinates();
+    assertEquals(7, cube3[0]);
+    assertEquals(2, cube3[2]);
+    assertEquals(-9, cube3[1]);
+    
+    Location l4 = Location.fromCubeCoordinates(l3.cubeCoordinates());
+    assertEquals(l3.row, l4.row);
+    assertEquals(l3.col, l4.col);
+    
+    //Try a buncha random locations, check the sum of the cube coordinates is always 0 (invariant)
+    int TESTS = 15;
+    for(int i = 0; i < TESTS; i++){
+      Location l = new Location((int)(Math.random() * i), (int)(Math.random() * i));
+      int[] c = l.cubeCoordinates();
+      assertEquals(0, c[0] + c[1] + c[2]);
+    }
+    
+    //Test neighbors for odd column
+    Location l5 = new Location(2,1);
+    Location[] n5 = l5.neighbors();
+    for(int i = 0; i < Hex.SIDES; i++){
+      assertTrue(l5.isAdjacentTo(n5[i]));
+      Location vec = Location.vec(l5, n5[i]);
+      assertEquals(Hex.NEIGHBOR_COORDINATES[1][i], vec);
+    }
+    
+    //Test neighbors for even column
+    Location l6 = new Location(2,2);
+    Location[] n6 = l6.neighbors();
+    for(int i = 0; i < Hex.SIDES; i++){
+      assertTrue(l6.isAdjacentTo(n6[i]));
+      Location vec = Location.vec(l6, n6[i]);
+      assertEquals(Hex.NEIGHBOR_COORDINATES[0][i], vec);
+    }
+    
+    
   }
   
   @Test
@@ -449,7 +502,7 @@ public class ModelsTest {
   @Test
   public void testLighting(){
     Board b = new Board(3,3);
-    Color[][] colors = { Colors.noneArray(Hex.SIDES),                                              //(0,0)
+    Color[][] colors = { Colors.fill(Hex.SIDES, Color.NONE),                                      //(0,0)
                          {Color.NONE, Color.NONE, Color.NONE, Color.RED, Color.NONE, Color.RED},  //(0,1)
                          {Color.NONE, Color.NONE, Color.RED, Color.RED, Color.NONE, Color.NONE},  //(0,2)
                          {Color.RED, Color.BLUE},                                                 //(1,0)
@@ -528,7 +581,7 @@ public class ModelsTest {
   
   @Test
   public void testCrystalConstructionandLighting(){
-    Board b = new Board(2,3);
+    Board b = new Board(2,4);
     
     Color[][] colors = { {Color.RED}, 
                          {Color.RED, Color.NONE, Color.NONE, Color.NONE, Color.RED, Color.NONE},
@@ -540,9 +593,11 @@ public class ModelsTest {
     new Spark(b, 0, 0, colors[0]);
     new Prism(b, 0, 1, colors[1]);
     new Crystal(b, 0, 2);
+    new Crystal(b, 0, 3);
     new Spark(b, 1, 0, colors[3]);
     new Prism(b, 1, 1, colors[4]);
     new Prism(b, 1, 2, colors[5]);
+    new Crystal(b, 1, 3);
     
     //Show for debugging purposes - uncomment and step through rotations to see board.
 //    SimpleGame game = new SimpleGame(null, null);
@@ -554,23 +609,23 @@ public class ModelsTest {
     //Set initial lighting
     b.relight();                
     
-    Color[][][] lighting = { {{Color.RED}, {}, {}}, {{Color.BLUE}, {}, {}}};
+    Color[][][] lighting = { {{Color.RED}, {}, {}, {}}, {{Color.BLUE}, {}, {}, {}}};
     helpLight(b, lighting);
     
-    //Light the crystal
+    //Light the crystal - adjacent crystal should not be lit.
     b.getHex(0,1).asPrism().rotate();
     
-    Color[][][] lightingTwo = {{{Color.RED}, {Color.RED}, {Color.RED}},  {{Color.BLUE}, {}, {}}};
+    Color[][][] lightingTwo = {{{Color.RED}, {Color.RED}, {Color.RED}, {}},  {{Color.BLUE}, {}, {}, {}}};
     helpLight(b, lightingTwo);
     
     //Add an input of a different color - crystal shouldn't change color.
     b.getHex(1,1).asPrism().rotate();
-    Color[][][] lightingThree = {{{Color.RED}, {Color.RED}, {Color.RED}}, {{Color.BLUE}, {Color.BLUE}, {Color.BLUE}}};
+    Color[][][] lightingThree = {{{Color.RED}, {Color.RED}, {Color.RED}, {}}, {{Color.BLUE}, {Color.BLUE}, {Color.BLUE}, {}}};
     helpLight(b, lightingThree);
     
     //Remove first light - crystal should pick up new color.
     b.getHex(0,1).asPrism().rotate();
-    Color[][][] lightingFour = {{{Color.RED}, {}, {Color.BLUE}}, {{Color.BLUE}, {Color.BLUE}, {Color.BLUE}}};
+    Color[][][] lightingFour = {{{Color.RED}, {}, {Color.BLUE}, {}}, {{Color.BLUE}, {Color.BLUE}, {Color.BLUE}, {}}};
     helpLight(b,lightingFour); 
   }
 

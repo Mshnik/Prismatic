@@ -51,11 +51,10 @@ public class Prism extends Hex{
     return colorCircle.toArray();
   }
   
-  /** Allows setting the ColorCircle, but only if it isn't set yet (is null).
+  /** Allows setting the ColorCircle.
    * @throws IllegalArgumentException if the colorCircle is currently non-null
    */
   public void setColorCircle(Color[] colors) throws IllegalArgumentException{
-    if(colorCircle != null) throw new IllegalArgumentException("Can't set colorCirle of " + this);
     if(colors != null && colors.length != SIDES) throw new IllegalArgumentException("Can't set color array of size " + colors.length);
     colorCircle = ColorCircle.fromArray(colors);
   }

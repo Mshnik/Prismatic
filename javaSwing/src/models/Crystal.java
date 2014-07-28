@@ -73,7 +73,7 @@ public class Crystal extends Hex {
   void findLightProviders(Color preferred){
     for(Hex h : getNeighbors()){
       Collection<Color> hLit = h.isLit();
-      if(hLit.size() > 0 && (preferred == Color.NONE || hLit.contains(preferred)) && hLit.contains(h.colorOfSide(h.indexLinked(this)))){ 
+      if(! (h instanceof Crystal) && hLit.size() > 0 && (preferred == Color.NONE || hLit.contains(preferred)) && hLit.contains(h.colorOfSide(h.indexLinked(this)))){ 
         lighters.put(h, h.colorOfSide(h.indexLinked(this)));
         return;
       }

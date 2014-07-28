@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
-import models.Hex;
+import models.*;
 
 /** A simple location class - honestly a Tuple of ints, but java doesn't have that :/
  * Using this over the Point class because constantly shifting from (x,y) to (col,row) is confusing
@@ -21,10 +21,38 @@ public class Location implements Serializable{
 
   public final int row;
   public final int col;
+  
+  //Used internally for A* running. May be altered by outside classes
+  public Location prev;
+  public int dist;
+  
   /** Constructs a location corresponding to row r, col c. */
   public Location(int r, int c){
     row = r;
     col = c;
+    prev = null;
+    dist = Integer.MAX_VALUE;
+  }
+  
+  /** Constructs a location from cube coordinates 
+   * @coord - a length three array of {x,y,z} coordinates of this in the cube coordinate system */
+  public static Location fromCubeCoordinates(int[] coord) throws IllegalArgumentException{
+    if(coord == null || coord.length != 3)
+      throw new IllegalArgumentException("Can't create location from cube coordinates: " + coord + "; should have length 3");
+    
+    int c = coord[0];
+    int r = coord[2] + (c - (c&1))/2;
+    return new Location(r,c);
+  }
+  
+  /** Constructs a location as the vector from from to to */
+  public static Location vec(Location from, Location to){
+    return new Location(to.row - from.row, to.col - from.col);
+  }
+ 
+  /** Constructs a random location in the range [0 ... maxR), [0 ... maxC) */
+  public static Location random(int maxR, int maxC){
+    return new Location((int)(Math.random() * maxR), (int)(Math.random() * maxC));
   }
   
   /** Returns true if this is out of bounds, that is has row/col < 0, row/col > boundsR, bounds C.
@@ -32,6 +60,23 @@ public class Location implements Serializable{
    */
   public boolean isOOB(int maxR, int maxC){
     return row < 0 || col < 0 || row > maxR || col > maxC;
+  }
+  
+  /** Returns the cube coorinates (x,y,z) for this location.
+   * Always returns the array of length 3: {x,y,z} */
+  public int[] cubeCoordinates(){
+    int[] i = new int[3];
+    i[0] = col;
+    i[2] = row - (col - (col & 1))/2;
+    i[1] = -i[0]-i[2];
+    return i;
+  }
+  
+  /** Returns the distance from this to dest using cube coordinate distance */
+  public int distance(Location dest){
+    int[] c1 = cubeCoordinates();
+    int[] c2 = dest.cubeCoordinates();
+    return (Math.abs(c1[0] - c2[0]) + Math.abs(c1[1] - c2[1]) + Math.abs(c1[2] - c2[2])) / 2;
   }
   
   /** Returns the given locations in order of closeness to this.
@@ -114,10 +159,57 @@ public class Location implements Serializable{
         return 1;
       else if(o2.isOOB(maxR, maxC))
         return -1;
-      int d1 = (here.row - o1.row)^2 + (here.col - o1.col)^2;
-      int d2 = (here.row - o2.row)^2 + (here.col - o2.col)^2;
-      return d1 - d2;
+      
+      return here.distance(o1) - here.distance(o2);
+    } 
+  }
+  
+  /** Comparator for sorting locations by their distance field plus a heuristic to goal (for A*) */
+  public static class DistanceComparator implements Comparator<Location>{
+    
+    private Location goal;
+    
+    public DistanceComparator(Location goal){
+      this.goal = goal;
     }
     
+    @Override
+    public int compare(Location o1, Location o2) {
+      return (o1.dist + o1.distance(goal)) - (o2.dist + o2.distance(goal));
+    }    
   }
+  
+  
+  /** Resets this location for running dijkstra's */
+  public void reset(){
+    prev = null;
+    dist = Integer.MAX_VALUE;
+  }
+  
+  /** Retrieve's this' neighbors in the board
+   * Allows A* data to persist between neighbor calls.
+   * Uses board to check for color linking. - allows neighbors of color c or color.any. 
+   * If Color.NONE passed in, doesn't check color. If color.any passed in, only allows wild cards.
+   * Doesn't add oob neighbors -- adds null in place.
+   * 
+   * Sparks and crystals always added to neighbors, in case they are wanted. If they are not, filter out later.
+   */
+  public Location[] neighborsInGraph(Board b, Color c){
+    Hex here = b.getHex(row, col);
+    Location[] l = new Location[Hex.SIDES];
+    int i = 0;
+    for(Hex n : here.getNeighborsWithBlanks()){
+      if(n instanceof Crystal || n instanceof Spark || 
+          (n != null && (c == Color.NONE || here.colorLinked(n) == c || here.colorLinked(n) == Color.ANY))){
+         l[i] = n.location;
+       }
+      else{
+        l[i] = null;
+      }
+      i++;
+    }
+    return l;
+  }
+
+  
 }

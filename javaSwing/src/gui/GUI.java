@@ -24,7 +24,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import javax.swing.event.ChangeListener;
@@ -147,7 +146,8 @@ public class GUI extends JFrame {
     
     colorEnabled = new HashMap<Color, Boolean>();
     colorEnabled.put(Color.NONE, false);
-    for(int i = 1; i < 1 + game.getDifficulty(); i++){
+    colorEnabled.put(Color.ANY, false);
+    for(int i = Colors.SPECIAL_OFFSET; i < Colors.SPECIAL_OFFSET + game.getDifficulty(); i++){
       JCheckBoxMenuItem ckb = new JCheckBoxMenuItem(Color.values()[i].toString());
       mnNewMenu.add(ckb);
       colorEnabled.put(Color.values()[i], true);

@@ -7,6 +7,7 @@ package models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -15,6 +16,7 @@ import java.util.Set;
 import game.Game;
 
 import util.*;
+import util.Location.DistanceComparator;
 
 /** Represents the board of hexagonal tiles.
  * Upon construction is empty - to fill with hexes, construct hexes with this as an argument. */
@@ -71,6 +73,11 @@ public class Board implements Serializable{
     board = null;
   }
   
+  /** Resets this's move count */
+  public void resetMoveCount(){
+    moves = 0;
+  }
+  
   /** Returns the index (0 ... SIDES - 1) of the side of h1 that is facing h2. Returns -1 if the two are not neighbors or h==null */
   public int indexLinked(Hex h1, Hex h2){
     if(h1 == null || h2 == null) return -1;
@@ -86,7 +93,8 @@ public class Board implements Serializable{
   
   /** Returns the color that links h1 and h2:
    *    1) The two hexes are neighbors (both non-null), otherwise returns none
-   *    2) The colors of the adjacent sides are the same
+   *    2) The colors of the adjacent sides are the same. Treats Color.any as a wild card.
+   *    If one is color.any and the other isn't, returns the more specific one.
    */
   public Color colorLinked(Hex h1, Hex h2){
     int index = indexLinked(h1, h2);
@@ -94,6 +102,12 @@ public class Board implements Serializable{
       return Color.NONE;
     Color c1 = h1.colorOfSide(index);
     Color c2 = h2.colorOfSide(Util.mod(index + Hex.SIDES/2, Hex.SIDES));
+    if(c1 == Color.ANY && c2 == Color.ANY)
+      return Color.ANY;
+    if(c1 == Color.ANY)
+      return c2;
+    if(c2 == Color.ANY)
+      return c1;
     if(c1 == c2)
       return c1;
     else
@@ -212,7 +226,7 @@ public class Board implements Serializable{
     for(int r = 0; r < b.getHeight(); r++){
       for(int c = 0; c < b.getWidth(); c++){
         if(r == 0 && c == 0 || r == b.getHeight() - 1 && c == 0){
-          new Spark(b, r, c, Colors.subValues(1, difficulty));
+          new Spark(b, r, c, Colors.subValues(difficulty));
         } else if(r == b.getHeight()-1 && c == b.getWidth()-1 || r == 0 && c == b.getWidth()-1){
           new Crystal(b, r, c);
         } else{
@@ -221,6 +235,17 @@ public class Board implements Serializable{
       }
     }
     b.relight();
+    return b;
+  }
+  
+  /** Makes a board filled entirely with any prisms - good for testing path algorithms / starting level editor stuff */
+  public static Board anyBoard(int rs, int cs){
+    Board b = new Board(rs, cs);
+    for(int i = 0; i < rs; i++){
+      for(int j = 0; j < cs; j++){
+        new Prism(b, new Location(i,j), Colors.fill(Hex.SIDES, Color.ANY));
+      }
+    }
     return b;
   }
   
@@ -236,6 +261,158 @@ public class Board implements Serializable{
   /** Hashes a Board based on its board matrix */
   public int hashCode(){
     return board.hashCode();
+  }
+  
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Algorithm related things for location
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  
+  /** Creates a random-ish path from start to end (return[0] = start, return[last] = end),
+   * that stays within [0..maxRow)[0..maxCol).
+   * Assumes Hex.NEIGHBOR_COORDINATES for adjacent nodes.
+   * end must be reachable by some path from start of the method will never terminate.
+   * 
+   * Slight probabilistic weighting towards moving towards the exit, to improve running time.
+   * 
+   * @param start - the start location of the random walk
+   * @param end   - the end location of the random walk
+   * @param c -  the color of links of the generated walk must be. If color.NONE, no color checking.
+   *                If anything but Color.NONE, checks if this even has a path of the given color.
+   * @return - a random path from (including) start to end. Will not have repeated nodes - a simple path.
+   * @throws IllegalArgumentException if maxRow < 0 or maxCol < 0 or start == end
+   */
+  public LinkedList<Location> randomWalk(Location start, Location end, Color c) throws RuntimeException{
+    int maxRow = getHeight();
+    int maxCol = getWidth();
+    if(maxRow < 0 || maxCol < 0) throw new IllegalArgumentException("Can't do random walk with maxRow " + maxRow + ", maxCol " + maxCol);
+    if(start.equals(end)) throw new IllegalArgumentException("Can't do random walk where start == end (" + start + ")");
+    if(start.row < 0 || start.row >= maxRow || start.col < 0 || start.col >= maxCol)
+      throw new IllegalArgumentException("Start location " + start + " out of bounds");
+    if(end.row < 0 || end.row >= maxRow || end.col < 0 || end.col >= maxCol)
+      throw new IllegalArgumentException("End location " + end + " out of bounds");
+    if(c == null || c == Color.ANY)
+       throw new IllegalArgumentException("Don't know how to find a randomWalk using color " + c  + ". If you want no color check, use Color.NONE");
+    
+    //Runs the shortest path to check if such a path is even possible. If not, throws runtimeexception
+    try{
+      LinkedList<Location> path = shortestPath(start, end, c);
+      if(path.size() <= 2) //If path is trivial, just return it - no point of making random path.
+        return path;
+    } catch(RuntimeException e){
+      throw e;
+    }
+    
+    LinkedList<Location> l = new LinkedList<Location>();
+    
+    Location here = start;
+    do{
+      //Determine if we have been here before. If so, remove newly formed cycle
+      int i = l.indexOf(here);
+      if(i != -1){
+        int len = l.size();
+        for(int j = i; j < len; j++){
+          l.remove(i);      //Repeatedly removing the same index (which is filled by later and later nodes)
+                            //Will ultimately remove i ... len-1 (rest of the list).
+        }
+      }
+      //Add new here to path
+      l.add(here);
+      Hex hereHex = getHex(here.row, here.col);
+      
+      //Pick a random neighbor
+      Location neighbor;
+      do{
+        //Picks a random direction, weighting choosing a direction towards the end.
+        int r = (int)(Math.pow(Math.random(),1.0) * Hex.SIDES) ;  //EVEN WEIGHT. towards picking an element earlier in the array. 
+                                                                  //Increase the power to increase the weight.
+        neighbor = end.orderByCloseness(here.neighbors(), maxRow, maxCol)[r];
+        try{
+          Hex nH = getHex(neighbor.row, neighbor.col);
+          Color link = hereHex.colorLinked(nH);
+          if(nH instanceof Spark || (nH instanceof Crystal && (! neighbor.equals(end)))){
+            neighbor = Location.NOWHERE;  //Not a valid color link - redo random.
+          }
+          else if(! (nH instanceof Crystal) && c != Color.NONE &&  link != c && link != Color.ANY)
+            neighbor = Location.NOWHERE;  //Not a valid color link - redo random.
+        } catch(ArrayIndexOutOfBoundsException e){} //Exception handled by looping again.
+      }while(neighbor.row >= maxRow || neighbor.col >= maxCol || neighbor.row < 0 || neighbor.col < 0);
+      
+      //Go there, set here to there.
+      here = new Location(neighbor.row, neighbor.col);
+    }while(! (here.equals(end)));
+    l.add(end);
+    return l;
+  }
+  
+  /** Finds the shortest path from start to end. Uses A*. Woo!
+   * @param start - the start location of the shortest path 
+   * @param end   - the end location of the shortest path
+   * @param c -  the color of links of the generated path must be. If color.NONE, no color checking.
+   *  @return the shortest path from start to end. return[first] = start, return[last] = end. If start == end, returns a list of length 1.
+   **/
+  public LinkedList<Location> shortestPath(Location start, Location end, Color c) throws RuntimeException{ // 
+    int maxRow = getHeight();
+    int maxCol = getWidth();
+    if(maxRow < 0 || maxCol < 0) throw new IllegalArgumentException("Can't do random walk with maxRow " + maxRow + ", maxCol " + maxCol);
+    if(start.row < 0 || start.row > maxRow || start.col < 0 || start.col > maxCol)
+      throw new IllegalArgumentException("Start location " + start + " out of bounds");
+    if(end.row < 0 || end.row > maxRow || end.col < 0 || end.col > maxCol)
+      throw new IllegalArgumentException("End location " + end + " out of bounds");
+    if(c == null || c == Color.ANY)
+      throw new IllegalArgumentException("Don't know how to find a randomWalk using color " + c  + ". If you want no color check, use Color.NONE");
+    
+    //Initialize
+    for(Hex h : allHexes()){
+      h.location.reset();
+    }
+    start.dist = 0;
+    DistanceComparator dstComp = new DistanceComparator(end);
+    LinkedList<Location> frontier = new LinkedList<Location>();
+    frontier.add(start);
+    
+    //Iterate.
+    //Terminating conditions - next closest node is end, frontier is empty
+    while(! frontier.isEmpty() && ! frontier.peek().equals(end)){
+      //Identify next closest frontier node to explore
+      Location here = frontier.poll();
+      Hex hereHex = getHex(here.row, here.col);
+      //For every neighbor, if that neighbor exists and has a higher distance than here + 1 (constant visit cost)
+      for(Location n : here.neighborsInGraph(this, c)){
+        if(n != null){
+          Hex nH = getHex(n.row, n.col);
+          Color link = hereHex.colorLinked(nH);
+          //Make sure crystals and sparks don't sneak in unless they're end points - spark should never be added except at start.
+          if( nH instanceof Prism || (nH instanceof Crystal && n.equals(end))){
+            if(nH instanceof Crystal || (c == Color.NONE ||  link == c || link == Color.ANY) && n.dist > here.dist + 1){
+              n.prev = here;
+              n.dist = here.dist + 1;
+              if(! frontier.contains(n))
+                frontier.add(n);
+            }
+          }
+        }
+      }
+      //Move closest node to front. This is O(n), as opposed O(n log n ) of fully sorting.
+      Location closest = Collections.min(frontier, dstComp);
+      frontier.remove(closest);
+      frontier.push(closest);
+    }
+    
+    //If frontier is empty, no path exists
+    if(frontier.isEmpty()){
+      throw new RuntimeException("No path exists from " + start + " to " + end);
+    }
+    
+    //Assemble path by following backpointers
+    LinkedList<Location> path = new LinkedList<Location>();
+    Location p = frontier.peek();
+    while(p != null){
+      path.push(p);
+      p = p.prev;
+    }
+    
+    return path;
   }
   
 }

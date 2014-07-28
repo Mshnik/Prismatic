@@ -12,11 +12,21 @@ import gui.GUI;
 import util.*;
 import models.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class AlgTest {
 
-  @SuppressWarnings("unused")
+  private Board anyBoard;
+  private static final int boardHeight = 10;
+  private static final int boardWidth = 10;
+
+  
+  @Before
+  public void resetBoard(){
+    anyBoard = Board.anyBoard(boardHeight, boardWidth);
+  }
+  
   private static class SimpleGame extends Game{
     private SimpleGame(Board b, GUI g){
       super(b,g);
@@ -57,17 +67,13 @@ public class AlgTest {
   }
   
   @Test
-  public void testRandomWalk(){
-    System.out.println("Fix Closeness comparator in Location because of hex distance");
-    
+  public void testRandomWalk(){    
     //Test random walks...
     // 1) have the start as the first location and end as the last location
     // 2) Are unique
     // 3) only contain valid neighbor paths
     // 4) throw correct errors
-    int TESTS = 10;
-    int boardHeight = 10;
-    int boardWidth = 10;
+    int TESTS = 25;
     for(int i = 0; i < TESTS; i++){
       Location start = new Location((int)(Math.random() * boardHeight), (int)(Math.random() * boardWidth));
       Location end;
@@ -75,7 +81,7 @@ public class AlgTest {
         end = new Location((int)(Math.random() * boardHeight), (int)(Math.random() * boardWidth));
       }while(end.equals(start));
       
-      LinkedList<Location> path = Creator.randomWalk(start, end, boardHeight, boardWidth);
+      LinkedList<Location> path = anyBoard.randomWalk(start, end, Color.NONE);
       
       assertEquals("Front of path is start", path.getFirst(), start);
       assertEquals("Last of path is end", path.getLast(), end);
@@ -92,33 +98,121 @@ public class AlgTest {
     
     //Check correct errors
     try{
-      Creator.randomWalk(new Location(0,0), new Location(1,1), boardHeight, -1);
-      fail("Did random walk with maxCol -1");
-    }catch(IllegalArgumentException e){}
-    try{
-      Creator.randomWalk(new Location(0,0), new Location(1,1), -1, boardWidth);
-      fail("Did random walk with maxRow -1");
-    }catch(IllegalArgumentException e){}
-    try{
-      Creator.randomWalk(new Location(0,0), new Location(0,0), boardHeight, boardWidth);
+      anyBoard.randomWalk(new Location(0,0), new Location(0,0),  Color.NONE);
       fail("Did random walk with equal start and end locations");
     }catch(IllegalArgumentException e){}
     try{
-      Creator.randomWalk(new Location(-1,0), new Location(0,0), boardHeight, boardWidth);
+      anyBoard.randomWalk(new Location(-1,0), new Location(0,0), Color.NONE);
       fail("Did random walk with an illegal start");
     }catch(IllegalArgumentException e){}
     try{
-      Creator.randomWalk(new Location(0,0), new Location(-1,0), boardHeight, boardWidth);
+      anyBoard.randomWalk(new Location(0,0), new Location(-1,0), Color.NONE);
       fail("Did random walk with an illegal end");
     }catch(IllegalArgumentException e){}
     try{
-      Creator.randomWalk(new Location(boardHeight + 1,0), new Location(0,0), boardHeight, boardWidth);
+      anyBoard.randomWalk(new Location(boardHeight + 1,0), new Location(0,0),  Color.NONE);
       fail("Did random walk with an illegal start");
     }catch(IllegalArgumentException e){}
     try{
-      Creator.randomWalk(new Location(0,0), new Location(0,boardWidth + 1), boardHeight, boardWidth);
+      anyBoard.randomWalk(new Location(0,0), new Location(0,boardWidth + 1), Color.NONE);
       fail("Did random walk with an illegal start");
     }catch(IllegalArgumentException e){}
+    try{
+      anyBoard.randomWalk(new Location(0,0), new Location(0,5), null);
+      fail("Did random walk with an illegal color");
+    }catch(IllegalArgumentException e){}
+  }
+  
+  @Test
+  public void testShortestPath(){
+    //Test random walks...
+    // 1) have the start as the first location and end as the last location
+    // 2) Are unique
+    // 3) only contain valid neighbor paths
+    // 4) throw correct errors
+    int TESTS = 10;
+    int boardHeight = 10;
+    int boardWidth = 10;
+    for(int i = 0; i < TESTS; i++){
+      Location start = new Location((int)(Math.random() * boardHeight), (int)(Math.random() * boardWidth));
+      Location end;
+      do{
+        end = new Location((int)(Math.random() * boardHeight), (int)(Math.random() * boardWidth));
+      }while(end.equals(start));
+      
+      LinkedList<Location> path = anyBoard.shortestPath(start, end, Color.NONE);
+      
+      assertEquals("Front of path is start", path.getFirst(), start);
+      assertEquals("Last of path is end", path.getLast(), end);
+      for(Location l : path){
+        assertTrue("Location " + l + " occurs once in path", path.indexOf(l) == path.lastIndexOf(l));
+      }
+      
+      for(int j = 0; j < path.size() - 1; j++){
+        Location here = path.get(j);
+        Location there = path.get(j+1);
+        assertTrue("Location " + here + " is adjacent to the next node " + there, here.isAdjacentTo(there));
+      }
+      
+      //Test the shortest path is shorter than any random path - hopefully this will fail eventually if the shortest path alg is wrong
+      for(int k = 0; k < TESTS; k++){
+        LinkedList<Location> rand = anyBoard.randomWalk(start, end, Color.NONE);
+        assertTrue(rand.size() >= path.size());
+      }
+    }
+    
+    //Check correct errors
+    try{
+      anyBoard.shortestPath(new Location(-1,0), new Location(0,0), Color.NONE);
+      fail("Did shortest walk with an illegal start");
+    }catch(IllegalArgumentException e){}
+    try{
+      anyBoard.shortestPath(new Location(0,0), new Location(-1,0), Color.NONE);
+      fail("Did shortest walk with an illegal end");
+    }catch(IllegalArgumentException e){}
+    try{
+      anyBoard.shortestPath(new Location(boardHeight + 1,0), new Location(0,0), Color.NONE);
+      fail("Did shortest walk with an illegal start");
+    }catch(IllegalArgumentException e){}
+    try{
+      anyBoard.shortestPath(new Location(0,0), new Location(0,boardWidth + 1), Color.NONE);
+      fail("Did shortest walk with an illegal start");
+    }catch(IllegalArgumentException e){}   
+    try{
+      anyBoard.shortestPath(new Location(0,0), new Location(0,5),  null);
+      fail("Did shortest walk with an illegal color");
+    }catch(IllegalArgumentException e){}
+  }
+  
+  @Test
+  public void testAddPath(){
+    //For displaying this test
+//    SimpleGame game = new SimpleGame(null, null);
+//    GUI g = new GUI(game, false);
+//    game.setGUI(g);
+//    anyBoard.setGame(game);
+//    game.setBoard(anyBoard);
+//    game.reset();
+    
+    // Test adding a path that crosses the board
+    LinkedList<Location> path1 = anyBoard.shortestPath(new Location(0,0), new Location(8,8), Color.RED);
+    Creator.addPath(Color.RED, anyBoard, path1);
+//    game.reset();
+    
+    //Check that every hex in the middle of that path has at least two red sides
+    for(int i = 1; i < path1.size() - 1; i++){
+      assertTrue(anyBoard.getHex(path1.get(i)).asPrism().colorCount(Color.RED) >= 2);
+    }
+    
+    // Test adding a path that crosses that path of the same color (should work)
+    LinkedList<Location> path2 = anyBoard.shortestPath(new Location(0,8), new Location(8,0), Color.RED);
+    Creator.addPath(Color.RED, anyBoard, path2);
+//    game.reset();
+    
+    for(int i = 1; i < path2.size() - 1; i++){
+      assertTrue(anyBoard.getHex(path2.get(i)).asPrism().colorCount(Color.RED) >= 2);
+    }
+    
   }
 
 }

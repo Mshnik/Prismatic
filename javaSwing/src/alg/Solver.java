@@ -1,7 +1,5 @@
 package alg;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.HashMap;
 
@@ -12,54 +10,54 @@ import models.*;
  *  -> list of moves to solve for that color combination.*/
 public class Solver {
   
-  public static HashMap<LinkedList<Color>, LinkedList<Move>> solve(Board board){  
-    //Assemble board by type
-    Collection<Hex> c = board.allHexesOfClass(Crystal.class);
-    Collection<Crystal> crystals = new ArrayList<Crystal>(c.size());
-    for(Hex h : c){
-      crystals.add((Crystal)h);
-    }
-    
-    Collection<Hex> s = board.allHexesOfClass(Spark.class);
-    Collection<Spark> sparks = new ArrayList<Spark>(c.size());
-    for(Hex h : s){
-      sparks.add((Spark)h);
-    }
-    
-//    Collection<Hex> p = board.allHexesOfClass(Prism.class);
-//    Collection<Prism> prisms = new ArrayList<Prism>(p.size());
-//    for(Hex h : p){
-//      prisms.add((Prism)h);
+//  public static HashMap<LinkedList<Color>, LinkedList<Move>> solve(Board board){  
+//    //Assemble board by type
+//    Collection<Hex> c = board.allHexesOfClass(Crystal.class);
+//    Collection<Crystal> crystals = new ArrayList<Crystal>(c.size());
+//    for(Hex h : c){
+//      crystals.add((Crystal)h);
 //    }
-    
-    //Construct a graph to perform searches on. Definitely only do this once per board, pass around as necessary.
-    HexWrapper[][] graph = new HexWrapper[board.getHeight()][board.getWidth()];
-    for(Hex h : board.allHexes()){
-      graph[h.location.row][h.location.col] = new HexWrapper(h);
-    }
-    
-    HashMap<LinkedList<Color>, LinkedList<Move>> m = new HashMap<LinkedList<Color>, LinkedList<Move>>();
-    for(int i = 1; i < crystals.size(); i++){
-      m = solve(board, graph, i, crystals, sparks, m);
-    }
-    
-    return m;
-  }
-  
-  /** Solves Recursively. 
-   *  In a single iteration, 
-   * 
-   * 
-   */
-  private static HashMap<LinkedList<Color>, LinkedList<Move>> 
-    solve(Board board, HexWrapper[][] graph, int goalCount, Collection<Crystal> crystals, Collection<Spark> sparks, HashMap<LinkedList<Color>, LinkedList<Move>> m){
-     
-    
-    
-    
-    
-    return m;
-  }
+//    
+//    Collection<Hex> s = board.allHexesOfClass(Spark.class);
+//    Collection<Spark> sparks = new ArrayList<Spark>(c.size());
+//    for(Hex h : s){
+//      sparks.add((Spark)h);
+//    }
+//    
+////    Collection<Hex> p = board.allHexesOfClass(Prism.class);
+////    Collection<Prism> prisms = new ArrayList<Prism>(p.size());
+////    for(Hex h : p){
+////      prisms.add((Prism)h);
+////    }
+//    
+//    //Construct a graph to perform searches on. Definitely only do this once per board, pass around as necessary.
+//    HexWrapper[][] graph = new HexWrapper[board.getHeight()][board.getWidth()];
+//    for(Hex h : board.allHexes()){
+//      graph[h.location.row][h.location.col] = new HexWrapper(h);
+//    }
+//    
+//    HashMap<LinkedList<Color>, LinkedList<Move>> m = new HashMap<LinkedList<Color>, LinkedList<Move>>();
+//    for(int i = 1; i < crystals.size(); i++){
+//      m = solve(board, graph, i, crystals, sparks, m);
+//    }
+//    
+//    return m;
+//  }
+//  
+//  /** Solves Recursively. 
+//   *  In a single iteration, 
+//   * 
+//   * 
+//   */
+//  private static HashMap<LinkedList<Color>, LinkedList<Move>> 
+//    solve(Board board, HexWrapper[][] graph, int goalCount, Collection<Crystal> crystals, Collection<Spark> sparks, HashMap<LinkedList<Color>, LinkedList<Move>> m){
+//     
+//    
+//    
+//    
+//    
+//    return m;
+//  }
   
 //  /** Constructs a hex graph from a board. Try to use sparingly */
 //  private static HexWrapper[][] graphFromBoard(Board b){

@@ -21,21 +21,24 @@ public class Colors {
     }
   }
 
-  /** Returns a subArray of colors, starting at color n and giving l colors. Loops back around as nessary.
-   * (Thus giving n > Color.values().length with have duplicates in the return) */
-  public static Color[] subValues(int offset, int n){
-    Color[] c = new Color[n];
-    for(int i = offset; i < n + offset; i++){
-      c[i - offset] = Color.values()[Util.mod(i, Color.values().length)];
+  /** Number of special colors in the Color enum. After this many, the rest are regular colors */
+  public static final int SPECIAL_OFFSET = 2;
+  
+  /** Returns a subArray of REGULAR colors, starting at color n and giving l colors. Caps at the available number of regular colors */
+  public static Color[] subValues(int n){
+    int len = Math.min(Color.values().length - SPECIAL_OFFSET, n);
+    Color[] c = new Color[len];
+    for(int i = SPECIAL_OFFSET; i < len + SPECIAL_OFFSET ; i++){
+      c[i - SPECIAL_OFFSET] = Color.values()[i];
     }
     return c;
   }
 
-  /** Returns an array of length l filled with Color.NONE */
-  public static Color[] noneArray(int length){
+  /** Returns an array of length l filled with the given color */
+  public static Color[] fill(int length, Color col){
     Color[] c = new Color[length];
     for(int i = 0; i < length; i++){
-      c[i] = Color.NONE;
+      c[i] = col;
     }
     return c;
   }

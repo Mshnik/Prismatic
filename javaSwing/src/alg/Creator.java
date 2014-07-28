@@ -1,5 +1,7 @@
 package alg;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import models.*;
@@ -7,57 +9,179 @@ import util.*;
 
 /** storage for static methods relating to creating puzzles. */
 public class Creator {
-
-  /** Creates a random-ish path from start to end (return[0] = start, return[last] = end),
-   * that stays within [0..maxRow][0..maxCol].
-   * Assumes Hex.NEIGHBOR_COORDINATES for adjacent nodes.
-   * end must be reachable by some path from start of the method will never terminate.
-   * 
-   * Slight probabilistic weighting towards moving towards the exit.
-   * 
-   * @param start - the start location of the random walk
-   * @param end   - the end location of the random walk
-   * @param maxRow - the cap for location row in the random walk.
-   * @param maxCol - the cap for location col in the random walk.
-   * @return - a random path from (including) start to end. Will not have repeated nodes - a simple path.
-   * @throws IllegalArgumentException if maxRow < 0 or maxCol < 0 or start == end
-   */
-  public static LinkedList<Location> randomWalk(Location start, Location end, int maxRow, int maxCol) throws IllegalArgumentException{
-    if(maxRow < 0 || maxCol < 0) throw new IllegalArgumentException("Can't do random walk with maxRow " + maxRow + ", maxCol " + maxCol);
-    if(start.equals(end)) throw new IllegalArgumentException("Can't do random walk where start == end (" + start + ")");
-    if(start.row < 0 || start.row > maxRow || start.col < 0 || start.col > maxCol)
-      throw new IllegalArgumentException("Start location " + start + " out of bounds");
-    if(end.row < 0 || end.row > maxRow || end.col < 0 || end.col > maxCol)
-      throw new IllegalArgumentException("End location " + end + " out of bounds");
-    LinkedList<Location> l = new LinkedList<Location>();
+  
+  /** Wraps a game that has been created by this -- has knowledge of its solutions. */
+  public static class CreatedGame{
+    public final Board board;
+    public final HashMap<Color[], LinkedList<LinkedList<Location>>> solutions;
     
-    Location here = start;
-    do{
-      //Determine if we have been here before. If so, remove newly formed cycle
-      int i = l.indexOf(here);
-      if(i != -1){
-        int len = l.size();
-        for(int j = i; j < len; j++){
-          l.remove(i);      //Repeatedly removing the same index (which is filled by later and later nodes)
-                            //Will ultimately remove i ... len-1 (rest of the list).
+    public CreatedGame(Board b, HashMap<Color[], LinkedList<LinkedList<Location>>> solutions){
+      this.board = b;
+      this.solutions = solutions;
+    }
+  }
+  
+  /** Creates a puzzle with the given number of colors, crystals, sparks */
+  public static CreatedGame createPuzzle(int colors, int crystals, int sparks, int boardHeight, int boardWidth, int puzzles){
+    CreatedGame game = prepGame(boardHeight, boardWidth, sparks, crystals, colors);
+    Board b = game.board;
+    
+    int p = 0;
+    LinkedList<Hex> availableSparks = (LinkedList<Hex>) b.allHexesOfClass(Spark.class);
+    LinkedList<Hex> availableCrystals = (LinkedList<Hex>) b.allHexesOfClass(Crystal.class);
+
+    while(p < puzzles){
+      //Number of paths in this puzzle - weight towards lower number. In range [1 .. sparks]. Cap at the number of crystals.
+      int r = Math.min((int)(Math.pow(Math.random(), 2.0) * sparks-1) + 1, crystals); 
+      //Pick a random color from each spark.
+      Color[] colorsForPuzzle = new Color[r];
+      int s = 0;
+      for(Hex spark : availableSparks) {
+        Color[] avaliableColors = spark.asSpark().getAvaliableColors();
+        int r2 = (int) (Math.random() * new Double(avaliableColors.length));
+        colorsForPuzzle[s] = avaliableColors[r2];
+        s++;
+        if(s == r) break;
+      }
+      
+      LinkedList<LinkedList<Location>> paths = new LinkedList<LinkedList<Location>>();
+      
+      //Shuffle crystals so the spark-crystal pairings are random
+      Collections.shuffle(availableCrystals);
+      boolean pathsOk = true;
+      for(int z = 0; z < r; z++){
+        try{
+          while(availableSparks.get(z).asSpark().getColor() != colorsForPuzzle[z])
+            availableSparks.get(z).asSpark().useNextColor();
+          paths.add(b.randomWalk(availableSparks.get(z).location, availableCrystals.get(z).location, colorsForPuzzle[z]));
+        } catch(RuntimeException e){
+          pathsOk = false;
+          break;
         }
       }
-      //Add new here to path
-      l.add(here);
       
-      //Pick a random neighbor
-      Location neighbor;
-      do{
-        //Picks a random direction, weighting choosing a direction towards the end.
-        int r = (int)(Math.pow(Math.random(),2.0) * Hex.SIDES) ;
-        neighbor = end.orderByCloseness(here.neighbors(), maxRow, maxCol)[r];
-      }while(neighbor.row > maxRow || neighbor.col > maxCol || neighbor.row < 0 || neighbor.col < 0);
-      
-      //Go there, set here to there.
-      here = new Location(neighbor.row, neighbor.col);
-    }while(! (here.equals(end)));
-    l.add(end);
-    return l;
+      if(pathsOk && (! game.solutions.keySet().contains(colorsForPuzzle))){
+        int z = 0;
+        for(LinkedList<Location> path : paths){
+          addPath(colorsForPuzzle[z], b, path);
+          z++;
+        }
+        game.solutions.put(colorsForPuzzle, paths);
+        p++;
+      }
+    }
+    
+    fuzzify(game, Colors.subValues(colors));
+    scramble(game);
+    
+    return game;
+  }
+  
+  /** Changes the prisms along the given path such that the whole path is linked by color c.
+   * throws a runtime exception if this would change a color that isn't color.any. */
+  public static void addPath(Color c, Board board, LinkedList<Location> path) throws RuntimeException{
+    
+    //Alter prisms along the way to make this path all the given color.
+    int i = 1;
+    Hex before = null;
+    Hex here = board.getHex(path.get(0));
+    Hex after = board.getHex(path.get(1));
+    while(i < path.size()){
+      //Move references down
+      before = here;
+      here = after;
+      if(i+1 < path.size())
+        after = board.getHex(path.get(i+1));
+      else
+        after = null;
+      //Link here to before and after, as necessary
+      //If here isn't a prism (perhaps a spark in the middle), skip it.
+      if(here instanceof Prism){
+        if(before != null){
+          fixHex(here, before, c);
+        }
+        if(after != null){
+          fixHex(here, after, c);
+        }
+      }
+      i++;
+    }
+  }
+  
+  /** Preps a craetedGame for creating puzzles */
+  private static CreatedGame prepGame(int boardHeight, int boardWidth, int sparks, int crystals, int colors){
+    Board b = new Board(boardHeight, boardWidth);
+    CreatedGame game = new CreatedGame(b, new HashMap<Color[], LinkedList<LinkedList<Location>>>());
+    //Place sparks and crystals on sides of board.
+    int i = 0;
+    while(i < crystals){
+      try{
+        new Crystal(b, new Location(i, boardWidth - 1));
+      }catch(IllegalArgumentException e){
+        i--;  //Retry this iteration
+      } finally{
+        i++;
+      }
+    }
+    Color[] availableColors = Colors.subValues(colors);
+    i = 0;
+    while(i < sparks){
+      try{
+        new Spark(b, new Location((boardHeight - 1) - i, 0), availableColors);
+      }catch(IllegalArgumentException e){
+        i--;  //Retry this iteration
+      } finally{
+        i++;
+      }
+    }
+    
+    //Fill rest of board with wild card prisms - any on all sides
+    for(int r = 0; r < boardHeight; r++){
+      for(int c = 0; c < boardWidth; c++){
+        try{
+          new Prism(b, new Location(r,c), Colors.fill(Hex.SIDES, Color.ANY));
+        } catch(IllegalArgumentException e) {}
+      }
+    }
+    return game;
+  }
+  
+  //TODO
+  /** Fills in the rest of the board. Should do this without adding to possible solutions.
+   * Fix later to make sure it doesn't add solutions - just doing it randomly for now */
+  private static void fuzzify(CreatedGame game, Color[] availableColors){
+    for(Hex prism : game.board.allHexesOfClass(Prism.class)){
+      Color[] colorArr = prism.asPrism().colorArray();
+      for(int i = 0; i < colorArr.length; i++){
+        if(colorArr[i] == Color.ANY){
+          colorArr[i] = availableColors[(int)(Math.random() * availableColors.length)];
+        }
+      }
+      prism.asPrism().setColorCircle(colorArr);
+    }
+  }
+  
+  //TODO
+  /** Scrambles the board. Later fix to count the screw-upishness to important tiles, to keep track of optimal solution */
+  public static void scramble(CreatedGame game){
+    for(Hex prism : game.board.allHexesOfClass(Prism.class)){
+      int r = (int)(Math.random() * Hex.SIDES);
+      for(int i = 0; i< r; i++){
+        prism.asPrism().rotate();
+      }
+    }
+    game.board.resetMoveCount();
+  }
+  
+  /** Helper for addPath Changes here to have color c on the side facing there 
+   * @throws RuntimeException if that side of here is already a color other than c or Color.ANY */
+  private static void fixHex(Hex here, Hex there, Color c) throws RuntimeException{
+    Color[] colorArr = here.asPrism().colorArray();
+    int s = here.indexLinked(there);
+    if(colorArr[s] != c && colorArr[s] != Color.ANY)
+      throw new RuntimeException("Can't Set side " + s + " of hex " + here + " to " + c + " because it is already " + colorArr[s]);
+    colorArr[s] = c;
+    here.asPrism().setColorCircle(colorArr);
   }
   
 }

@@ -1,13 +1,7 @@
 package game;
 
-import util.Colors;
 import gui.*;
-import models.Board;
-import models.ColorCircle;
-import models.Crystal;
-import models.Hex;
-import models.Prism;
-import models.Spark;
+import models.*;
 
 public class RandomPuzzle extends Game {
 
