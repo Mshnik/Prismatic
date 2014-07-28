@@ -161,6 +161,11 @@ public abstract class Hex implements Serializable{
     return q;
   }
   
+  /** Turns this hex on or off. Turning it off means it doesn't participate in lighting (provide or take). */
+  public void turn(boolean state){
+    canLight = state;
+  }
+  
   /** Returns the color(s) this hex is lit, empty set otherwise */
   public Collection<Color> isLit(){
     return lighters.values();
@@ -213,7 +218,8 @@ public abstract class Hex implements Serializable{
       boolean contains = h.lighters.keySet().contains(this);
       boolean notLit = ! lit.contains(h.lighters.get(this));
       boolean notLinked = colorLinked(h) != h.lighters.get(this);
-      if(contains && (notLit || notLinked))
+      boolean cantLight = !canLight;
+      if(contains && (notLit || notLinked || cantLight))
         h.light();
     }
   }
@@ -225,7 +231,7 @@ public abstract class Hex implements Serializable{
    * Note: Always try to provide light to crystal, never try to provide light to spark. Neither of these recurse, so no trouble.
    * Sparks can always provide light, others can only provide light if they have a lighter*/
   void provideLight(){
-    if(this instanceof Spark || (lighters != null && lighters.size() > 0)){
+    if(canLight && (this instanceof Spark || (lighters != null && lighters.size() > 0))){
       Collection<Color> lit = isLit();
       for(Hex h : getNeighbors()){
         Collection<Color> hLit = h.isLit();

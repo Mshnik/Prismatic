@@ -128,6 +128,10 @@ public class ModelsTest {
     assertEquals(l[4], new Location(2,0));
     assertEquals(l[5], new Location(1,0));
     
+    for(Location loc : l){
+      assertTrue(loc.isAdjacentTo(new Location(1,1)));
+    }
+    
     //Check even column neighbors
     n = b.getHex(1, 2).getNeighbors();
     assertEquals(6, n.length);
@@ -142,6 +146,10 @@ public class ModelsTest {
     assertEquals(l[3], new Location(2,2));
     assertEquals(l[4], new Location(1,1));
     assertEquals(l[5], new Location(0,1));
+    
+    for(Location loc : l){
+      assertTrue(loc.isAdjacentTo(new Location(1,2)));
+    }
     
     //Check neighbors when bordering edge, omitting blanks
     n = b.getHex(1,0).getNeighbors();
@@ -182,6 +190,11 @@ public class ModelsTest {
     for(int i = 0; i < 6; i++){
       assertEquals(n3[0][i], n3[1][i]);
     }
+    
+    //Check other assorted location.isadjacent
+    assertFalse(new Location(0,0).isAdjacentTo(new Location(2,0)));
+    assertFalse(new Location(0,0).isAdjacentTo(new Location(0,0)));
+    assertFalse(new Location(0,0).isAdjacentTo(Location.NOWHERE));
   }
   
   @Test

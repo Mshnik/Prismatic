@@ -85,11 +85,6 @@ public class Spark extends Hex {
     useNextColor();
   }
   
-  /** Turns this spark on or off. Turning it off means it doesn't provide light. */
-  public void turn(boolean state){
-    canLight = state;
-  }
-  
   @Override
   /** Overrides Hex isLit() because Sparks are always lit */
   public Collection<Color> isLit(){

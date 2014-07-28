@@ -81,9 +81,9 @@ public class Solver {
     if(spark.board != board || crystal.board != board) 
       throw new IllegalArgumentException("Spark " + spark + " or Crystal " + crystal + " doesn't belong to board " + board);
     
-    //Make sure power from other sparks doesn't interfere
-    for(Hex h : board.allHexesOfClass(Spark.class)){
-      h.asSpark().turn(false);
+    //Make sure power from all hexes don't interfere
+    for(Hex h : board.allHexes()){
+      h.turn(false);
     }
     spark.turn(true);
     
@@ -114,7 +114,7 @@ public class Solver {
     return list;
   }
   
-  private static final int sleeptime = 200;
+  private static final int sleeptime = 50;
   
   /** Helps dfs - returns the best move to get towards the goal.
    * @param c - the color to light
@@ -131,9 +131,11 @@ public class Solver {
     //No move necessary -> return parent move as the completing move.
     if(crystal.lit() == c){
       optimal.put(DoubleHex.keyFor(parent.hex, c), parent);
+      System.out.println("Stored " + DoubleHex.keyFor(parent.hex, c) + " : " + parent);
       Move previousWinningMove = optimal.get(DoubleHex.goalKey(crystal));
       if(previousWinningMove != null && parent.index() < previousWinningMove.index()){
         optimal.put(DoubleHex.goalKey(crystal), parent);
+        System.out.println("Stored " + DoubleHex.goalKey(crystal) + " : " + parent);
       }
       return parent;
     }
@@ -142,6 +144,7 @@ public class Solver {
     Move previousWinningMove = optimal.get(DoubleHex.goalKey(crystal));
     if(previousWinningMove != null && parent.index() > previousWinningMove.index()){
         optimal.put(DoubleHex.keyFor(here, c), Move.NO_MOVE);
+        System.out.println("Stored " + DoubleHex.keyFor(here, c) + " : " + Move.NO_MOVE);
         return Move.NO_MOVE;
     }
     
@@ -154,11 +157,13 @@ public class Solver {
                                                   //Set to this before returning.
     Boolean[] rotationDirections = {true, false};
     for(Hex h : here.children(c)){
-      
+      //Turn on lighting for this child, recalculate light
+      h.turn(true);
+      h.board.relight();
       //Determine if this child needs to be explored again
       Move bestMoveForChild = Move.NO_MOVE;
       Move previousBestMoveForChild = optimal.get(DoubleHex.keyFor(h, c));
-      if(previousBestMoveForChild != null){
+      if(previousBestMoveForChild != null){ //
         bestMoveForChild = previousBestMoveForChild;
         
         //Going from the child's previous best is correct, but check if the path here was better than the childs.
@@ -169,6 +174,7 @@ public class Solver {
           while(m != null){
             if(m.hex == h && m.prev.hex != h){
               if(parent.index() < m.prev.index()){
+                System.out.println("Updated " + m.prev + " to " + parent);
                 m.prev = parent;
               }
               m = null;
@@ -212,7 +218,11 @@ public class Solver {
           }
         }
         optimal.put(DoubleHex.keyFor(h, c), bestMoveForChild);
+//        System.out.println("Updated " + DoubleHex.keyFor(h, c) + " : " + bestMoveForChild);
       }
+      //Turn off this hex, recalculate light
+      h.turn(false);
+      h.board.relight();
       if(bestMoveForChild.index() < bestMove.index())
         bestMove = bestMoveForChild;
     }

@@ -163,7 +163,7 @@ public class Board implements Serializable{
     }
   }
   
-  /** Re-calcualtes light on whole board */
+  /** Re-calcualtes light on whole board. Doesn't change whether or not a hex can light. */
   public void relight(){
     for(Hex h : allHexes()){
       h.lighters.clear(); // Remove all lighters from board
