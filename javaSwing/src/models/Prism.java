@@ -7,8 +7,6 @@ import util.*;
 
 /** Represents a single prism */
 public class Prism extends Hex{
-  
-  private static final long serialVersionUID = 1921228710574878868L;
 
   /** Defines default rotation behavior for all prisms - true for clockwise, false for couterclockwise */
   public static boolean ROTATE_CLOCKWISE = true;
@@ -132,5 +130,12 @@ public class Prism extends Hex{
   /** Hashes a prism based on their locations, boards */
   public int hashCode(){
     return Objects.hash(board, location);
+  }
+
+  @Override
+  public String toJSONString() {
+    return "{\n" + Hex.TYPE_KEY + ":" + Util.addQ("P") + ",\n"
+        + Hex.LOCATION_KEY + ":" + Util.addQ(location.toString()) + ",\n"
+        + Hex.COLORS_KEY + ":" + colorCircle.toJSONString() + "\n}" ;
   }
 }

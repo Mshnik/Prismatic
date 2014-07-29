@@ -8,7 +8,6 @@ import util.*;
 
 public class Spark extends Hex {
 
-  private static final long serialVersionUID = -4488651998928115173L;
   private ColorCircle avaliableColors; //The colors this spark can take on, 
                                        //with avaliableColor.color as the currently selected one
   
@@ -112,6 +111,12 @@ public class Spark extends Hex {
     return Objects.hash(board, location);
   }
 
+  @Override
+  public String toJSONString() {
+    return "{\n" + Hex.TYPE_KEY + ":" + Util.addQ("S") + ",\n"
+        + Hex.LOCATION_KEY + ":" + Util.addQ(location.toString()) + ",\n"
+        + Hex.COLORS_KEY + ":" + avaliableColors.toJSONString() + "\n}" ;
+  }
 
 
 }

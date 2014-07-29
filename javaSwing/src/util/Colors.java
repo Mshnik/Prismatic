@@ -24,6 +24,16 @@ public class Colors {
   /** Number of special colors in the Color enum. After this many, the rest are regular colors */
   public static final int SPECIAL_OFFSET = 2;
   
+  /** Returns true if this color is a regular color, false if it s a special color */
+  public static boolean isRegularColor(Color c){
+    return c != Color.NONE && c != Color.ANY;
+  }
+  
+  /** Returns the regular colors */
+  public static Color[] regularColors(){
+    return subValues(Integer.MAX_VALUE);
+  }
+  
   /** Returns a subArray of REGULAR colors, starting at color n and giving l colors. Caps at the available number of regular colors */
   public static Color[] subValues(int n){
     int len = Math.min(Color.values().length - SPECIAL_OFFSET, n);

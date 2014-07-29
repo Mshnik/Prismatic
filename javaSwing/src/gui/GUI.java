@@ -34,6 +34,7 @@ import javax.swing.JMenu;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.SwingUtilities;
+import javax.swing.BoxLayout;
 
 
 /** GUI for testing purposes - shows board and allows for mutation */
@@ -53,6 +54,7 @@ public class GUI extends JFrame {
   //JFrame stuff
   private JPanel centerPanel;
   private JLabel scoreLabel;
+  private JLabel puzzleLabel;
   
   /** Returns the currently open GUI instance */
   public static GUI getInstance(){
@@ -92,6 +94,13 @@ public class GUI extends JFrame {
       scoreLabel = new JLabel("Moves: 0");
       panel_2.add(scoreLabel);
       
+      JPanel panel_1 = new JPanel();
+      panel.add(panel_1, BorderLayout.CENTER);
+      panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.X_AXIS));
+      
+      puzzleLabel = new JLabel("  Goal:");
+      panel_1.add(puzzleLabel);
+      
       if(interactive){
         JButton btnNewButton_1 = new JButton("Reset Game");
         panel_2.add(btnNewButton_1);
@@ -105,7 +114,7 @@ public class GUI extends JFrame {
       }
 
       
-    setMinimumSize(new Dimension(1200, 1000));
+    setMinimumSize(new Dimension(1400, 1200));
     
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     
@@ -185,6 +194,14 @@ public class GUI extends JFrame {
     setAlwaysOnTop(false);
   }
   
+  /** Updates the puzzle label */
+  public void updatePuzzleLabel(){
+    if(game instanceof CreatedGame){
+      CreatedGame game2 = (CreatedGame)game;
+      puzzleLabel.setText("  Goal: " + game2.puzzleString());
+    }
+  }
+  
   /** Updates the score label */
   public void updateScoreLabel(){
     if(game.getBoard()!= null) scoreLabel.setText("Moves: " + game.getBoard().getMoves());
@@ -217,6 +234,7 @@ public class GUI extends JFrame {
   
 
   private static final int HEX_RAD = 80;
+  private static final int SPACE = 10;
   private static final int BUFFER = 80;
 
   /** One hex, as a drawable element */
@@ -235,8 +253,8 @@ public class GUI extends JFrame {
       xIndex = h.location.col;
       yIndex = h.location.row;
       int yOffset = 0;
-      if(xIndex % 2 == 1) yOffset = HEX_RAD;
-      center = new Point(BUFFER + HEX_RAD * 2 * xIndex * 3/4, BUFFER + HEX_RAD * 2 * yIndex + yOffset);
+      if(xIndex % 2 == 1) yOffset = (HEX_RAD);
+      center = new Point(BUFFER + (HEX_RAD + SPACE) * 2 * xIndex * 3/4, BUFFER + (HEX_RAD) * 2 * yIndex + yOffset);
       poly = new Polygon();
       for(int i = 0; i < Hex.SIDES; i++){
         poly.addPoint((int)(HEX_RAD + HEX_RAD * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES)), 
@@ -282,8 +300,6 @@ public class GUI extends JFrame {
       if(h instanceof Prism){
         Prism p = (Prism)h;
         for(int i = 0; i < Hex.SIDES; i++){
-          if(colorEnabled.get(p.colorOfSide(i)) == null) return;
-
           Polygon triangle = new Polygon();
           triangle.addPoint(HEX_RAD, HEX_RAD);
           for(int k = i; k < i+2; k++){
@@ -291,18 +307,36 @@ public class GUI extends JFrame {
           }
           g.setColor(java.awt.Color.BLACK);
           g.drawPolygon(triangle);
-          java.awt.Color c = Colors.colorFromColor(p.colorOfSide(i));
-          g.setColor(c);
-          g.fillPolygon(triangle);
+          if(colorEnabled.get(p.colorOfSide(i))){
+            java.awt.Color c = Colors.colorFromColor(p.colorOfSide(i));
+            g.setColor(c);
+            g.fillPolygon(triangle);
+          }
         }
         if(! p.isLit().isEmpty()){
           Color[] lit = p.isLit().toArray(new Color[0]);
           Graphics2D g2 = (Graphics2D)g;
-          g2.setStroke(new BasicStroke(5));
-          for(int i = 0; i < Hex.SIDES; i++){
-            g.setColor(Colors.colorFromColor(lit[i % lit.length]));
-            g.drawLine(poly.xpoints[i], poly.ypoints[i], poly.xpoints[(i+1)%Hex.SIDES], poly.ypoints[(i+1)%Hex.SIDES]);
+          for(Color c : lit){
+            for(int s = 0; s < Hex.SIDES; s++){
+              if(p.colorOfSide(s) == c){
+                Point out = new Point((int)(HEX_RAD + (HEX_RAD + SPACE * 1.9) * Math.cos((s - 2) * 2 * Math.PI / Hex.SIDES + Math.PI/6)), 
+                    (int)(HEX_RAD + (HEX_RAD + SPACE*1.9) * Math.sin((s - 2) * 2 * Math.PI / Hex.SIDES + Math.PI/6)));
+                g2.setStroke(new BasicStroke(13));
+                g.setColor(java.awt.Color.YELLOW);
+                g2.drawLine(HEX_RAD, HEX_RAD, out.x, out.y);
+                g2.setStroke(new BasicStroke(8));
+                g.setColor(Colors.colorFromColor(c));
+                g2.drawLine(HEX_RAD, HEX_RAD, out.x, out.y);
+                g.setColor(java.awt.Color.YELLOW);
+                g2.setStroke(new BasicStroke(20));
+                g2.drawOval(HEX_RAD-10, HEX_RAD-10, 20, 20);
+              }
+            }
           }
+//          for(int i = 0; i < Hex.SIDES; i++){
+//            g.setColor(Colors.colorFromColor(lit[i % lit.length]));
+//            g.drawLine(poly.xpoints[i], poly.ypoints[i], poly.xpoints[(i+1)%Hex.SIDES], poly.ypoints[(i+1)%Hex.SIDES]);
+//          }
         }
       }
       else if(h instanceof Spark){

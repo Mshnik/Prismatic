@@ -4,7 +4,6 @@ package models;
 /** Board is implemented using the odd-q layout on the above page */
 
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,6 +12,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import org.json.*;
+
 import game.Game;
 
 import util.*;
@@ -20,10 +21,7 @@ import util.Location.DistanceComparator;
 
 /** Represents the board of hexagonal tiles.
  * Upon construction is empty - to fill with hexes, construct hexes with this as an argument. */
-public class Board implements Serializable{
-
-  private static final long serialVersionUID = -5927877006439609670L;
-
+public class Board implements JSONString{
   /** The board of hexes for this board. Stored in "odd-q" layout to
    * make storing a hexagonal grid possible in a 2-D matrix.
    * For illustration, see 
@@ -152,6 +150,44 @@ public class Board implements Serializable{
     return allHexesByClass.get(t);
   }
   
+  /** Returns the set of colors that are present on this map. Only includes regular colors */
+  public Set<Color> colorsPresent(){
+    HashSet<Color> s = new HashSet<Color>();
+    for(Hex h : allHexesOfClass(Spark.class)){
+      for(Color c : h.asSpark().getAvaliableColors()){
+        if(Colors.isRegularColor(c))
+          s.add(c);
+      }
+    }
+    return s;
+  }
+  
+  /** Returns a hashmap of color -> int, that is the count of the sides of prisms that have that color on this board */
+  public HashMap<Color, Integer> colorCount(){
+    HashMap<Color, Integer> m = new HashMap<Color, Integer>();
+    for(Hex h : allHexesOfClass(Prism.class)){
+      for(Color c : Color.values()){
+        if(! m.containsKey(c)){
+          m.put(c, h.asPrism().colorCount(c));
+        }
+        else{
+          m.put(c, m.get(c) + h.asPrism().colorCount(c));
+        }
+      }
+    }
+    return m;
+  }
+  
+  /** Returns all prisms that have at least one side with Color.ANY on it. Useful for finding a part of the board not yet finished */
+  public Collection<Prism> allPrismsWithAny(){
+    Collection<Hex> prisms = allHexesOfClass(Prism.class);
+    Collection<Prism> p = new LinkedList<Prism>();
+    for(Hex h : prisms){
+      if(h.asPrism().colorCount(Color.ANY) >= 1)
+        p.add(h.asPrism());
+    }
+    return p;
+  }
   
   /** Sets the hex at position (r,c). Also sets all neighbor hexes as needing a neighbor update.
    * Hex must have this as its board - otherwise throws illegalargexception
@@ -262,6 +298,17 @@ public class Board implements Serializable{
   public int hashCode(){
     return board.hashCode();
   }
+  
+  /** Returns this board as a json object, fully representing the most basic part of the board - the hexes with locations and colors. */
+  @Override
+  public String toJSONString() {
+    String s = "{";
+    for(Hex h : allHexes()){
+      s += "\n" + "\"" + h.location.toString() + "\":" + h.toJSONString() + ",";
+    }
+    return s + "\n}";
+  }
+  
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Algorithm related things for location

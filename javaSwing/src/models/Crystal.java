@@ -5,8 +5,6 @@ import java.util.Collection;
 import util.*;
 
 public class Crystal extends Hex {
-  
-  private static final long serialVersionUID = -1502067965351067014L;
 
   private Color lit;  //Single color this is lit. Try to stay this color when recalculating light.
   
@@ -90,5 +88,11 @@ public class Crystal extends Hex {
   @Override
   /** Interacting with a Crystal does nothing - do nothing here */
   public void click() {}
+
+  @Override
+  public String toJSONString() {
+    return "{\n" + Hex.TYPE_KEY + ":" + Util.addQ("C") + ",\n"
+    	+ Hex.LOCATION_KEY + ":" + Util.addQ(location.toString()) + "\n}";
+  }
 
 }

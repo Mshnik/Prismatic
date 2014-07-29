@@ -19,15 +19,19 @@ public class ObjectIO{
 	 * @param toWrite - the Serializable Object to write to memory.
 	 * @param directory - the location to write the object to
 	 * @param name - the name to give to the serialized version of this object. 
-	 * 			Must not contain the '.' or the '/' characters. */
-	public static void write(Serializable toWrite, String directory, String name) 
+	 * 			Must not contain the '.' or the '/' characters. 
+	 * @param extension - optional. The extension for the file. If not provided (null or empty), will use default extension .ser
+	 * */
+	public static void write(Serializable toWrite, String directory, String name, String extension) 
 			throws IllegalArgumentException, IOException{
 		
 		if(name.contains(".") || name.contains("/"))
 			throw new IllegalArgumentException("Input name contains a '.' or a '/'");
 		
+		if(extension == null || extension.length() == 0)
+		  extension = EXTENSION;
 		try{
-			FileOutputStream fileOut = new FileOutputStream(directory + "/" + name + EXTENSION);
+			FileOutputStream fileOut = new FileOutputStream(directory + "/" + name + extension);
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			out.writeObject(toWrite);
 			out.close();

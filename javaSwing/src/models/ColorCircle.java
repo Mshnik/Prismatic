@@ -1,17 +1,17 @@
 package models;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import util.Util;
+
+import org.json.JSONString;
 
 /** Represents the color of one side of a hex - one link.
  * Using this instead of built in linked list class because of rotation functionality.
  * @author MPatashnik
  *
  */
-public class ColorCircle implements Serializable{
+public class ColorCircle implements JSONString{
 
-  private static final long serialVersionUID = 6519613127863567763L;
   private Color color;
   private ColorCircle prev;
   private ColorCircle next;
@@ -130,6 +130,17 @@ public class ColorCircle implements Serializable{
       c = c.next;
     }while(c != this);
     return sum;
+  }
+
+  @Override
+  public String toJSONString() {
+    String s = "";
+    Color[] colorArr = toArray();
+    for(int i = 0; i < colorArr.length - 1; i++){
+      s += Util.addQ(colorArr[i].toString().toLowerCase()) + ", ";
+    }
+    s += Util.addQ(colorArr[colorArr.length - 1].toString().toLowerCase());
+    return "[" + s + "]";
   }
   
 }

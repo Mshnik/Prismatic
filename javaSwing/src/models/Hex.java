@@ -1,6 +1,5 @@
 package models;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,13 +10,14 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import org.json.*;
+
 import util.*;
 
 
 /** Abstract parent of all tiles */
-public abstract class Hex implements Serializable{
+public abstract class Hex implements JSONString{
 
-  private static final long serialVersionUID = 8566479292297887732L;
   public static final int SIDES = 6; //Sides per hex
   public static final Location[][] NEIGHBOR_COORDINATES = {
    {new Location(-1, 0), new Location(-1, 1), new Location(0, 1), new Location(1, 0), new Location(0, -1), new Location(-1, -1)},
@@ -31,7 +31,6 @@ public abstract class Hex implements Serializable{
    *
    */
   public static class SimpleHex extends Hex{
-    private static final long serialVersionUID = 1L;
     public SimpleHex(Board b, Location l){
       super(b, l);
     }
@@ -44,6 +43,10 @@ public abstract class Hex implements Serializable{
     public Color colorOfSide(int n) throws IllegalArgumentException { return null; }
     @Override
     public void click() {}
+    @Override
+    public String toJSONString() {
+      return null;
+    }
   };
   
   public final Board board;        //The board this Hex is on
@@ -311,5 +314,10 @@ public abstract class Hex implements Serializable{
     if(board != null && board.getGame() != null)
       board.getGame().updateHex(this);
   }
+  
+  /** Stuff for JSON serialization */
+  public static final String TYPE_KEY = "\"Type\"";
+  public static final String LOCATION_KEY = "\"Loc\"";
+  public static final String COLORS_KEY = "\"Colors\"";
   
 }

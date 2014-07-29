@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import models.*;
 import gui.*;
-import util.ObjectIO;
+import util.TextIO;
 
 /** Parent of all Game classes. Define generic game behavior */
 public abstract class Game {
@@ -63,7 +63,7 @@ public abstract class Game {
   public void saveBoard(){
     Board b = new Board(board);
     try {
-      ObjectIO.write(b, "Sample Maps", ((int)(Math.random() * 1000)) + "");
+      TextIO.writeJSON("Sample Maps/" + b.hashCode() + ".json", b);
     } catch (IllegalArgumentException | IOException e) {
       e.printStackTrace();
     }

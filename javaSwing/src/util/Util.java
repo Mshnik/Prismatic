@@ -7,4 +7,11 @@ public class Util {
     return ((a % b) + b) % b;
   }
   
+  /** Surrounds the given string with a pair of quotes. Nice for JSONing.
+   * 
+   */
+  public static String addQ(String s){
+    return "\"" + s + "\"";
+  }
+  
 }
