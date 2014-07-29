@@ -10,12 +10,31 @@ import util.*;
 /** storage for static methods relating to creating puzzles. */
 public class Creator {
   
+  /** Represents a single solution - the color of the path, the path starting with spark ending with crystal */
+  public static class Solution{
+    private Color color;
+    private LinkedList<Location> path;
+    
+    private Solution(Color c, LinkedList<Location> p){
+      color = c;
+      path = p;
+    }
+    
+    public Color getColor(){
+      return color;
+    }
+    
+    public LinkedList<Location> getPath(){
+      return path;
+    }
+  }
+  
   /** Wraps a game that has been created by this -- has knowledge of its solutions. */
   public static class CreatedGame{
     public final Board board;
-    public final HashMap<Color[], LinkedList<LinkedList<Location>>> solutions;
+    public final HashMap<Integer, LinkedList<Solution>> solutions;   //Hash of color array to list of solutions, one per color.
     
-    public CreatedGame(Board b, HashMap<Color[], LinkedList<LinkedList<Location>>> solutions){
+    public CreatedGame(Board b, HashMap<Integer, LinkedList<Solution>> solutions){
       this.board = b;
       this.solutions = solutions;
     }
@@ -32,7 +51,7 @@ public class Creator {
 
     while(p < puzzles){
       //Number of paths in this puzzle - weight towards lower number. In range [1 .. sparks]. Cap at the number of crystals.
-      int r = Math.min((int)(Math.pow(Math.random(), 2.0) * sparks-1) + 1, crystals); 
+      int r = Math.min((int)(Math.pow(Math.random(), 1.0) * sparks-1) + 1, crystals); 
       //Pick a random color from each spark.
       Color[] colorsForPuzzle = new Color[r];
       int s = 0;
@@ -44,7 +63,7 @@ public class Creator {
         if(s == r) break;
       }
       
-      LinkedList<LinkedList<Location>> paths = new LinkedList<LinkedList<Location>>();
+      LinkedList<Solution> solutions = new LinkedList<Solution>();
       
       //Shuffle crystals so the spark-crystal pairings are random
       Collections.shuffle(availableCrystals);
@@ -53,20 +72,19 @@ public class Creator {
         try{
           while(availableSparks.get(z).asSpark().getColor() != colorsForPuzzle[z])
             availableSparks.get(z).asSpark().useNextColor();
-          paths.add(b.randomWalk(availableSparks.get(z).location, availableCrystals.get(z).location, colorsForPuzzle[z]));
+          
+          solutions.add(new Solution(colorsForPuzzle[z], b.randomWalk(availableSparks.get(z).location, availableCrystals.get(z).location, colorsForPuzzle[z])));
         } catch(RuntimeException e){
           pathsOk = false;
           break;
         }
       }
       
-      if(pathsOk && (! game.solutions.keySet().contains(colorsForPuzzle))){
-        int z = 0;
-        for(LinkedList<Location> path : paths){
-          addPath(colorsForPuzzle[z], b, path);
-          z++;
+      if(pathsOk && (! game.solutions.keySet().contains(Colors.hashArray(colorsForPuzzle)))){
+        for(Solution sol : solutions){
+          addPath(sol.color, b, sol.path);
         }
-        game.solutions.put(colorsForPuzzle, paths);
+        game.solutions.put(Colors.hashArray(colorsForPuzzle), solutions);
         p++;
       }
     }
@@ -111,7 +129,7 @@ public class Creator {
   /** Preps a craetedGame for creating puzzles */
   private static CreatedGame prepGame(int boardHeight, int boardWidth, int sparks, int crystals, int colors){
     Board b = new Board(boardHeight, boardWidth);
-    CreatedGame game = new CreatedGame(b, new HashMap<Color[], LinkedList<LinkedList<Location>>>());
+    CreatedGame game = new CreatedGame(b, new HashMap<Integer, LinkedList<Solution>>());
     //Place sparks and crystals on sides of board.
     int i = 0;
     while(i < crystals){

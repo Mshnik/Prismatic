@@ -501,7 +501,7 @@ public class ModelsTest {
   
   @Test
   public void testLighting(){
-    Board b = new Board(3,3);
+    Board b = new Board(4,3);
     Color[][] colors = { Colors.fill(Hex.SIDES, Color.NONE),                                      //(0,0)
                          {Color.NONE, Color.NONE, Color.NONE, Color.RED, Color.NONE, Color.RED},  //(0,1)
                          {Color.NONE, Color.NONE, Color.RED, Color.RED, Color.NONE, Color.NONE},  //(0,2)
@@ -509,8 +509,11 @@ public class ModelsTest {
                          {Color.RED, Color.NONE, Color.RED, Color.NONE, Color.BLUE, Color.BLUE},  //(1,1)
                          {Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED},      //(1,2)
                          {Color.RED, Color.BLUE, Color.BLUE, Color.NONE, Color.NONE, Color.NONE}, //(2,0)
-                         {Color.BLUE, Color.NONE, Color.NONE, Color.NONE, Color.BLUE, Color.BLUE},//(2,1)
-                         {Color.BLUE, Color.GREEN}                                                //(2,2)
+                         {Color.BLUE, Color.NONE, Color.NONE, Color.GREEN, Color.BLUE, Color.BLUE},//(2,1)
+                         {Color.BLUE, Color.GREEN},                                               //(2,2)
+                         Colors.fill(Hex.SIDES, Color.NONE),                                       //(3,0)
+                         Colors.fill(Hex.SIDES, Color.NONE),                                      //(3,1)
+                         {Color.GREEN},                                                           //(3,2)
                        };
     new Prism(b, 0, 0, colors[0]);
     new Prism(b, 0, 1, colors[1]);
@@ -521,6 +524,9 @@ public class ModelsTest {
     new Prism(b, 2, 0, colors[6]);
     new Prism(b, 2, 1, colors[7]);
     new Spark(b, 2, 2, colors[8]);
+    new Prism(b, 3, 0, colors[9]);
+    new Prism(b, 3, 1, colors[10]);
+    new Spark(b, 3, 2, colors[11]);
    
     //Show for debugging purposes - uncomment and step through rotations to see board.
 //    SimpleGame game = new SimpleGame(null, null);
@@ -532,12 +538,12 @@ public class ModelsTest {
     //Set initial lighting
     b.relight();
     
-    Color[][][] lighting = {{ {}, {}, {}},{{Color.RED}, {}, {}},{{Color.RED}, {}, {Color.BLUE}}};
+    Color[][][] lighting = {{ {}, {}, {}},{{Color.RED}, {}, {}},{{Color.RED}, {}, {Color.BLUE}}, {{}, {}, {Color.GREEN}, {}}};
     helpLight(b, lighting);
     
     //Test rotating a prism propigates light
     b.getHex(1, 1).asPrism().rotateCounter();
-    Color[][][] lightingTwo = {{{}, {}, {Color.RED}},{{Color.RED}, {Color.RED}, {Color.RED}},{{Color.RED}, {}, {Color.BLUE}}};
+    Color[][][] lightingTwo = {{{}, {}, {Color.RED}},{{Color.RED}, {Color.RED}, {Color.RED}},{{Color.RED}, {}, {Color.BLUE}}, {{}, {}, {Color.GREEN}, {}}};
     helpLight(b, lightingTwo);
     
     //Test undoing rotation removes light
@@ -550,7 +556,7 @@ public class ModelsTest {
     b.getHex(0, 1).asPrism().rotateCounter();
     b.getHex(1, 1).asPrism().rotateCounter();
     
-    Color[][][] lightingThree = {{{}, {Color.RED}, {Color.RED}},{{Color.RED}, {Color.RED}, {Color.RED}},{{Color.RED}, {}, {Color.BLUE}}};
+    Color[][][] lightingThree = {{{}, {Color.RED}, {Color.RED}},{{Color.RED}, {Color.RED}, {Color.RED}},{{Color.RED}, {}, {Color.BLUE}}, {{}, {}, {Color.GREEN}, {}}};
     helpLight(b, lightingThree);
     
     //Remove top path
@@ -564,18 +570,18 @@ public class ModelsTest {
     
     //Test adding second color of light adds to currently lit prism
     b.getHex(2, 1).asPrism().rotate();
-    Color[][][] lightingFour = {{{}, {}, {Color.RED}},{{Color.RED}, {Color.RED, Color.BLUE}, {Color.RED}},{{Color.RED, Color.BLUE}, {Color.BLUE}, {Color.BLUE}}};
+    Color[][][] lightingFour = {{{}, {}, {Color.RED}},{{Color.RED}, {Color.RED, Color.BLUE}, {Color.RED}},{{Color.RED, Color.BLUE}, {Color.BLUE}, {Color.BLUE}}, {{}, {}, {Color.GREEN}, {}}};
     helpLight(b, lightingFour);
 
     
     //Test turning off Spark removes light
     b.getHex(1,0).asSpark().useNextColor();
-    Color[][][] lightingFive = {{{}, {}, {}},{{Color.BLUE}, {Color.BLUE}, {}},{{Color.BLUE}, {Color.BLUE}, {Color.BLUE}}};
+    Color[][][] lightingFive = {{{}, {}, {}},{{Color.BLUE}, {Color.BLUE}, {}},{{Color.BLUE}, {Color.BLUE}, {Color.BLUE}}, {{}, {}, {Color.GREEN}, {}}};
     helpLight(b, lightingFive);
     
     //Test turning off spark removes light even from cycle.
     b.getHex(2,2).asSpark().useNextColor();
-    Color[][][] lightingSix = {{{}, {}, {}}, {{Color.BLUE}, {}, {}}, {{}, {}, {Color.GREEN}}};
+    Color[][][] lightingSix = {{{}, {}, {}}, {{Color.BLUE}, {}, {}}, {{}, {}, {Color.GREEN}}, {{}, {}, {Color.GREEN}, {}}};
     helpLight(b, lightingSix);
   }
   

@@ -3,12 +3,10 @@ package game;
 import gui.GUI;
 
 import java.util.LinkedList;
-import java.util.Map.Entry;
 
 import alg.Creator;
-import models.Color;
+import alg.Creator.Solution;
 import models.Hex;
-import util.Location;
 
 public class CreatedGame extends Game{
 
@@ -36,17 +34,17 @@ public class CreatedGame extends Game{
 
   @Override
   public void reset() {
-    Creator.CreatedGame g = Creator.createPuzzle(difficulty, 2, 2, 5, 9, 1);
+    Creator.CreatedGame g = Creator.createPuzzle(difficulty, 2, 2, 5, 9, 3);
     int i = 0;
-    for(Entry<Color[], LinkedList<LinkedList<Location>>> e : g.solutions.entrySet()){
+    for(LinkedList<Solution> lst : g.solutions.values()){
       System.out.println("Puzzle " + (++i) + ": ");
       System.out.print("\t");
-      for(int j = 0; j < e.getKey().length; j++){
-        System.out.print(e.getKey()[j] + " ");
+      for(Solution s : lst){
+        System.out.print(s.getColor() + " ");
       }
       System.out.print(" -> ");
-      for(LinkedList<Location> ll : e.getValue()){
-        System.out.print("[" + ll + "]  ");
+      for(Solution s : lst){
+        System.out.print("[" + s.getPath() + "]  ");
       }
       System.out.println("");
     }

@@ -42,5 +42,16 @@ public class Colors {
     }
     return c;
   }
+  
+  /** Hashes a color array based on the sum of its hashes
+   * This is done so order doesn't matter -> {green, red}.hash == {red, green}.hash
+   */
+  public static Integer hashArray(Color[] arr){
+    int i = 0;
+    for(Color c : arr){
+      i += c.hashCode();
+    }
+    return i;
+  }
 
 }
