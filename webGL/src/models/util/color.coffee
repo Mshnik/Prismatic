@@ -3,16 +3,18 @@ class @Color
   # Actual colors - kinda an enum object.
   @_val = 
     NONE : 0
-    RED : 1
-    BLUE : 2
-    GREEN : 3
-    ORANGE : 4
-    PURPLE : 5
-    CYAN : 6
-    YELLOW : 7
-    PINK : 8
+    ANY : 1
+    RED : 2
+    BLUE : 3
+    GREEN : 4
+    ORANGE : 5
+    PURPLE : 6
+    CYAN : 7
+    YELLOW : 8
+    PINK : 9
 
   @NONE = @_val.NONE
+  @ANY = @_val.ANY
   @RED = @_val.RED
   @BLUE = @_val.BLUE
   @GREEN = @_val.GREEN
@@ -22,34 +24,44 @@ class @Color
   @YELLOW = @_val.YELLOW
   @PINK = @_val.PINK
 
+  @SPECIAL_OFFSET = 2 ## Number of special colors - NONE and ANY
+
   @count : () -> Object.keys(@_val).length
 
   @values : () -> Object.keys(@_val)
 
-  @subValues : (offset, n) ->
-    c = Color.count()
-    Color.values().splice(offset %% c, (offset + n) %% c)
+  ### Returns the regular colors ###
+  @regularColors : () -> @subvalues(Number.MAX_VALUE)
 
-  @noneArray : (length) ->
-    Color.NONE for i in [0 ... (length - 1)] by 1
+  ### Returns a subArray of REGULAR colors, starting at color n and giving l colors. Caps at the available number of regular colors ###
+  @subValues : (n) ->
+    c = Color.count()
+    len = Math.min(n, c - @SPECIAL_OFFSET)
+    Color.values().splice(@SPECIAL_OFFSET, len)
+
+  ### Returns an array of length length filled with color col ###
+  @fill : (length, col) ->
+    col for i in [0 ... (length - 1)] by 1
 
   @asString : (color) ->
     switch color
-      when 1
+      when @ANY
+        return "any"
+      when @RED
         return "red"
-      when 2
+      when @BLUE
         return "blue"
-      when 3
+      when @GREEN
         return "green"
-      when 4
+      when @ORANGE
         return "orange"
-      when 5
+      when @PURPLE
         return "purple"
-      when 6
+      when @CYAN
         return "cyan"
-      when 7
+      when @YELLOW
         return "yellow"
-      when 8
+      when @PINK
         return "pink"
       else
         return "none"

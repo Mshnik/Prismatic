@@ -11,17 +11,20 @@
 
     Color._val = {
       NONE: 0,
-      RED: 1,
-      BLUE: 2,
-      GREEN: 3,
-      ORANGE: 4,
-      PURPLE: 5,
-      CYAN: 6,
-      YELLOW: 7,
-      PINK: 8
+      ANY: 1,
+      RED: 2,
+      BLUE: 3,
+      GREEN: 4,
+      ORANGE: 5,
+      PURPLE: 6,
+      CYAN: 7,
+      YELLOW: 8,
+      PINK: 9
     };
 
     Color.NONE = Color._val.NONE;
+
+    Color.ANY = Color._val.ANY;
 
     Color.RED = Color._val.RED;
 
@@ -39,6 +42,8 @@
 
     Color.PINK = Color._val.PINK;
 
+    Color.SPECIAL_OFFSET = 2;
+
     Color.count = function() {
       return Object.keys(this._val).length;
     };
@@ -47,38 +52,54 @@
       return Object.keys(this._val);
     };
 
-    Color.subValues = function(offset, n) {
-      var c;
-      c = Color.count();
-      return Color.values().splice(__modulo(offset, c), __modulo(offset + n, c));
+
+    /* Returns the regular colors */
+
+    Color.regularColors = function() {
+      return this.subvalues(Number.MAX_VALUE);
     };
 
-    Color.noneArray = function(length) {
+
+    /* Returns a subArray of REGULAR colors, starting at color n and giving l colors. Caps at the available number of regular colors */
+
+    Color.subValues = function(n) {
+      var c, len;
+      c = Color.count();
+      len = Math.min(n, c - this.SPECIAL_OFFSET);
+      return Color.values().splice(this.SPECIAL_OFFSET, len);
+    };
+
+
+    /* Returns an array of length length filled with color col */
+
+    Color.fill = function(length, col) {
       var i, _i, _ref, _results;
       _results = [];
       for (i = _i = 0, _ref = length - 1; _i < _ref; i = _i += 1) {
-        _results.push(Color.NONE);
+        _results.push(col);
       }
       return _results;
     };
 
     Color.asString = function(color) {
       switch (color) {
-        case 1:
+        case this.ANY:
+          return "any";
+        case this.RED:
           return "red";
-        case 2:
+        case this.BLUE:
           return "blue";
-        case 3:
+        case this.GREEN:
           return "green";
-        case 4:
+        case this.ORANGE:
           return "orange";
-        case 5:
+        case this.PURPLE:
           return "purple";
-        case 6:
+        case this.CYAN:
           return "cyan";
-        case 7:
+        case this.YELLOW:
           return "yellow";
-        case 8:
+        case this.PINK:
           return "pink";
         default:
           return "none";
@@ -243,7 +264,64 @@
     function Loc(row, col) {
       this.row = row;
       this.col = col;
+      this.prev = null;
+      this.dist = Number.MAX_VALUE;
     }
+
+
+    /* Resets the fields used by A* */
+
+    Loc.prototype.reset = function() {
+      this.prev = null;
+      return this.dist = Number.MAX_VALUE;
+    };
+
+
+    /* Returns true if this is OOB. Row or col < 0 or greater than resepctive max */
+
+    Loc.prototype.isOOB = function(maxR, maxC) {
+      return this.row < 0 || this.col < 0 || this.row > maxR || this.col > maxC;
+    };
+
+
+    /* Returns a object representing this location in cube coordinates -> (x,y,z). */
+
+    Loc.prototype.cubeCoordinates = function() {
+      var o, x, y, z;
+      x = this.col;
+      z = this.row - (this.col - (this.col & 1)) / 2;
+      y = -x - z;
+      o = {};
+      o[x] = x;
+      o[y] = y;
+      o[z] = z;
+      return o;
+    };
+
+
+    /* Returns the distance from this to dest using the cube coordinate distance */
+
+    Loc.prototype.distance = function(dest) {
+      var c1, c2;
+      c1 = this.cubeCoordinates();
+      c2 = dest.cubeCoordinates();
+      return (Math.abs(c1.x - c2.x) + Math.abs(c1.y - c2.y) + Math.abs(c1.z - c2.z)) / 2;
+    };
+
+
+    /* Returns true if this is adjacent to l, false otherwise */
+
+    Loc.prototype.isAdjacentTo = function(l) {
+      var vec, _i, _len, _ref;
+      _ref = Hex.NEIGHBOR_COORDINATES[__modulo(this.col, 2)];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        vec = _ref[_i];
+        if (l.row === this.row + vec.row && l.col === this.col + vec.col) {
+          return true;
+        }
+      }
+      return false;
+    };
 
     Loc.prototype.equals = function(o) {
       var l;
@@ -265,6 +343,20 @@
       s1 = s.substring(1, i);
       s2 = s.substring(i + 1, s.length - 1);
       return new Loc(parseInt(s1), parseInt(s2));
+    };
+
+
+    /* Returns a new Location that represents a vector from l1 to l2 */
+
+    Loc.vec = function(l1, l2) {
+      return new Loc(l2.row - l1.row, l2.col - l1.col);
+    };
+
+
+    /* Constructs a new Random location in the range [0 ... maxR), [0 ... maxC */
+
+    Loc.random = function(maxR, maxC) {
+      return new Loc(Math.floor(Math.random() * maxR), Math.floor(Math.random() * maxC));
     };
 
     Loc.NOWHERE = new Loc(-9999, -9999);
@@ -290,6 +382,7 @@
           this.board[r].push(null);
         }
       }
+      this.allHexesByClass = {};
       this.game = null;
     }
 
@@ -353,7 +446,9 @@
 
 
     /* Returns the color that links h1 and h2. 
-        Returns none if either is null or they are not neighbors, or they are not color linked
+        1) The two hexes are neighbors (both non-null), otherwise returns none
+        2) The colors of the adjacent sides are the same. Treats Color.any as a wild card.
+        If one is color.any and the other isn't, returns the more specific one.
      */
 
     Board.prototype.colorLinked = function(h1, h2) {
@@ -364,7 +459,13 @@
       }
       c1 = h1.colorOfSide(index);
       c2 = h2.colorOfSide(__modulo(index + Hex.SIDES / 2, Hex.SIDES));
-      if (c1 === c2) {
+      if (c1 === Color.ANY && c2 === Color.ANY) {
+        return Color.ANY;
+      } else if (c1 === Color.ANY) {
+        return c2;
+      } else if (c2 === Color.ANY) {
+        return c1;
+      } else if (c1 === c2) {
         return c1;
       } else {
         return Color.NONE;
@@ -389,17 +490,92 @@
     /* Returns a flattened version of the board - all hexes in no particular order */
 
     Board.prototype.allHexes = function() {
-      var a, arr, h, _i, _j, _len, _len1, _ref;
+      var arr, h, key, value, _i, _j, _len, _len1, _ref;
       arr = [];
-      _ref = this.board;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        a = _ref[_i];
-        for (_j = 0, _len1 = a.length; _j < _len1; _j++) {
-          h = a[_j];
+      _ref = this.allHexesByClass;
+      for (value = _i = 0, _len = _ref.length; _i < _len; value = ++_i) {
+        key = _ref[value];
+        for (_j = 0, _len1 = value.length; _j < _len1; _j++) {
+          h = value[_j];
           arr.push(h);
         }
       }
       return arr;
+    };
+
+
+    /* Returns all hexes in the board that are of a particular class. Returns an empty array if no such class */
+
+    Board.prototype.allHexesOfClass = function(cl) {
+      var key, value, _i, _len, _ref;
+      _ref = this.allHexesByClass;
+      for (value = _i = 0, _len = _ref.length; _i < _len; value = ++_i) {
+        key = _ref[value];
+        if (key.toLowerCase === cl.toLowerCase) {
+          return value;
+        }
+      }
+      return [];
+    };
+
+
+    /* Returns the colors present on this board, looking at the sparks. Only includes regular colors */
+
+    Board.prototype.colorsPresent = function() {
+      var arr, c, spark, _i, _j, _len, _len1, _ref, _ref1;
+      arr = [];
+      _ref = allHexesOfClass("Spark");
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        spark = _ref[_i];
+        _ref1 = spark.getAvailableColors();
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          c = _ref1[_j];
+          if (__indexOf.call(arr, c) < 0 && Color.isRegularColor(c)) {
+            arr.push(c);
+          }
+        }
+      }
+      return arr;
+    };
+
+
+    /* Returns a map of color -> int that is the sides of prisms that are the color */
+
+    Board.prototype.colorCount = function() {
+      var c, o, prism, _i, _j, _len, _len1, _ref, _ref1;
+      o = {};
+      _ref = allHexesOfClass("Prism");
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        prism = _ref[_i];
+        _ref1 = Color.values();
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          c = _ref1[_j];
+          if (!(c in o)) {
+            o[c] = prism.colorCount(c);
+          } else {
+            o[c] = o[c] + prism.colorCount(c);
+          }
+        }
+      }
+      return o;
+    };
+
+
+    /* Returns all prisms that have at least one side with color.ANY on it. Useful for finding part of the board not finished */
+
+    Board.prototype.allPrismsWithAny = function() {
+      var prism, _i, _len, _ref, _results;
+      _ref = allHexesOfClass("Prism");
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        prism = _ref[_i];
+        if (prism.colorCount(Color.ANY) >= 1) {
+          _results.push(prism);
+        } else {
+
+        }
+      }
+      return _results;
     };
 
 
@@ -408,11 +584,16 @@
      */
 
     Board.prototype.setHex = function(h, l) {
-      var n, _i, _len, _ref;
+      var cl, n, _i, _len, _ref;
       if (h.board !== this) {
         throw "Can't put hex belonging to " + h.board + " in board " + this;
       }
       this.board[l.row][l.col] = h;
+      cl = h instanceof Prism ? "Prism" : h instanceof Spark ? "Spark" : h instanceof Crystal ? "Crystal" : "Unknown";
+      if (!(cl in this.allHexesByClass)) {
+        this.allHexesByClass[cl] = [];
+      }
+      this.allHexesByClass[cl].push(h);
       _ref = h.getNeighbors();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         n = _ref[_i];
@@ -422,17 +603,20 @@
 
 
     /* Re-calculates light on whole board - tells each spark to light itself and give light out.
-        This should hit the whole board.
+       This should hit the whole board.
      */
 
     Board.prototype.relight = function() {
-      var h, _i, _len, _ref;
+      var h, _i, _j, _len, _len1, _ref, _ref1;
       _ref = this.allHexes();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         h = _ref[_i];
-        if (h instanceof Spark) {
-          h.light();
-        }
+        h.lighters = [];
+      }
+      _ref1 = this.allHexesOfClass("Spark");
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        h = _ref1[_j];
+        h.light();
       }
     };
 
@@ -499,6 +683,20 @@
       return b;
     };
 
+    Board.anyBoard = function(rs, cs) {
+      var b, c, r, _i, _j, _ref, _ref1;
+      b = new Board(rs, cs);
+      for (r = _i = 0, _ref = rs - 1; _i <= _ref; r = _i += 1) {
+        for (c = _j = 0, _ref1 = cs - 1; _j <= _ref1; c = _j += 1) {
+          new Prism(b, new Loc(r, c), Color.fill(Hex.SIDES, Color.ANY));
+        }
+      }
+      return b;
+    };
+
+
+    /* TODO: ALGORITHM STUFF. */
+
     return Board;
 
   })();
@@ -560,6 +758,15 @@
     Hex.NEIGHBOR_COORDINATES = [[new Loc(-1, 0), new Loc(-1, 1), new Loc(0, 1), new Loc(1, 0), new Loc(0, -1), new Loc(-1, -1)], [new Loc(-1, 0), new Loc(0, 1), new Loc(1, 1), new Loc(1, 0), new Loc(1, -1), new Loc(0, -1)]];
 
 
+    /* Stuff for communicating with swing version, reading/writing boards */
+
+    Hex.TYPE_KEY = "\"Type\"";
+
+    Hex.LOCATION_KEY = "\"Loc\"";
+
+    Hex.COLORS_KEY = "\"Colors\"";
+
+
     /*Stores Board b and Point p as board and location in this hex.
        Throws IllegalArgumentException if b is null, point p is already occupied on board b,
        Or if the location is out of bounds.
@@ -593,6 +800,7 @@
       this.neighborsUpdated = true;
       this.neighborHexes = [];
       this.board.setHex(this, loc);
+      this.canLight = true;
       this.lighters = {};
     }
 
@@ -658,6 +866,39 @@
     };
 
 
+    /* Looks at all neighbors, and finds a list of neighbors that could be usefully powered by this were they rotated.
+        This requires the neighbor to have at least two of color C on it, and that this has the correct color facing that neighbor.
+        Shouldn't check if anything requiring this to rotate.
+        Also doesn't return any neighbors that are part of this' lighter set.
+       
+        Only returns prisms.
+     
+      Does not actually rotate any hexes or modify the board in any way.
+     */
+
+    Hex.prototype.children = function(c) {
+      var n, _i, _len, _ref, _results;
+      _ref = getNeighbors();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        n = _ref[_i];
+        if (__indexOf.call(lighterSet(c), n) < 0 && n instanceof Prism && h.asPrism().colorCount(c) >= 2 && c === colorOfSide(indexLinked(n))) {
+          _results.push(n);
+        } else {
+
+        }
+      }
+      return _results;
+    };
+
+
+    /*Turns this hex on or off. Turning it off means it doesn't participate in lighting (provide or take). */
+
+    Hex.prototype.turn = function(state) {
+      this.canLight = state;
+    };
+
+
     /* Returns the colors this is lit. Returns empty if this isn't lit */
 
     Hex.prototype.isLit = function() {
@@ -669,6 +910,21 @@
         _results.push(val);
       }
       return _results;
+    };
+
+
+    /* Returns the hex that is currently directly providing this with light. Returns null if no such hex for color c */
+
+    Hex.prototype.lighter = function(c) {
+      var key, val, _ref;
+      _ref = this.lighters;
+      for (key in _ref) {
+        val = _ref[key];
+        if (val === c) {
+          return this.board.getHex(Loc.fromString(key));
+        }
+      }
+      return null;
     };
 
 
@@ -738,7 +994,7 @@
     /* Helper method for use in findLight implementations. Tells neighbors this is currently lighting to look elsewhere */
 
     Hex.prototype.stopProvidingLight = function() {
-      var c, cond1, cond2, cond3, h, i, _i, _j, _len, _ref, _ref1, _ref2;
+      var c, cond1, cond2, cond3, cond4, h, i, _i, _j, _len, _ref, _ref1, _ref2;
       c = this.isLit();
       for (i = _i = 0, _ref = c.length - 1; _i <= _ref; i = _i += 1) {
         if (!isNaN(c[i])) {
@@ -751,7 +1007,8 @@
         cond1 = this.loc in h.lighters;
         cond2 = (_ref2 = h.lighters[this.loc], __indexOf.call(c, _ref2) < 0);
         cond3 = this.colorLinked(h) !== h.lighters[this.loc];
-        if (cond1 && (cond2 || cond3)) {
+        cond4 = !h.canLight;
+        if (cond1 && (cond2 || cond3 || cond4)) {
           h.light();
         }
       }
@@ -768,7 +1025,7 @@
 
     Hex.prototype.provideLight = function() {
       var c, h, hLit, lit, _i, _len, _ref;
-      if (this instanceof Spark || (Object.keys(this.lighters).length > 0)) {
+      if (this.canLight && (this instanceof Spark || (Object.keys(this.lighters).length > 0))) {
         lit = this.isLit();
         _ref = this.getNeighbors();
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -778,7 +1035,7 @@
           if (!isNaN(c)) {
             c = Color.asString(c);
           }
-          if (!(h instanceof Spark) && ((h instanceof Crystal && hLit.length === 0) || (h instanceof Prism && __indexOf.call(lit, c) >= 0 && __indexOf.call(hLit, c) < 0))) {
+          if (!(h instanceof Spark && lit.length === 0) && ((h instanceof Crystal && hLit.length === 0) || (h instanceof Prism && __indexOf.call(lit, c) >= 0 && __indexOf.call(hLit, c) < 0))) {
             h.light();
           }
         }
@@ -801,7 +1058,7 @@
         if (!isNaN(c)) {
           c = Color.asString(c);
         }
-        if (__indexOf.call(hLit, c) >= 0 && (preferred === Color.NONE || preferred === c) && __indexOf.call(this.isLit(), c) < 0 && ((h.lighterSet(c) == null) || __indexOf.call(h.lighterSet(c), this) < 0)) {
+        if (h.canLight && __indexOf.call(hLit, c) >= 0 && (preferred === Color.NONE || preferred === c) && __indexOf.call(this.isLit(), c) < 0 && ((h.lighterSet(c) == null) || __indexOf.call(h.lighterSet(c), this) < 0)) {
           this.lighters[h.loc.toString()] = c;
         }
       }
@@ -869,6 +1126,7 @@
     function Crystal(board, loc) {
       Crystal.__super__.constructor.call(this, board, loc);
       this.lit = Color.NONE;
+      this.canLight = false;
     }
 
 
@@ -880,7 +1138,7 @@
     Crystal.prototype.light = function() {
       var lighterChanged, lit;
       lighterChanged = this.pruneLighters();
-      if (lighterChanged || this.lit === 0) {
+      if (lighterChanged || this.lit === Color.NONE || this.lit === Color.asString(Color.NONE)) {
         this.findLightProviders(lit);
         if (this.isLit().length === 0) {
           this.findLightProviders(Color.NONE);
@@ -908,7 +1166,7 @@
         h = _ref[_i];
         hLit = h.isLit();
         c = h.colorOfSide(h.indexLinked(this));
-        if ((hLit.length > 0 && (preferred === Color.NONE || __indexOf.call(hLit, preferred) >= 0)) && __indexOf.call(this.isLit(), c) < 0 && __indexOf.call(hLit, c) >= 0) {
+        if ((!h instanceof Crystal) && (hLit.length > 0 && (preferred === Color.NONE || __indexOf.call(hLit, preferred) >= 0)) && __indexOf.call(this.isLit(), c) < 0 && __indexOf.call(hLit, c) >= 0) {
           this.lighters[h.loc.toString()] = c;
         }
       }
@@ -1005,6 +1263,24 @@
     };
 
 
+    /* Returns the number of sides of this that are the specified color */
+
+    Prism.prototype.colorCount = function(c) {
+      var col, count, _i, _len, _ref;
+      count = 0;
+      _ref = colorArray();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        col = _ref[_i];
+        if (c === col) {
+          count++;
+        } else {
+
+        }
+      }
+      return count;
+    };
+
+
     /* @Override
        Tries to find light by looking at all neighbor hexes that this isn't providing light to
        Tries to stay the same color of light if multiple are avaliable. Otherwise chooses arbitrarily.
@@ -1030,6 +1306,19 @@
     Prism.prototype.click = function() {
       if (this.targetRotation === this.currentRotation) {
         if (Prism.ROTATE_CLOCKWISE) {
+          this.rotate();
+        } else {
+          this.rotateCounter();
+        }
+      }
+    };
+
+
+    /* Does the opposite of the default behavior. Mwa haha! */
+
+    Prism.prototype.antiClick = function() {
+      if (this.targetRotation === this.currentRotation) {
+        if (!Prism.ROTATE_CLOCKWISE) {
           this.rotate();
         } else {
           this.rotateCounter();

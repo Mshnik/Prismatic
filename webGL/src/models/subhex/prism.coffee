@@ -17,7 +17,7 @@ class @Prism extends Hex
     @prevRotation = 0       ## The rotation this was in (side on top, after modding by 6)
     @currentRotation = 0    ## The rotation this is currently in (side on top, after modding by 6)
     @targetRotation = 0     ## The rotation this wants to be in (side on top, after moding by 6)
-    @canLight = true        ## True if this can participate in lighting, false otherwise (false while rotating)
+    @canLight = true        ## false while rotating, true otherwise
 
   ### Returns the colors of this prism, clockwise from the current top ###
   colorArray : () ->
@@ -54,6 +54,15 @@ class @Prism extends Hex
       throw ("Illegal Side Number " + n)
     return @colorCircle.toArray()[n]
 
+  ### Returns the number of sides of this that are the specified color ###
+  colorCount : (c) ->
+    count = 0
+    for col in colorArray()
+      if c is col
+        count++
+      else
+    return count
+
   ### @Override
      Tries to find light by looking at all neighbor hexes that this isn't providing light to
      Tries to stay the same color of light if multiple are avaliable. Otherwise chooses arbitrarily.
@@ -85,6 +94,15 @@ class @Prism extends Hex
   click : () -> 
     if @targetRotation is @currentRotation
       if(Prism.ROTATE_CLOCKWISE)
+        @rotate()
+      else
+        @rotateCounter()
+    return
+
+  ### Does the opposite of the default behavior. Mwa haha! ###
+  antiClick : () ->
+    if @targetRotation is @currentRotation
+      if(not Prism.ROTATE_CLOCKWISE)
         @rotate()
       else
         @rotateCounter()

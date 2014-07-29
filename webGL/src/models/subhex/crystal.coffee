@@ -7,7 +7,8 @@ class @Crystal extends Hex
   ###
   constructor : (board, loc) ->
     super(board, loc)
-    @lit = Color.NONE # Single color this is lit. Only changed at end of recalculating light
+    @lit = Color.NONE   ## Single color this is lit. Only changed at end of recalculating light
+    @canLight = false   ## Can never provide light
 
 
   ### @Override
@@ -16,8 +17,8 @@ class @Crystal extends Hex
   light : () ->
     lighterChanged = @pruneLighters()
     #First try to find a provider of the previous color of light
-    if(lighterChanged || @lit is 0)
-      @findLightProviders(lit);
+    if(lighterChanged or @lit is Color.NONE or @lit is Color.asString(Color.NONE))
+      @findLightProviders(lit)
       if(@isLit().length == 0)
         @findLightProviders(Color.NONE)
     
@@ -39,7 +40,7 @@ class @Crystal extends Hex
     for h in @getNeighbors()
       hLit = h.isLit()
       c = h.colorOfSide(h.indexLinked(this))
-      if((hLit.length > 0 and (preferred is Color.NONE or preferred in hLit)) and c not in @isLit() and c in hLit)
+      if( (not h instanceof Crystal) and (hLit.length > 0 and (preferred is Color.NONE or preferred in hLit)) and c not in @isLit() and c in hLit)
         @lighters[h.loc.toString()] = c        
     return
   

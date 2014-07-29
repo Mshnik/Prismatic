@@ -12,6 +12,11 @@ class @Hex
     #First array is for even col number, second is for odd col number.
     #Both begin with neighbor directly above a hex and go clockwise.
 
+  ### Stuff for communicating with swing version, reading/writing boards ###
+  @TYPE_KEY = "\"Type\""
+  @LOCATION_KEY = "\"Loc\""
+  @COLORS_KEY = "\"Colors\""
+
   ###Stores Board b and Point p as board and location in this hex.
      Throws IllegalArgumentException if b is null, point p is already occupied on board b,
      Or if the location is out of bounds.###
@@ -40,6 +45,7 @@ class @Hex
     @neighborHexes = []
       # Puts this hex in board
     @board.setHex(this, loc)
+    @canLight = true ## True if this hex can participate in lighting at all, false otw.
       #Map of location (hex) -> color of hexes that provide this with light
     @lighters = {}
 
@@ -78,9 +84,36 @@ class @Hex
   colorLinked : (h) ->
     @board.colorLinked(this, h)
 
+  ### Looks at all neighbors, and finds a list of neighbors that could be usefully powered by this were they rotated.
+      This requires the neighbor to have at least two of color C on it, and that this has the correct color facing that neighbor.
+      Shouldn't check if anything requiring this to rotate.
+      Also doesn't return any neighbors that are part of this' lighter set.
+     
+      Only returns prisms.
+   
+    Does not actually rotate any hexes or modify the board in any way. ###
+  children : (c) ->
+    for n in getNeighbors()
+      if n not in lighterSet(c) and n instanceof Prism and h.asPrism().colorCount(c) >= 2 and c is colorOfSide(indexLinked(n))
+        n
+      else
+        # Add nothing
+
+  ###Turns this hex on or off. Turning it off means it doesn't participate in lighting (provide or take). ###
+  turn : (state) ->
+    @canLight = state
+    return
+
   ### Returns the colors this is lit. Returns empty if this isn't lit ###
   isLit : () ->
     (val for key, val of @lighters)
+
+  ### Returns the hex that is currently directly providing this with light. Returns null if no such hex for color c ####
+  lighter : (c) ->
+    for key, val of @lighters 
+      if(val == c)
+        return @board.getHex(Loc.fromString(key))
+    return null
 
   ### Returns a set of locations (hexes) that all eventually provide light to this of a given color.
       Can be used to prevent cycles from forming. ###
@@ -105,7 +138,7 @@ class @Hex
       c = @colorLinked(h)
       if !isNaN(c)
        c = Color.asString(c)
-      if( (not h.canLight) || c == Color.asString(Color.NONE) || c not in h.isLit() || this in h.lighterSet(c))
+      if((not h.canLight) || c == Color.asString(Color.NONE) || c not in h.isLit() || this in h.lighterSet(c))
         delete @lighters[l]
     oldArr.length != Object.keys(@lighters).length
 
@@ -119,7 +152,8 @@ class @Hex
       cond1 = @loc of h.lighters
       cond2 = h.lighters[@loc] not in c
       cond3 = @colorLinked(h) isnt h.lighters[@loc] 
-      if (cond1 and (cond2 or cond3))
+      cond4 = not h.canLight
+      if (cond1 and (cond2 or cond3 or cond4))
         h.light()
     return
 
@@ -130,14 +164,14 @@ class @Hex
      Note: Always try to provide light to crystal, never try to provide light to spark. Neither of these recurse, so no trouble.
      Sparks can always provide light, others can only provide light if they have a lighter ###
   provideLight : () ->
-    if (this instanceof Spark or (Object.keys(@lighters).length > 0))
+    if (@canLight and (this instanceof Spark or (Object.keys(@lighters).length > 0)))
       lit = @isLit()
       for h in @getNeighbors()
         hLit = h.isLit()
         c = @colorLinked(h)
         if !isNaN(c)
           c = Color.asString(c)
-        if( ! (h instanceof Spark) and ((h instanceof Crystal and hLit.length == 0) or (h instanceof Prism and c in lit and c not in hLit)))
+        if( ! (h instanceof Spark and lit.length is 0) and ((h instanceof Crystal and hLit.length == 0) or (h instanceof Prism and c in lit and c not in hLit)))
           h.light()
     return
 
@@ -150,7 +184,7 @@ class @Hex
       c = @colorLinked(h)
       if !isNaN(c)
         c = Color.asString(c)
-      if(c in hLit and (preferred is Color.NONE || preferred is c) and c not in @isLit() and (not h.lighterSet(c)? or this not in h.lighterSet(c)))
+      if(h.canLight and c in hLit and (preferred is Color.NONE or preferred is c) and c not in @isLit() and (not h.lighterSet(c)? or this not in h.lighterSet(c)))
         @lighters[h.loc.toString()] = c
     return
 
