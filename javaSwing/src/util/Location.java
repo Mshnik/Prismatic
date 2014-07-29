@@ -167,6 +167,7 @@ public class Location implements Serializable{
   /** Comparator for sorting locations by their distance field plus a heuristic to goal (for A*) */
   public static class DistanceComparator implements Comparator<Location>{
     
+    private static final double HEURISTIC_COEF = 5/6; //Guarantees permissibility of search by slightly underweighting heuristic.
     private Location goal;
     
     public DistanceComparator(Location goal){
@@ -175,7 +176,9 @@ public class Location implements Serializable{
     
     @Override
     public int compare(Location o1, Location o2) {
-      return (o1.dist + o1.distance(goal)) - (o2.dist + o2.distance(goal));
+      int d1 = o1.dist + (int)((double) o1.distance(goal) * HEURISTIC_COEF);
+      int d2 = o2.dist + (int)((double) o2.distance(goal) * HEURISTIC_COEF);
+      return d1 - d2;
     }    
   }
   

@@ -98,31 +98,28 @@ public class Creator {
   /** Changes the prisms along the given path such that the whole path is linked by color c.
    * throws a runtime exception if this would change a color that isn't color.any. */
   public static void addPath(Color c, Board board, LinkedList<Location> path) throws RuntimeException{
-    
+    if(path.size() <= 1)
+      return; //No changes to make on length 1, 0 path.
     //Alter prisms along the way to make this path all the given color.
-    int i = 1;
-    Hex before = null;
+    int i = 0;
     Hex here = board.getHex(path.get(0));
     Hex after = board.getHex(path.get(1));
     while(i < path.size()){
-      //Move references down
-      before = here;
-      here = after;
-      if(i+1 < path.size())
-        after = board.getHex(path.get(i+1));
-      else
-        after = null;
       //Link here to before and after, as necessary
       //If here isn't a prism (perhaps a spark in the middle), skip it.
-      if(here instanceof Prism){
-        if(before != null){
-          fixHex(here, before, c);
-        }
-        if(after != null){
+      if(here instanceof Prism && after != null){
           fixHex(here, after, c);
-        }
       }
+      if(after instanceof Prism && here != null){
+        fixHex(after, here, c);
+      }
+      //Move references down
       i++;
+      here = after;
+      if(i + 1 < path.size())
+        after = board.getHex(path.get(i + 1));
+      else
+        after = null;
     }
   }
   

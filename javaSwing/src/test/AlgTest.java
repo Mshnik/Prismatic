@@ -46,7 +46,7 @@ public class AlgTest {
 
     @Override
     public int getDifficulty() {
-      return Color.values().length -1;
+      return Color.values().length -Colors.SPECIAL_OFFSET;
     }
   }
   
@@ -184,35 +184,55 @@ public class AlgTest {
     }catch(IllegalArgumentException e){}
   }
   
+  private void pathAndCheck(Color c, Location start, Location end, Board b, Game game){
+    LinkedList<Location> path = b.shortestPath(start, end, c);
+    Creator.addPath(c, b, path);
+    if(game != null)
+      game.reset();
+    for(int i = 1; i < path.size() - 1; i++){
+      assertTrue(b.getHex(path.get(i)).asPrism().colorCount(c) >= 2);
+    }
+  }
+  
   @Test
   public void testAddPath(){
+    SimpleGame game = null;
     //For displaying this test
-//    SimpleGame game = new SimpleGame(null, null);
-//    GUI g = new GUI(game, false);
-//    game.setGUI(g);
-//    anyBoard.setGame(game);
-//    game.setBoard(anyBoard);
-//    game.reset();
+    game = new SimpleGame(null, null);
+    GUI g = new GUI(game, false);
+    game.setGUI(g);
+    anyBoard = Board.anyBoard(5, 9);
+    anyBoard.setGame(game);
+    game.setBoard(anyBoard);
+    game.reset();
     
     // Test adding a path that crosses the board
-    LinkedList<Location> path1 = anyBoard.shortestPath(new Location(0,0), new Location(8,8), Color.RED);
-    Creator.addPath(Color.RED, anyBoard, path1);
-//    game.reset();
-    
-    //Check that every hex in the middle of that path has at least two red sides
-    for(int i = 1; i < path1.size() - 1; i++){
-      assertTrue(anyBoard.getHex(path1.get(i)).asPrism().colorCount(Color.RED) >= 2);
-    }
+    pathAndCheck(Color.RED, new Location(0,0), new Location(4,8), anyBoard, game);
     
     // Test adding a path that crosses that path of the same color (should work)
-    LinkedList<Location> path2 = anyBoard.shortestPath(new Location(0,8), new Location(8,0), Color.RED);
-    Creator.addPath(Color.RED, anyBoard, path2);
-//    game.reset();
+    pathAndCheck(Color.RED, new Location(0,8), new Location(4,0), anyBoard, game);
     
-    for(int i = 1; i < path2.size() - 1; i++){
-      assertTrue(anyBoard.getHex(path2.get(i)).asPrism().colorCount(Color.RED) >= 2);
-    }
+    // Test adding a path that crosses that path of the a different color (should still work - find a cross)
+    pathAndCheck(Color.BLUE, new Location(0,7), new Location(3,0), anyBoard, game);
     
+    // Add a path that completes cutting off the board
+    pathAndCheck(Color.GREEN, new Location(0,4), new Location(4,4), anyBoard, game);
+    
+    //Ditto above
+    pathAndCheck(Color.PINK, new Location(0,4), new Location(4,3), anyBoard, game);
+    
+    //Test a path can piggyback off a earlier path
+    pathAndCheck(Color.BLUE, new Location(2,0), new Location(1,8), anyBoard, game);
+    
+    //Test an impossible path - end point is filled in with non-valid color.
+    try{
+      pathAndCheck(Color.ORANGE, new Location(0,0), new Location(2,4), anyBoard, game);
+      fail("Created an impossible path and it passed checks. WTF?");
+    }catch(RuntimeException e){}
+    
+    //Test a very roundabout path - make sure A* isn't broken.
+    pathAndCheck(Color.YELLOW, new Location(0,3), new Location(0,4), anyBoard, game);
+   
   }
 
 }
