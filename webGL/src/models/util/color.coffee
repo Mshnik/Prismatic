@@ -30,14 +30,14 @@ class @Color
 
   @values : () -> Object.keys(@_val)
 
-  ### Returns the regular colors ###
-  @regularColors : () -> @subvalues(Number.MAX_VALUE)
-
   ### Returns a subArray of REGULAR colors, starting at color n and giving l colors. Caps at the available number of regular colors ###
   @subValues : (n) ->
     c = Color.count()
     len = Math.min(n, c - @SPECIAL_OFFSET)
     Color.values().splice(@SPECIAL_OFFSET, len)
+
+  ### Returns the regular colors ###
+  @regularColors : () -> @subValues(Number.MAX_VALUE)
 
   ### Returns an array of length length filled with color col ###
   @fill : (length, col) ->

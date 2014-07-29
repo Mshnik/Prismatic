@@ -83,7 +83,7 @@ class @Board
   ### Returns a flattened version of the board - all hexes in no particular order ###
   allHexes : () ->
     arr = []
-    for key, value in @allHexesByClass
+    for key, value of @allHexesByClass
       for h in value
         arr.push(h)
 
@@ -91,7 +91,7 @@ class @Board
 
   ### Returns all hexes in the board that are of a particular class. Returns an empty array if no such class ###
   allHexesOfClass : (cl) ->
-    for key, value in @allHexesByClass
+    for key, value of @allHexesByClass
       if key.toLowerCase is cl.toLowerCase
         return value
     return []
@@ -158,7 +158,7 @@ class @Board
      This should hit the whole board. ###
   relight : () ->
     for h in @allHexes()
-      h.lighters = []
+      h.lighters = {}
     for h in @allHexesOfClass("Spark")
       h.light()
     return
@@ -190,13 +190,17 @@ class @Board
       s = s + "\n"
     return s
 
+  ### Loads the given board from JSON text. Takes the name of the board (no file extension) as arg ###
+  @loadBoard = (name) ->
+    boardText = fs.readFileSync("assets/boards/" + name + ".json").toString()
+
   ### Makes a random board with the given dimentions. Mainly for testing. Sparks/Crystals at corners, prisms otw ###
   @makeBoard = (rs, cs, cls) ->
     b = new Board(rs,cs);
     for r in [0 .. rs - 1] by 1
       for c in [0 .. cs - 1] by 1
         if r is 0 and c is 0 or r is (rs-1) and c is 0
-          new Spark(b, new Loc(r,c), Color.subValues(1, cls-1))
+          new Spark(b, new Loc(r,c), Color.subValues(cls))
         else if r is 0 and c is (cs - 1) or r is (rs-1) and c is (cs - 1)
           new Crystal(b, new Loc(r, c))
         else

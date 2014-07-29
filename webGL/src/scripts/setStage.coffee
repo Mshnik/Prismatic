@@ -83,7 +83,7 @@ window.onresize = () ->
             h.prevRotation = h.currentRotation
             h.canLight = true
             h.light()
-        if h instanceof Spark and h.toColor isnt ""
+        if h instanceof Spark and h.toColor ist ""
           tex = PIXI.Texture.fromImage("assets/img/circle_" + h.toColor + ".png")
           for i in [1 .. Hex.SIDES] by 1
             h.panel.children[i].texture = tex
@@ -92,19 +92,23 @@ window.onresize = () ->
     @renderer.render(@stage)
     return
   requestAnimFrame(animate )
-  window.createDummyBoard()
+  @BOARD = new Board() ## Temp board to handle resize requests while loading new board
+  Board.loadBoard("223723243")
+  return
+
+### Called when the board is loaded ###
+@onBoardLoad = () ->
   ## Fit the canvas to the window
   document.body.appendChild(renderer.view)
   ## Scale the pieces based on the board size relative to the canvas size
   window.resize()
   window.drawBoard()
-  return
-
 
 ### Creates a dummy board and adds to scope. Mainly for testing ###
 @createDummyBoard = () ->
   @BOARD = @Board.makeBoard(4, 12,3)
   @BOARD.relight()
+  @onBoardLoad()
   return
 
 

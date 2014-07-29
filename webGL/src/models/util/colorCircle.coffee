@@ -23,8 +23,9 @@ class ColorCircle
       throw ("Can't make Color Array of length " + length + " for color circle")
     if(maxColors <= 0) 
       throw ("Can't make Color Array of length using at most " + maxColors + " colors")
+    m = Math.min(maxColors, Color.regularColors().length)
     a = for i in [0 .. (length-1)] by 1
-      Color.values()[1 + Math.floor((Math.random() * (Math.min(maxColors, Color.values().length - 1))))]
+      Color.regularColors()[Math.floor(Math.random() * m)]
     a
 
   ### Constructs a color circle with the given inputs. Should not be used outside of this file - use helpers ###

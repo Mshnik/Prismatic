@@ -53,13 +53,6 @@
     };
 
 
-    /* Returns the regular colors */
-
-    Color.regularColors = function() {
-      return this.subvalues(Number.MAX_VALUE);
-    };
-
-
     /* Returns a subArray of REGULAR colors, starting at color n and giving l colors. Caps at the available number of regular colors */
 
     Color.subValues = function(n) {
@@ -67,6 +60,13 @@
       c = Color.count();
       len = Math.min(n, c - this.SPECIAL_OFFSET);
       return Color.values().splice(this.SPECIAL_OFFSET, len);
+    };
+
+
+    /* Returns the regular colors */
+
+    Color.regularColors = function() {
+      return this.subValues(Number.MAX_VALUE);
     };
 
 
@@ -145,18 +145,19 @@
      */
 
     ColorCircle.randomArray = function(length, maxColors) {
-      var a, i;
+      var a, i, m;
       if (length <= 0) {
         throw "Can't make Color Array of length " + length + " for color circle";
       }
       if (maxColors <= 0) {
         throw "Can't make Color Array of length using at most " + maxColors + " colors";
       }
+      m = Math.min(maxColors, Color.regularColors().length);
       a = (function() {
         var _i, _ref, _results;
         _results = [];
         for (i = _i = 0, _ref = length - 1; _i <= _ref; i = _i += 1) {
-          _results.push(Color.values()[1 + Math.floor(Math.random() * (Math.min(maxColors, Color.values().length - 1)))]);
+          _results.push(Color.regularColors()[Math.floor(Math.random() * m)]);
         }
         return _results;
       })();
@@ -490,13 +491,13 @@
     /* Returns a flattened version of the board - all hexes in no particular order */
 
     Board.prototype.allHexes = function() {
-      var arr, h, key, value, _i, _j, _len, _len1, _ref;
+      var arr, h, key, value, _i, _len, _ref;
       arr = [];
       _ref = this.allHexesByClass;
-      for (value = _i = 0, _len = _ref.length; _i < _len; value = ++_i) {
-        key = _ref[value];
-        for (_j = 0, _len1 = value.length; _j < _len1; _j++) {
-          h = value[_j];
+      for (key in _ref) {
+        value = _ref[key];
+        for (_i = 0, _len = value.length; _i < _len; _i++) {
+          h = value[_i];
           arr.push(h);
         }
       }
@@ -507,10 +508,10 @@
     /* Returns all hexes in the board that are of a particular class. Returns an empty array if no such class */
 
     Board.prototype.allHexesOfClass = function(cl) {
-      var key, value, _i, _len, _ref;
+      var key, value, _ref;
       _ref = this.allHexesByClass;
-      for (value = _i = 0, _len = _ref.length; _i < _len; value = ++_i) {
-        key = _ref[value];
+      for (key in _ref) {
+        value = _ref[key];
         if (key.toLowerCase === cl.toLowerCase) {
           return value;
         }
@@ -611,7 +612,7 @@
       _ref = this.allHexes();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         h = _ref[_i];
-        h.lighters = [];
+        h.lighters = {};
       }
       _ref1 = this.allHexesOfClass("Spark");
       for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
@@ -664,6 +665,14 @@
     };
 
 
+    /* Loads the given board from JSON text. Takes the name of the board (no file extension) as arg */
+
+    Board.loadBoard = function(name) {
+      var boardText;
+      return boardText = fs.readFileSync("assets/boards/" + name + ".json").toString();
+    };
+
+
     /* Makes a random board with the given dimentions. Mainly for testing. Sparks/Crystals at corners, prisms otw */
 
     Board.makeBoard = function(rs, cs, cls) {
@@ -672,7 +681,7 @@
       for (r = _i = 0, _ref = rs - 1; _i <= _ref; r = _i += 1) {
         for (c = _j = 0, _ref1 = cs - 1; _j <= _ref1; c = _j += 1) {
           if (r === 0 && c === 0 || r === (rs - 1) && c === 0) {
-            new Spark(b, new Loc(r, c), Color.subValues(1, cls - 1));
+            new Spark(b, new Loc(r, c), Color.subValues(cls));
           } else if (r === 0 && c === (cs - 1) || r === (rs - 1) && c === (cs - 1)) {
             new Crystal(b, new Loc(r, c));
           } else {

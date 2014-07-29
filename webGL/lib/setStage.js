@@ -94,7 +94,7 @@
               h.light();
             }
           }
-          if (h instanceof Spark && h.toColor !== "") {
+          if (h instanceof Spark && h.toColor(ist(""))) {
             tex = PIXI.Texture.fromImage("assets/img/circle_" + h.toColor + ".png");
             for (i = _j = 1, _ref1 = Hex.SIDES; _j <= _ref1; i = _j += 1) {
               h.panel.children[i].texture = tex;
@@ -107,10 +107,17 @@
       this.renderer.render(this.stage);
     };
     requestAnimFrame(animate);
-    window.createDummyBoard();
+    this.BOARD = new Board();
+    Board.loadBoard("223723243");
+  };
+
+
+  /* Called when the board is loaded */
+
+  this.onBoardLoad = function() {
     document.body.appendChild(renderer.view);
     window.resize();
-    window.drawBoard();
+    return window.drawBoard();
   };
 
 
@@ -119,6 +126,7 @@
   this.createDummyBoard = function() {
     this.BOARD = this.Board.makeBoard(4, 12, 3);
     this.BOARD.relight();
+    this.onBoardLoad();
   };
 
 
