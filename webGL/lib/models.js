@@ -1202,6 +1202,7 @@
       Crystal.__super__.constructor.call(this, board, loc);
       this.lit = Color.NONE;
       this.canLight = false;
+      this.toColor = "";
     }
 
 
@@ -1224,6 +1225,7 @@
       } else {
         this.lit = this.isLit()[0];
       }
+      this.toColor = this.lit;
       this.update();
     };
 
@@ -1379,12 +1381,10 @@
     /* Default behavior for a Prism is to rotate. Rotates clockwise if ROTATE_CLOCKWISE, rotates counterclockwise otherwise. */
 
     Prism.prototype.click = function() {
-      if (this.targetRotation === this.currentRotation) {
-        if (Prism.ROTATE_CLOCKWISE) {
-          this.rotate();
-        } else {
-          this.rotateCounter();
-        }
+      if (Prism.ROTATE_CLOCKWISE) {
+        return this.rotate();
+      } else {
+        return this.rotateCounter();
       }
     };
 
@@ -1392,12 +1392,10 @@
     /* Does the opposite of the default behavior. Mwa haha! */
 
     Prism.prototype.antiClick = function() {
-      if (this.targetRotation === this.currentRotation) {
-        if (!Prism.ROTATE_CLOCKWISE) {
-          this.rotate();
-        } else {
-          this.rotateCounter();
-        }
+      if (!Prism.ROTATE_CLOCKWISE) {
+        return this.rotate();
+      } else {
+        return this.rotateCounter();
       }
     };
 

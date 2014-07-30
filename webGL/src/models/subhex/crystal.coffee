@@ -9,6 +9,7 @@ class @Crystal extends Hex
     super(board, loc)
     @lit = Color.NONE   ## Single color this is lit. Only changed at end of recalculating light
     @canLight = false   ## Can never provide light
+    @toColor = ""       ## Color to change this to on next redraw. Empty if current color is ok
 
 
   ### @Override
@@ -29,6 +30,7 @@ class @Crystal extends Hex
       @lit = @isLit()[0]
 
     ##Redraw 
+    @toColor = @lit
     @update()
     return
 

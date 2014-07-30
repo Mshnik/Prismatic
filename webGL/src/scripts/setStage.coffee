@@ -32,8 +32,8 @@
 
 ### Load assets into cache ###
 @preloadImages = ->
-  assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/circle_blue.png", 
-            "assets/img/circle_red.png", "assets/img/circle_green.png"]
+  assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/circle_none.png",
+            "assets/img/circle_blue.png", "assets/img/circle_red.png", "assets/img/circle_green.png"]
   loader = new PIXI.AssetLoader(assets)
   loader.onComplete = @initFinish
   loader.load()
@@ -75,7 +75,11 @@ window.onresize = () ->
           if h.canLight
             h.canLight = false
             h.light()
-          inc = (h.targetRotation - h.prevRotation) * rotSpeed
+          inc = 
+            if (h.targetRotation - h.prevRotation) >= 0 
+              rotSpeed
+            else
+              -rotSpeed
           h.panel.rotation += inc * radTo60Degree
           h.currentRotation += inc 
           if Math.abs(h.targetRotation - h.currentRotation) < tolerance
@@ -85,12 +89,11 @@ window.onresize = () ->
             h.prevRotation = h.currentRotation
             h.canLight = true
             h.light()
-        if h instanceof Spark and h.toColor isnt "" or h instanceof Crystal and h.lit isnt Color.NONE
-          c = (if h instanceof Spark then h.toColor else h.lit)
-          col = if (not isNaN(c)) 
-                  Color.asString(c) 
+        if (h instanceof Spark or h instanceof Crystal) and h.toColor isnt ""
+          col = if (not isNaN(h.toColor)) 
+                  Color.asString(h.toColor) 
                 else 
-                  c
+                  h.toColor
           tex = PIXI.Texture.fromImage("assets/img/circle_" +  col + ".png")
           for i in [1 .. Hex.SIDES] by 1
             h.panel.children[i].texture = tex

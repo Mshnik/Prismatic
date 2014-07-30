@@ -92,18 +92,14 @@ class @Prism extends Hex
 
   ### Default behavior for a Prism is to rotate. Rotates clockwise if ROTATE_CLOCKWISE, rotates counterclockwise otherwise. ###
   click : () -> 
-    if @targetRotation is @currentRotation
-      if(Prism.ROTATE_CLOCKWISE)
-        @rotate()
-      else
-        @rotateCounter()
-    return
+    if(Prism.ROTATE_CLOCKWISE)
+      @rotate()
+    else
+      @rotateCounter()
 
   ### Does the opposite of the default behavior. Mwa haha! ###
   antiClick : () ->
-    if @targetRotation is @currentRotation
-      if(not Prism.ROTATE_CLOCKWISE)
-        @rotate()
-      else
-        @rotateCounter()
-    return
+    if(not Prism.ROTATE_CLOCKWISE)
+      @rotate()
+    else
+      @rotateCounter()

@@ -27,7 +27,7 @@
 
   this.preloadImages = function() {
     var assets, loader;
-    assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/circle_blue.png", "assets/img/circle_red.png", "assets/img/circle_green.png"];
+    assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/circle_none.png", "assets/img/circle_blue.png", "assets/img/circle_red.png", "assets/img/circle_green.png"];
     loader = new PIXI.AssetLoader(assets);
     loader.onComplete = this.initFinish;
     loader.load();
@@ -58,7 +58,7 @@
   this.initFinish = function() {
     var animate;
     animate = function() {
-      var c, col, h, i, inc, radTo60Degree, rotSpeed, tex, tolerance, _i, _j, _len, _ref, _ref1;
+      var col, h, i, inc, radTo60Degree, rotSpeed, tex, tolerance, _i, _j, _len, _ref, _ref1;
       rotSpeed = 1 / 10;
       tolerance = 0.000001;
       radTo60Degree = 1.04719755;
@@ -84,7 +84,7 @@
               h.canLight = false;
               h.light();
             }
-            inc = (h.targetRotation - h.prevRotation) * rotSpeed;
+            inc = (h.targetRotation - h.prevRotation) >= 0 ? rotSpeed : -rotSpeed;
             h.panel.rotation += inc * radTo60Degree;
             h.currentRotation += inc;
             if (Math.abs(h.targetRotation - h.currentRotation) < tolerance) {
@@ -96,9 +96,8 @@
               h.light();
             }
           }
-          if (h instanceof Spark && h.toColor !== "" || h instanceof Crystal && h.lit !== Color.NONE) {
-            c = (h instanceof Spark ? h.toColor : h.lit);
-            col = !isNaN(c) ? Color.asString(c) : c;
+          if ((h instanceof Spark || h instanceof Crystal) && h.toColor !== "") {
+            col = !isNaN(h.toColor) ? Color.asString(h.toColor) : h.toColor;
             tex = PIXI.Texture.fromImage("assets/img/circle_" + col + ".png");
             for (i = _j = 1, _ref1 = Hex.SIDES; _j <= _ref1; i = _j += 1) {
               h.panel.children[i].texture = tex;
