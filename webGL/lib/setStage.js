@@ -16,9 +16,11 @@
     margin = 20;
     this.renderer = PIXI.autoDetectRenderer(window.innerWidth - margin, window.innerHeight - margin);
     PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
+    this.menu = new PIXI.DisplayObjectContainer();
+    this.stage.addChild(this.menu);
     this.container = new PIXI.DisplayObjectContainer();
+    container.position.y = 100;
     this.stage.addChild(this.container);
-    PIXI.scaleModes.DEFAULT = PIXI.scaleModes.LINEAR;
     preloadImages();
   };
 
@@ -27,7 +29,7 @@
 
   this.preloadImages = function() {
     var assets, loader;
-    assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/circle_none.png", "assets/img/circle_blue.png", "assets/img/circle_red.png", "assets/img/circle_green.png"];
+    assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/menu.png", "assets/img/circle_none.png", "assets/img/circle_blue.png", "assets/img/circle_red.png", "assets/img/circle_green.png"];
     loader = new PIXI.AssetLoader(assets);
     loader.onComplete = this.initFinish;
     loader.load();
@@ -37,12 +39,26 @@
   /* Resizes the stage correctly */
 
   this.resize = function() {
-    var margin, scale;
+    var margin, menuBackground, menuLeft, menuMiddle, menuRight, n, newScale, newScale2, scale;
     margin = 20;
     window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin);
-    scale = (1 / 120) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth());
-    window.container.scale.x = scale;
-    window.container.scale.y = scale;
+    menuBackground = this.menu.children[0];
+    menuLeft = menuBackground.children[0];
+    menuMiddle = menuBackground.children[1];
+    menuRight = menuBackground.children[2];
+    newScale = (window.innerWidth - 220) / 200;
+    menuMiddle.scale.x = newScale;
+    menuRight.position.x = 100 + (newScale * 200);
+    newScale2 = Math.min(1, Math.max(0.75, window.innerHeight / 1000));
+    menuBackground.scale.y = newScale2;
+    this.container.position.y = newScale2 * 100;
+    if ((this.BOARD != null)) {
+      scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth());
+      this.container.scale.x = scale;
+      this.container.scale.y = scale;
+      n = this.hexRad * this.container.scale.x;
+      this.container.position.x = (window.innerWidth - window.BOARD.getWidth() * n) / 2;
+    }
   };
 
 
@@ -57,6 +73,7 @@
 
   this.initFinish = function() {
     var animate;
+    window.initMenu();
     animate = function() {
       var col, h, i, inc, radTo60Degree, rotSpeed, tex, tolerance, _i, _j, _len, _ref, _ref1;
       rotSpeed = 1 / 10;
@@ -112,6 +129,22 @@
     requestAnimFrame(animate);
     this.BOARD = new Board();
     Board.loadBoard("board1");
+  };
+
+  this.initMenu = function() {
+    var baseTex, menuBack_Left, menuBack_Middle, menuBack_Right, menuBackground;
+    menuBackground = new PIXI.DisplayObjectContainer();
+    baseTex = PIXI.BaseTexture.fromImage("assets/img/menu.png");
+    menuBack_Left = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(0, 0, 100, 100)));
+    menuBack_Middle = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(100, 0, 200, 100)));
+    menuBack_Middle.position.x = 100;
+    menuBack_Right = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(300, 0, 100, 100)));
+    menuBack_Right.position.x = 300;
+    menuBackground.addChild(menuBack_Left);
+    menuBackground.addChild(menuBack_Middle);
+    menuBackground.addChild(menuBack_Right);
+    this.menu.addChild(menuBackground);
+    this.resize();
   };
 
 

@@ -9,7 +9,10 @@
   margin = 20
   @renderer = PIXI.autoDetectRenderer(window.innerWidth - margin, window.innerHeight - margin)
   PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST
+  @menu = new PIXI.DisplayObjectContainer()
+  @stage.addChild(@menu)
   @container = new PIXI.DisplayObjectContainer()
+  container.position.y = 100
   @stage.addChild(@container)
 # stage = new PIXI.Stage(0x66FF99);
 #   renderer = PIXI.autoDetectRenderer(400, 300);
@@ -26,14 +29,13 @@
   # @hexPanel.addChild(dS)
 
   # @renderer.render(stage);
-  PIXI.scaleModes.DEFAULT = PIXI.scaleModes.LINEAR
   preloadImages()
   return
 
 ### Load assets into cache ###
 @preloadImages = ->
-  assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/circle_none.png",
-            "assets/img/circle_blue.png", "assets/img/circle_red.png", "assets/img/circle_green.png"]
+  assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/menu.png",
+            "assets/img/circle_none.png", "assets/img/circle_blue.png", "assets/img/circle_red.png", "assets/img/circle_green.png"]
   loader = new PIXI.AssetLoader(assets)
   loader.onComplete = @initFinish
   loader.load()
@@ -43,9 +45,32 @@
 @resize = () ->
   margin = 20
   window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin)
-  scale = (1 / 120) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth())
-  window.container.scale.x = scale
-  window.container.scale.y = scale
+
+  ## Expand/contract the menu. Horizontal expansion/contraction is on middle sprite. Vertical is on whole menubackground container
+  menuBackground = @menu.children[0]
+  menuLeft = menuBackground.children[0]
+  menuMiddle = menuBackground.children[1]
+  menuRight = menuBackground.children[2]
+
+  ## Default size = 200.
+  newScale = (window.innerWidth - 220) / 200
+  menuMiddle.scale.x = newScale
+  menuRight.position.x = 100 + (newScale * 200)
+
+  ##Resize vertically - default height = 100
+  newScale2 = Math.min(1, Math.max(0.75, window.innerHeight / 1000))
+  menuBackground.scale.y = newScale2
+  @container.position.y = newScale2 * 100
+
+  ## Fix board
+  if(@BOARD?)
+    scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth())
+    @container.scale.x = scale
+    @container.scale.y = scale
+
+    ##Center
+    n = @hexRad * @container.scale.x
+    @container.position.x = (window.innerWidth - window.BOARD.getWidth() * n)/2
   return
 
 ### Detect when the window is resized - jquery ftw! ###
@@ -55,6 +80,7 @@ window.onresize = () ->
 
 ### Finish initing after assets are loaded ###
 @initFinish = ->
+  window.initMenu()
   animate = () ->
     rotSpeed = 1/10
     tolerance = 0.000001 ## For floating point errors - difference below this is considered 'equal'
@@ -104,6 +130,23 @@ window.onresize = () ->
   requestAnimFrame(animate )
   @BOARD = new Board() ## Temp board to handle resize requests while loading new board
   Board.loadBoard("board1")
+  return
+
+@initMenu = () ->
+  menuBackground = new PIXI.DisplayObjectContainer()
+  baseTex = PIXI.BaseTexture.fromImage("assets/img/menu.png")
+  menuBack_Left = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(0, 0, 100, 100)))
+  menuBack_Middle = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(100, 0, 200, 100)))
+  menuBack_Middle.position.x = 100
+  menuBack_Right = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(300, 0, 100, 100)))
+  menuBack_Right.position.x = 300
+
+  ## Add pieces to background
+  menuBackground.addChild(menuBack_Left)
+  menuBackground.addChild(menuBack_Middle)
+  menuBackground.addChild(menuBack_Right)
+  @menu.addChild(menuBackground)
+  @resize()
   return
 
 ### Called when the board is loaded ###
