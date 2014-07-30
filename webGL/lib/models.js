@@ -106,6 +106,31 @@
       }
     };
 
+    Color.fromString = function(color) {
+      switch (color.toLowerCase()) {
+        case "any":
+          return this.ANY;
+        case "red":
+          return this.RED;
+        case "blue":
+          return this.BLUE;
+        case "green":
+          return this.GREEN;
+        case "orange":
+          return this.ORANGE;
+        case "purple":
+          return this.PURPLE;
+        case "cyan":
+          return this.CYAN;
+        case "yellow":
+          return this.YELLOW;
+        case "pink":
+          return this.PINK;
+        default:
+          return this.NONE;
+      }
+    };
+
     return Color;
 
   })();
@@ -336,6 +361,22 @@
 
     Loc.prototype.toString = function() {
       return "(" + this.row + "," + this.col + ")";
+    };
+
+
+    /* Returns true if the string is a location, false otherwise */
+
+    Loc.isLoc = function(s) {
+      var c, i, o, s1, s2;
+      i = s.indexOf(",");
+      o = s.indexOf("(");
+      c = s.indexOf(")");
+      if (i === -1 || o !== 0 || c !== (s.length - 1)) {
+        return false;
+      }
+      s1 = s.substring(1, i);
+      s2 = s.substring(i + 1, s.length - 1);
+      return !(isNaN(s1) || isNaN(s2));
     };
 
     Loc.fromString = function(s) {
@@ -668,8 +709,33 @@
     /* Loads the given board from JSON text. Takes the name of the board (no file extension) as arg */
 
     Board.loadBoard = function(name) {
-      var boardText;
-      return boardText = fs.readFileSync("assets/boards/" + name + ".json").toString();
+      var file;
+      file = "/assets/boards/" + name + ".json";
+      $.getJSON(file, function(content) {
+        var b, key, value;
+        console.log("Got board");
+        b = new Board(content.Height, content.Width);
+        b.puzzle = content.Puzzle;
+        for (key in content) {
+          value = content[key];
+          if (Loc.isLoc(key)) {
+            if (value.Type === "C") {
+              new Crystal(b, Loc.fromString(key));
+            } else if (value.Type === "P") {
+              new Prism(b, Loc.fromString(key), value.Colors);
+            } else if (value.Type === "S") {
+              new Spark(b, Loc.fromString(key), value.Colors);
+            } else {
+              Console.error("Bad k/v found " + key + ";" + value);
+            }
+          } else {
+
+          }
+        }
+        console.log("Board loaded");
+        window.BOARD = b;
+        window.onBoardLoad();
+      });
     };
 
 

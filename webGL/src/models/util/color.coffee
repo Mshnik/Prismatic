@@ -65,3 +65,26 @@ class @Color
         return "pink"
       else
         return "none"
+
+  @fromString : (color) ->
+    switch color.toLowerCase()
+      when "any"
+        return @ANY
+      when "red"
+        return @RED
+      when "blue"
+        return @BLUE
+      when "green"
+        return @GREEN
+      when "orange"
+        return @ORANGE
+      when "purple"
+        return @PURPLE
+      when "cyan"
+        return @CYAN
+      when "yellow"
+        return @YELLOW
+      when "pink"
+        return @PINK
+      else
+        return @NONE

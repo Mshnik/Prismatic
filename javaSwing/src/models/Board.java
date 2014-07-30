@@ -39,6 +39,9 @@ public class Board implements JSONString{
   /** The number of moves made on this board. A move is a prism rotation. */
   protected int moves = 0;
   
+  /** A string representing the puzzle for this board */
+  public String puzzle = "";
+  
   /** Returns the number of moves on this board */
   public int getMoves(){
     return moves;
@@ -304,8 +307,11 @@ public class Board implements JSONString{
   public String toJSONString() {
     String s = "{";
     for(Hex h : allHexes()){
-      s += "\n" + "\"" + h.location.toString() + "\":" + h.toJSONString() + ",";
+      s += "\n" + Util.addQ(h.location.toString()) + ":" + h.toJSONString() + ",";
     }
+    s += "\n" + Util.addQ("Height") + ":" + getHeight() + ",";
+    s += "\n" + Util.addQ("Width") + ":" + getWidth() + ",";
+    s += "\n" + Util.addQ("Puzzle") + ":" + Util.addQ(puzzle);     //Lack of comma here is very important - not valid JSON otherwise.
     return s + "\n}";
   }
   

@@ -58,6 +58,17 @@ class @Loc
   toString: () ->
     "(" + @row + "," + @col + ")"
 
+  ### Returns true if the string is a location, false otherwise ###
+  @isLoc : (s) ->
+    i = s.indexOf(",")
+    o = s.indexOf("(")
+    c = s.indexOf(")")
+    if i == -1 or o isnt 0 or c isnt (s.length - 1)
+      return false
+    s1 = s.substring(1,i)
+    s2 = s.substring(i+1, s.length - 1)
+    return not (isNaN(s1) or isNaN(s2))
+
   @fromString : (s) ->
     i = s.indexOf(",")
     s1 = s.substring(1,i)

@@ -37,7 +37,9 @@
   /* Resizes the stage correctly */
 
   this.resize = function() {
-    var scale;
+    var margin, scale;
+    margin = 20;
+    window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin);
     scale = (1 / 120) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth());
     window.container.scale.x = scale;
     window.container.scale.y = scale;
@@ -56,7 +58,7 @@
   this.initFinish = function() {
     var animate;
     animate = function() {
-      var h, i, inc, radTo60Degree, rotSpeed, tex, tolerance, _i, _j, _len, _ref, _ref1;
+      var col, h, i, inc, radTo60Degree, rotSpeed, tex, tolerance, _i, _j, _len, _ref, _ref1;
       rotSpeed = 1 / 10;
       tolerance = 0.000001;
       radTo60Degree = 1.04719755;
@@ -94,8 +96,9 @@
               h.light();
             }
           }
-          if (h instanceof Spark && h.toColor(ist(""))) {
-            tex = PIXI.Texture.fromImage("assets/img/circle_" + h.toColor + ".png");
+          if (h instanceof Spark && h.toColor !== "") {
+            col = !isNaN(h.toColor) ? Color.asString(h.toColor) : h.toColor;
+            tex = PIXI.Texture.fromImage("assets/img/circle_" + col + ".png");
             for (i = _j = 1, _ref1 = Hex.SIDES; _j <= _ref1; i = _j += 1) {
               h.panel.children[i].texture = tex;
             }
@@ -108,13 +111,14 @@
     };
     requestAnimFrame(animate);
     this.BOARD = new Board();
-    Board.loadBoard("223723243");
+    Board.loadBoard("board1");
   };
 
 
   /* Called when the board is loaded */
 
   this.onBoardLoad = function() {
+    window.BOARD.relight();
     document.body.appendChild(renderer.view);
     window.resize();
     return window.drawBoard();
@@ -125,7 +129,6 @@
 
   this.createDummyBoard = function() {
     this.BOARD = this.Board.makeBoard(4, 12, 3);
-    this.BOARD.relight();
     this.onBoardLoad();
   };
 

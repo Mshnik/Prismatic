@@ -62,6 +62,8 @@ public abstract class Game {
   /** Saves the current board w/ random name*/
   public void saveBoard(){
     Board b = new Board(board);
+    if(this instanceof CreatedGame)
+      b.puzzle = ((CreatedGame)this).puzzleString();
     try {
       TextIO.writeJSON("Sample Maps/" + b.hashCode() + ".json", b);
     } catch (IllegalArgumentException | IOException e) {

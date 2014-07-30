@@ -8,6 +8,9 @@ class ColorCircle
     if(colors is null or colors.length is 0)
       return null
     l = colors.length
+
+    ##Convert to contstants if they came in as strings
+    # colorsFixed = ((if isNaN(c) then Color.fromString(c) else c) for c in colors)
     t = (new ColorCircle(c, null, null) for c in colors)
     for i in [0 .. (l - 1)] by 1
       cc = t[i]

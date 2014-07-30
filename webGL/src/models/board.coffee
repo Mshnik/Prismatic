@@ -192,7 +192,30 @@ class @Board
 
   ### Loads the given board from JSON text. Takes the name of the board (no file extension) as arg ###
   @loadBoard = (name) ->
-    boardText = fs.readFileSync("assets/boards/" + name + ".json").toString()
+    file = "/assets/boards/" + name + ".json"
+    $.getJSON(file, 
+      (content) ->
+        console.log("Got board")
+        b = new Board(content.Height, content.Width)
+        b.puzzle = content.Puzzle
+        for key, value of content
+          if Loc.isLoc(key)
+            if value.Type is "C"
+              new Crystal(b, Loc.fromString(key))
+            else if value.Type is "P"
+              new Prism(b, Loc.fromString(key), value.Colors)
+            else if value.Type is "S"
+              new Spark(b, Loc.fromString(key), value.Colors)
+            else
+              Console.error("Bad k/v found " + key + ";" + value)
+          else
+            # Do nothing
+        console.log("Board loaded")
+        window.BOARD = b
+        window.onBoardLoad()
+        return
+    )
+    return
 
   ### Makes a random board with the given dimentions. Mainly for testing. Sparks/Crystals at corners, prisms otw ###
   @makeBoard = (rs, cs, cls) ->

@@ -41,6 +41,8 @@
 
 ### Resizes the stage correctly ###
 @resize = () ->
+  margin = 20
+  window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin)
   scale = (1 / 120) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth())
   window.container.scale.x = scale
   window.container.scale.y = scale
@@ -83,8 +85,12 @@ window.onresize = () ->
             h.prevRotation = h.currentRotation
             h.canLight = true
             h.light()
-        if h instanceof Spark and h.toColor ist ""
-          tex = PIXI.Texture.fromImage("assets/img/circle_" + h.toColor + ".png")
+        if h instanceof Spark and h.toColor isnt ""
+          col = if (not isNaN(h.toColor)) 
+                  Color.asString(h.toColor) 
+                else 
+                  h.toColor
+          tex = PIXI.Texture.fromImage("assets/img/circle_" +  col + ".png")
           for i in [1 .. Hex.SIDES] by 1
             h.panel.children[i].texture = tex
           h.toColor = ""
@@ -93,11 +99,12 @@ window.onresize = () ->
     return
   requestAnimFrame(animate )
   @BOARD = new Board() ## Temp board to handle resize requests while loading new board
-  Board.loadBoard("223723243")
+  Board.loadBoard("board1")
   return
 
 ### Called when the board is loaded ###
 @onBoardLoad = () ->
+  window.BOARD.relight()
   ## Fit the canvas to the window
   document.body.appendChild(renderer.view)
   ## Scale the pieces based on the board size relative to the canvas size
@@ -107,7 +114,6 @@ window.onresize = () ->
 ### Creates a dummy board and adds to scope. Mainly for testing ###
 @createDummyBoard = () ->
   @BOARD = @Board.makeBoard(4, 12,3)
-  @BOARD.relight()
   @onBoardLoad()
   return
 

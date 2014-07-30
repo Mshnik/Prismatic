@@ -14,4 +14,12 @@ public class Util {
     return "\"" + s + "\"";
   }
   
+  
+  /** Surrounds the given string with a double pair of quotes. Nice for JSONing.
+   * 
+   */
+  public static String add2Q(String s){
+    return "\"\\\"" + s + "\\\"\"";
+  }
+  
 }
