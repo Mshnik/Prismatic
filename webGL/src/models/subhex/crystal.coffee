@@ -18,15 +18,15 @@ class @Crystal extends Hex
     lighterChanged = @pruneLighters()
     #First try to find a provider of the previous color of light
     if(lighterChanged or @lit is Color.NONE or @lit is Color.asString(Color.NONE))
-      @findLightProviders(lit)
+      @findLightProviders(@lit)
       if(@isLit().length == 0)
         @findLightProviders(Color.NONE)
     
     #Update the color this is lit
     if(@isLit().length == 0)
-      lit = Color.NONE;
+      @lit = Color.NONE;
     else
-      lit = @isLit()[0]
+      @lit = @isLit()[0]
 
     ##Redraw 
     @update()
@@ -40,7 +40,7 @@ class @Crystal extends Hex
     for h in @getNeighbors()
       hLit = h.isLit()
       c = h.colorOfSide(h.indexLinked(this))
-      if( (not h instanceof Crystal) and (hLit.length > 0 and (preferred is Color.NONE or preferred in hLit)) and c not in @isLit() and c in hLit)
+      if( not (h instanceof Crystal) and (hLit.length > 0 and (preferred is Color.NONE or preferred in hLit)) and c not in @isLit() and c in hLit)
         @lighters[h.loc.toString()] = c        
     return
   

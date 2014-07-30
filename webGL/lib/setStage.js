@@ -58,7 +58,7 @@
   this.initFinish = function() {
     var animate;
     animate = function() {
-      var col, h, i, inc, radTo60Degree, rotSpeed, tex, tolerance, _i, _j, _len, _ref, _ref1;
+      var c, col, h, i, inc, radTo60Degree, rotSpeed, tex, tolerance, _i, _j, _len, _ref, _ref1;
       rotSpeed = 1 / 10;
       tolerance = 0.000001;
       radTo60Degree = 1.04719755;
@@ -96,8 +96,9 @@
               h.light();
             }
           }
-          if (h instanceof Spark && h.toColor !== "") {
-            col = !isNaN(h.toColor) ? Color.asString(h.toColor) : h.toColor;
+          if (h instanceof Spark && h.toColor !== "" || h instanceof Crystal && h.lit !== Color.NONE) {
+            c = (h instanceof Spark ? h.toColor : h.lit);
+            col = !isNaN(c) ? Color.asString(c) : c;
             tex = PIXI.Texture.fromImage("assets/img/circle_" + col + ".png");
             for (i = _j = 1, _ref1 = Hex.SIDES; _j <= _ref1; i = _j += 1) {
               h.panel.children[i].texture = tex;

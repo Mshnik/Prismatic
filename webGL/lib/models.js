@@ -1211,18 +1211,18 @@
      */
 
     Crystal.prototype.light = function() {
-      var lighterChanged, lit;
+      var lighterChanged;
       lighterChanged = this.pruneLighters();
       if (lighterChanged || this.lit === Color.NONE || this.lit === Color.asString(Color.NONE)) {
-        this.findLightProviders(lit);
+        this.findLightProviders(this.lit);
         if (this.isLit().length === 0) {
           this.findLightProviders(Color.NONE);
         }
       }
       if (this.isLit().length === 0) {
-        lit = Color.NONE;
+        this.lit = Color.NONE;
       } else {
-        lit = this.isLit()[0];
+        this.lit = this.isLit()[0];
       }
       this.update();
     };
@@ -1241,7 +1241,7 @@
         h = _ref[_i];
         hLit = h.isLit();
         c = h.colorOfSide(h.indexLinked(this));
-        if ((!h instanceof Crystal) && (hLit.length > 0 && (preferred === Color.NONE || __indexOf.call(hLit, preferred) >= 0)) && __indexOf.call(this.isLit(), c) < 0 && __indexOf.call(hLit, c) >= 0) {
+        if (!(h instanceof Crystal) && (hLit.length > 0 && (preferred === Color.NONE || __indexOf.call(hLit, preferred) >= 0)) && __indexOf.call(this.isLit(), c) < 0 && __indexOf.call(hLit, c) >= 0) {
           this.lighters[h.loc.toString()] = c;
         }
       }

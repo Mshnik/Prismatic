@@ -85,11 +85,12 @@ window.onresize = () ->
             h.prevRotation = h.currentRotation
             h.canLight = true
             h.light()
-        if h instanceof Spark and h.toColor isnt ""
-          col = if (not isNaN(h.toColor)) 
-                  Color.asString(h.toColor) 
+        if h instanceof Spark and h.toColor isnt "" or h instanceof Crystal and h.lit isnt Color.NONE
+          c = (if h instanceof Spark then h.toColor else h.lit)
+          col = if (not isNaN(c)) 
+                  Color.asString(c) 
                 else 
-                  h.toColor
+                  c
           tex = PIXI.Texture.fromImage("assets/img/circle_" +  col + ".png")
           for i in [1 .. Hex.SIDES] by 1
             h.panel.children[i].texture = tex
