@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"filter",
+				"filter"
+			],
+			[
+				"menuBa",
+				"menuBackground"
+			],
+			[
+				"menuB",
+				"menuBack_Right"
+			],
+			[
+				"menu",
+				"menuBack_Middle"
+			],
+			[
+				"m",
+				"menuBack_Left"
+			],
+			[
 				"cube",
 				"cubeCoordinates"
 			],
@@ -499,7 +519,7 @@
 			"file": "src/models/board.coffee",
 			"settings":
 			{
-				"buffer_size": 6589,
+				"buffer_size": 7279,
 				"line_ending": "Unix"
 			}
 		},
@@ -507,7 +527,7 @@
 			"file": "src/scripts/setStage.coffee",
 			"settings":
 			{
-				"buffer_size": 6034,
+				"buffer_size": 8769,
 				"line_ending": "Unix"
 			}
 		},
@@ -515,7 +535,7 @@
 			"file": "src/models/util/colorCircle.coffee",
 			"settings":
 			{
-				"buffer_size": 2442,
+				"buffer_size": 2582,
 				"line_ending": "Unix"
 			}
 		},
@@ -523,7 +543,63 @@
 			"file": "src/models/util/color.coffee",
 			"settings":
 			{
-				"buffer_size": 1508,
+				"buffer_size": 3717,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "lib/models.js",
+			"settings":
+			{
+				"buffer_size": 43682,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/util/location.coffee",
+			"settings":
+			{
+				"buffer_size": 2629,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "lib/setStage.js",
+			"settings":
+			{
+				"buffer_size": 9005,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/crystal.coffee",
+			"settings":
+			{
+				"buffer_size": 2381,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/prism.coffee",
+			"settings":
+			{
+				"buffer_size": 4007,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/hex.coffee",
+			"settings":
+			{
+				"buffer_size": 8782,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/spark.coffee",
+			"settings":
+			{
+				"buffer_size": 2044,
 				"line_ending": "Unix"
 			}
 		},
@@ -532,6 +608,14 @@
 			"settings":
 			{
 				"buffer_size": 4678,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 354,
 				"line_ending": "Unix"
 			}
 		}
@@ -588,6 +672,7 @@
 	},
 	"file_history":
 	[
+		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/board1.json",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/223723243.json",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/Sample Maps/223723243 copy.json",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/models.js",
@@ -714,8 +799,7 @@
 		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/course/CourseController.scala",
 		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/home/HomeController.scala",
 		"/Users/MPatashnik/Documents/Originate/training-website/conf/routes",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/user/UserController.scala",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/models/Configable.scala"
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/user/UserController.scala"
 	],
 	"find":
 	{
@@ -881,7 +965,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -889,15 +973,15 @@
 					"file": "src/models/board.coffee",
 					"settings":
 					{
-						"buffer_size": 6589,
+						"buffer_size": 7279,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5072,
-								5072
+								6018,
+								6018
 							]
 						],
 						"settings":
@@ -907,7 +991,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1984.0,
+						"translation.y": 2360.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -917,15 +1001,15 @@
 					"file": "src/scripts/setStage.coffee",
 					"settings":
 					{
-						"buffer_size": 6034,
+						"buffer_size": 8769,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1208,
-								1208
+								3606,
+								3606
 							]
 						],
 						"settings":
@@ -935,7 +1019,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1183.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -945,15 +1029,15 @@
 					"file": "src/models/util/colorCircle.coffee",
 					"settings":
 					{
-						"buffer_size": 2442,
+						"buffer_size": 2582,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1075,
-								1075
+								1846,
+								1846
 							]
 						],
 						"settings":
@@ -973,15 +1057,211 @@
 					"file": "src/models/util/color.coffee",
 					"settings":
 					{
-						"buffer_size": 1508,
+						"buffer_size": 3717,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								188,
-								188
+								637,
+								637
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "lib/models.js",
+					"settings":
+					{
+						"buffer_size": 43682,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1356,
+								1356
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/models/util/location.coffee",
+					"settings":
+					{
+						"buffer_size": 2629,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1793,
+								1793
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 65.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "lib/setStage.js",
+					"settings":
+					{
+						"buffer_size": 9005,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3804,
+								3804
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1007.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/models/subhex/crystal.coffee",
+					"settings":
+					{
+						"buffer_size": 2381,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1283,
+								1283
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/models/subhex/prism.coffee",
+					"settings":
+					{
+						"buffer_size": 4007,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3554,
+								3554
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 425.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/models/hex.coffee",
+					"settings":
+					{
+						"buffer_size": 8782,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2244,
+								2255
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 863.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/models/subhex/spark.coffee",
+					"settings":
+					{
+						"buffer_size": 2044,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1768,
+								1768
 							]
 						],
 						"settings":
@@ -999,11 +1279,11 @@
 			]
 		},
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
-					"buffer": 4,
+					"buffer": 11,
 					"file": "/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
 					"settings":
 					{
@@ -1026,6 +1306,32 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 859.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "index.html",
+					"settings":
+					{
+						"buffer_size": 354,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								346,
+								346
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

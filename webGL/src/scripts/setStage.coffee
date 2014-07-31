@@ -9,27 +9,32 @@
   margin = 20
   @renderer = PIXI.autoDetectRenderer(window.innerWidth - margin, window.innerHeight - margin)
   PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST
+
+  ## The menu and associated text/buttons/stuff
   @menu = new PIXI.DisplayObjectContainer()
   @stage.addChild(@menu)
+
+  menuHeight = 100
+
+  ##The container for the base hexes. The one that actually responds to clicks.
   @container = new PIXI.DisplayObjectContainer()
-  container.position.y = 100
+  container.position.y = menuHeight
   @stage.addChild(@container)
 
-# stage = new PIXI.Stage(0x66FF99);
-#   renderer = PIXI.autoDetectRenderer(400, 300);
-#   document.body.appendChild(renderer.view);
-  
-  # @hexPanel = new PIXI.DisplayObjectContainer()
-  # @stage.addChild(@hexPanel)
+  ## Containers for elements to be colored. One layer per color 
+  @colorContainers = {}
+  for c in Color.values()
+    colr = c
+    if(not isNaN(colr))
+      colr = Color.asString(colr)
+    cContainer = new PIXI.DisplayObjectContainer()
+    cContainer.position.y = menuHeight
+    f = new PIXI.ColorMatrixFilter()
+    f.matrix = Color.matrixFor(colr)
+    cContainer.filters = [f]
+    @stage.addChild(cContainer)
+    @colorContainers[colr] = cContainer
 
-  # #Add a dummy sprite - not working. Why?
-  # d = PIXI.Texture.fromImage("assets/img/circle_blue.png")
-  # dS = new PIXI.Sprite(d)
-  # dS.position.x = 200
-  # dS.position.y = 200
-  # @hexPanel.addChild(dS)
-
-  # @renderer.render(stage);
   preloadImages()
   return
 
@@ -62,16 +67,25 @@
   newScale2 = Math.min(1, Math.max(0.75, window.innerHeight / 1000))
   menuBackground.scale.y = newScale2
   @container.position.y = newScale2 * 100
+  for col, cContainer of @colorContainers
+    cContainer.position.y = newScale2 * 100
 
   ## Fix board
-  if(@BOARD?)
+  if @BOARD?
     scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth())
     @container.scale.x = scale
     @container.scale.y = scale
+    for col, cContainer of @colorContainers
+      cContainer.scale.x = scale
+      cContainer.scale.y = scale
 
     ##Center
     n = @hexRad * @container.scale.x
-    @container.position.x = (window.innerWidth - window.BOARD.getWidth() * n)/2
+    newX = (window.innerWidth - window.BOARD.getWidth() * n)/2
+    @container.position.x = newX
+    for col, cContainer of @colorContainers
+      cContainer.position.x = newX
+
   return
 
 ### Detect when the window is resized - jquery ftw! ###
@@ -92,26 +106,31 @@ window.onresize = () ->
     radTo60Degree = 1.04719755 ## 1 radian * this coefficient = 60 degrees
     if (@BOARD?)
       for h in @BOARD.allHexes()
-        ## Update lighting of all hexes
-        if h.isLit().length > 0 and not h.panel.children[0].lit
-          h.panel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-lit.png")
-          h.panel.children[0].lit = true
-        if h.isLit().length is 0 and h.panel.children[0].lit
-          h.panel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-back.png")
-          h.panel.children[0].lit = false
+        # Update lighting of all hexes
+        if h.isLit().length > 0 and not h.backPanel.children[0].lit
+          h.backPanel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-lit.png")
+          h.backPanel.children[0].lit = true
+        if h.isLit().length is 0 and h.backPanel.children[0].lit
+          h.backPanel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-back.png")
+          h.backPanel.children[0].lit = false
 
-        if h.lightChange
-          hLit = h.isLit()
-          p = h.panel
-          nS = h.getNeighborsWithBlanks()
-          for i in [0 .. Hex.SIDES - 1] by 1
-            c = h.colorOfSide(i)
-            n = nS[i]
+        hLit = h.isLit()
+        nS = h.getNeighborsWithBlanks()
+        for col, panel of h.colorPanels
+          for connector in panel.children
+            c = h.colorOfSide(connector.side)
+            n = nS[connector.side]
             if n? and c in hLit and n.colorOfSide(n.indexLinked(h)) is c
-              p.children[i+1].texture = PIXI.Texture.fromImage("assets/img/connector_on.png")
+              connector.texture = PIXI.Texture.fromImage("assets/img/connector_on.png")
+              for nConnector in n.colorPanels[col].children
+                if nConnector.side is n.indexLinked(h)
+                  nConnector.texture = PIXI.Texture.fromImage("assets/img/connector_on.png")
             else
-              p.children[i+1].texture = PIXI.Texture.fromImage("assets/img/connector_off.png")
-          h.lightChange = false
+              connector.texture = PIXI.Texture.fromImage("assets/img/connector_off.png")
+              if n?
+                for nConnector in n.colorPanels[col].children
+                  if nConnector.side is n.indexLinked(h)
+                    nConnector.texture = PIXI.Texture.fromImage("assets/img/connector_off.png")
 
         ### Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
             If this is the first notification that this prism wants to rotate, stops providing light.
@@ -125,15 +144,24 @@ window.onresize = () ->
               rotSpeed
             else
               -rotSpeed
-          h.panel.rotation += inc * radTo60Degree
+          h.backPanel.rotation += inc * radTo60Degree
           h.currentRotation += inc 
+          for key, value of h.colorPanels
+            value.rotation += inc * radTo60Degree
           if Math.abs(h.targetRotation - h.currentRotation) < tolerance
             inc = (h.targetRotation - h.currentRotation)
-            h.panel.rotation += inc * radTo60Degree
+            h.backPanel.rotation += inc * radTo60Degree
             h.currentRotation += inc
+            for key, value of h.colorPanels
+              value.rotation += inc * radTo60Degree
+              ## Update side index of each sprite
+              for spr in value.children
+                spr.side = (spr.side + (h.currentRotation - h.prevRotation)) %% Hex.SIDES
             h.prevRotation = h.currentRotation
             h.canLight = true
             h.light()
+
+        ### Spark and crystal color changing ###
         if (h instanceof Spark or h instanceof Crystal) and h.toColor isnt ""
           col = if (not isNaN(h.toColor)) 
                   Color.asString(h.toColor) 
@@ -197,29 +225,43 @@ window.onresize = () ->
   if typeof hex.panel is "undefined" or hex.panel is null 
     radTo60Degree = 1.04719755 ## 1 radian * this coefficient = 60 degrees
 
-    ## Create panel that holds hex and all associated sprites
-    panel = new PIXI.DisplayObjectContainer()
-    panel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
-    panel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
-    panel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
-    panel.pivot.x = 0.5
-    panel.pivot.y = 0.5
+    ## Create panels that holds hex
+    backpanel = new PIXI.DisplayObjectContainer()
+    backpanel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
+    backpanel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
+    backpanel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
+    backpanel.pivot.x = 0.5
+    backpanel.pivot.y = 0.5
+
+    ## Create panels for colored parts of hexes
+    hColPanel = {}
+    for color in Color.values()
+      c = color
+      if(not isNaN(c))
+        c = Color.asString(c)
+      cpanel = new PIXI.DisplayObjectContainer()
+      cpanel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
+      cpanel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
+      cpanel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
+      cpanel.pivot.x = 0.5
+      cpanel.pivot.y = 0.5
+      hColPanel[c] = cpanel
 
     ## Create hex and add to panel
     spr = PIXI.Sprite.fromImage("assets/img/hex-back.png")
     spr.lit = false ## Initially unlit
     spr.anchor.x = 0.5
     spr.anchor.y = 0.5
-    panel.addChild(spr)
-    panel.hex = spr
-
-    #setFrame(new PIXI.Rectangle(0,0,@hexRad * 2, @hexRad * 2))
+    backpanel.addChild(spr)
+    backpanel.hex = spr
 
     ## Create color Circles
     for i in [0 .. Hex.SIDES - 1] by 1
       c = hex.colorOfSide(i)
       if(not isNaN(c))
-        c = Color.asString(c)
+        c = Color.asString(c).toUpperCase()
+      else
+        c = c.toUpperCase()
       nudge = 0.528  ## Nudges along radius
       shrink = 25 ## Moves beam towards center
       point = new PIXI.Point( (@hexRad / 2 - shrink) * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + nudge), 
@@ -230,25 +272,27 @@ window.onresize = () ->
       cr.rotation = i * radTo60Degree
       cr.position.x = point.x
       cr.position.y = point.y
-      cr.scale.x = 0.20
-      cr.scale.y = 0.09
-
-      ##Apply color filter
-      filter = Color.filters[c]
-      cr.filters = [filter]
-
-      panel.addChild(cr)
+      # The side of the hex this is on
+      cr.side = i
+      ## Add to correct hColPanel
+      hColPanel[c].addChild(cr)
 
 
-    # Store in eachother for pointers
-    hex.panel = panel
-    panel.hex = hex
+    # Store panels in hex for later access
+    hex.backPanel = backpanel
+    hex.colorPanels = hColPanel
+
+    ## Add to back container
+    @container.addChild(backpanel)
+
+    ## Add to correct color layers
+    for key, value of hColPanel  
+      @colorContainers[key].addChild(value)
 
     #Add a click listener
-    panel.interactive = true
-    panel.click = -> 
+    backpanel.interactive = true
+    backpanel.click = -> 
       hex.click()
       return
 
-    @container.addChild(panel)
   return hex.panel

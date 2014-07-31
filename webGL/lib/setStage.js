@@ -3,7 +3,8 @@
 /* Begins init processing */
 
 (function() {
-  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
+    __modulo = function(a, b) { return (a % b + +b) % b; };
 
   this.init = function() {
     return this.initStart();
@@ -13,16 +14,33 @@
   /* Set up a PIXI stage - part before asset loading */
 
   this.initStart = function() {
-    var margin;
+    var c, cContainer, colr, f, margin, menuHeight, _i, _len, _ref;
     this.stage = new PIXI.Stage(0x295266, true);
     margin = 20;
     this.renderer = PIXI.autoDetectRenderer(window.innerWidth - margin, window.innerHeight - margin);
     PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
     this.menu = new PIXI.DisplayObjectContainer();
     this.stage.addChild(this.menu);
+    menuHeight = 100;
     this.container = new PIXI.DisplayObjectContainer();
-    container.position.y = 100;
+    container.position.y = menuHeight;
     this.stage.addChild(this.container);
+    this.colorContainers = {};
+    _ref = Color.values();
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      c = _ref[_i];
+      colr = c;
+      if (!isNaN(colr)) {
+        colr = Color.asString(colr);
+      }
+      cContainer = new PIXI.DisplayObjectContainer();
+      cContainer.position.y = menuHeight;
+      f = new PIXI.ColorMatrixFilter();
+      f.matrix = Color.matrixFor(colr);
+      cContainer.filters = [f];
+      this.stage.addChild(cContainer);
+      this.colorContainers[colr] = cContainer;
+    }
     preloadImages();
   };
 
@@ -41,7 +59,7 @@
   /* Resizes the stage correctly */
 
   this.resize = function() {
-    var margin, menuBackground, menuLeft, menuMiddle, menuRight, n, newScale, newScale2, scale;
+    var cContainer, col, margin, menuBackground, menuLeft, menuMiddle, menuRight, n, newScale, newScale2, newX, scale, _ref, _ref1, _ref2;
     margin = 20;
     window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin);
     menuBackground = this.menu.children[0];
@@ -54,12 +72,29 @@
     newScale2 = Math.min(1, Math.max(0.75, window.innerHeight / 1000));
     menuBackground.scale.y = newScale2;
     this.container.position.y = newScale2 * 100;
-    if ((this.BOARD != null)) {
+    _ref = this.colorContainers;
+    for (col in _ref) {
+      cContainer = _ref[col];
+      cContainer.position.y = newScale2 * 100;
+    }
+    if (this.BOARD != null) {
       scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth());
       this.container.scale.x = scale;
       this.container.scale.y = scale;
+      _ref1 = this.colorContainers;
+      for (col in _ref1) {
+        cContainer = _ref1[col];
+        cContainer.scale.x = scale;
+        cContainer.scale.y = scale;
+      }
       n = this.hexRad * this.container.scale.x;
-      this.container.position.x = (window.innerWidth - window.BOARD.getWidth() * n) / 2;
+      newX = (window.innerWidth - window.BOARD.getWidth() * n) / 2;
+      this.container.position.x = newX;
+      _ref2 = this.colorContainers;
+      for (col in _ref2) {
+        cContainer = _ref2[col];
+        cContainer.position.x = newX;
+      }
     }
   };
 
@@ -79,7 +114,7 @@
     Color.makeFilters();
     window.count = 0;
     animate = function() {
-      var c, col, filter, h, hLit, i, inc, n, nS, p, radTo60Degree, rotSpeed, tolerance, _i, _j, _k, _len, _ref, _ref1, _ref2;
+      var c, col, connector, filter, h, hLit, i, inc, key, n, nConnector, nS, panel, radTo60Degree, rotSpeed, spr, tolerance, value, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _n, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
       window.count += 1;
       rotSpeed = 1 / 10;
       tolerance = 0.000001;
@@ -88,28 +123,46 @@
         _ref = this.BOARD.allHexes();
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           h = _ref[_i];
-          if (h.isLit().length > 0 && !h.panel.children[0].lit) {
-            h.panel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-lit.png");
-            h.panel.children[0].lit = true;
+          if (h.isLit().length > 0 && !h.backPanel.children[0].lit) {
+            h.backPanel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-lit.png");
+            h.backPanel.children[0].lit = true;
           }
-          if (h.isLit().length === 0 && h.panel.children[0].lit) {
-            h.panel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-back.png");
-            h.panel.children[0].lit = false;
+          if (h.isLit().length === 0 && h.backPanel.children[0].lit) {
+            h.backPanel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-back.png");
+            h.backPanel.children[0].lit = false;
           }
-          if (h.lightChange) {
-            hLit = h.isLit();
-            p = h.panel;
-            nS = h.getNeighborsWithBlanks();
-            for (i = _j = 0, _ref1 = Hex.SIDES - 1; _j <= _ref1; i = _j += 1) {
-              c = h.colorOfSide(i);
-              n = nS[i];
+          hLit = h.isLit();
+          nS = h.getNeighborsWithBlanks();
+          _ref1 = h.colorPanels;
+          for (col in _ref1) {
+            panel = _ref1[col];
+            _ref2 = panel.children;
+            for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+              connector = _ref2[_j];
+              c = h.colorOfSide(connector.side);
+              n = nS[connector.side];
               if ((n != null) && __indexOf.call(hLit, c) >= 0 && n.colorOfSide(n.indexLinked(h)) === c) {
-                p.children[i + 1].texture = PIXI.Texture.fromImage("assets/img/connector_on.png");
+                connector.texture = PIXI.Texture.fromImage("assets/img/connector_on.png");
+                _ref3 = n.colorPanels[col].children;
+                for (_k = 0, _len2 = _ref3.length; _k < _len2; _k++) {
+                  nConnector = _ref3[_k];
+                  if (nConnector.side === n.indexLinked(h)) {
+                    nConnector.texture = PIXI.Texture.fromImage("assets/img/connector_on.png");
+                  }
+                }
               } else {
-                p.children[i + 1].texture = PIXI.Texture.fromImage("assets/img/connector_off.png");
+                connector.texture = PIXI.Texture.fromImage("assets/img/connector_off.png");
+                if (n != null) {
+                  _ref4 = n.colorPanels[col].children;
+                  for (_l = 0, _len3 = _ref4.length; _l < _len3; _l++) {
+                    nConnector = _ref4[_l];
+                    if (nConnector.side === n.indexLinked(h)) {
+                      nConnector.texture = PIXI.Texture.fromImage("assets/img/connector_off.png");
+                    }
+                  }
+                }
               }
             }
-            h.lightChange = false;
           }
 
           /* Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
@@ -122,21 +175,38 @@
               h.light();
             }
             inc = (h.targetRotation - h.prevRotation) >= 0 ? rotSpeed : -rotSpeed;
-            h.panel.rotation += inc * radTo60Degree;
+            h.backPanel.rotation += inc * radTo60Degree;
             h.currentRotation += inc;
+            _ref5 = h.colorPanels;
+            for (key in _ref5) {
+              value = _ref5[key];
+              value.rotation += inc * radTo60Degree;
+            }
             if (Math.abs(h.targetRotation - h.currentRotation) < tolerance) {
               inc = h.targetRotation - h.currentRotation;
-              h.panel.rotation += inc * radTo60Degree;
+              h.backPanel.rotation += inc * radTo60Degree;
               h.currentRotation += inc;
+              _ref6 = h.colorPanels;
+              for (key in _ref6) {
+                value = _ref6[key];
+                value.rotation += inc * radTo60Degree;
+                _ref7 = value.children;
+                for (_m = 0, _len4 = _ref7.length; _m < _len4; _m++) {
+                  spr = _ref7[_m];
+                  spr.side = __modulo(spr.side + (h.currentRotation - h.prevRotation), Hex.SIDES);
+                }
+              }
               h.prevRotation = h.currentRotation;
               h.canLight = true;
               h.light();
             }
           }
+
+          /* Spark and crystal color changing */
           if ((h instanceof Spark || h instanceof Crystal) && h.toColor !== "") {
             col = !isNaN(h.toColor) ? Color.asString(h.toColor) : h.toColor;
             filter = Color.filters[col];
-            for (i = _k = 1, _ref2 = Hex.SIDES; _k <= _ref2; i = _k += 1) {
+            for (i = _n = 1, _ref8 = Hex.SIDES; _n <= _ref8; i = _n += 1) {
               h.panel.children[i].filters = [filter];
             }
             h.toColor = "";
@@ -203,27 +273,47 @@
   /* Creates a single sprite for a hex and adds it to stage */
 
   this.createSpriteForHex = function(hex) {
-    var c, cr, filter, i, nudge, panel, point, radTo60Degree, shrink, spr, _i, _ref;
+    var backpanel, c, color, cpanel, cr, hColPanel, i, key, nudge, point, radTo60Degree, shrink, spr, value, _i, _j, _len, _ref, _ref1;
     if (typeof hex.panel === "undefined" || hex.panel === null) {
       radTo60Degree = 1.04719755;
-      panel = new PIXI.DisplayObjectContainer();
-      panel.position.x = hex.loc.col * this.hexRad * 3 / 4 * 1.11 + this.hexRad * (5 / 8);
-      panel.position.y = hex.loc.row * this.hexRad + this.hexRad * (5 / 8);
+      backpanel = new PIXI.DisplayObjectContainer();
+      backpanel.position.x = hex.loc.col * this.hexRad * 3 / 4 * 1.11 + this.hexRad * (5 / 8);
+      backpanel.position.y = hex.loc.row * this.hexRad + this.hexRad * (5 / 8);
       if (hex.loc.col % 2 === 1) {
-        panel.position.y += this.hexRad / 2;
+        backpanel.position.y += this.hexRad / 2;
       }
-      panel.pivot.x = 0.5;
-      panel.pivot.y = 0.5;
+      backpanel.pivot.x = 0.5;
+      backpanel.pivot.y = 0.5;
+      hColPanel = {};
+      _ref = Color.values();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        color = _ref[_i];
+        c = color;
+        if (!isNaN(c)) {
+          c = Color.asString(c);
+        }
+        cpanel = new PIXI.DisplayObjectContainer();
+        cpanel.position.x = hex.loc.col * this.hexRad * 3 / 4 * 1.11 + this.hexRad * (5 / 8);
+        cpanel.position.y = hex.loc.row * this.hexRad + this.hexRad * (5 / 8);
+        if (hex.loc.col % 2 === 1) {
+          cpanel.position.y += this.hexRad / 2;
+        }
+        cpanel.pivot.x = 0.5;
+        cpanel.pivot.y = 0.5;
+        hColPanel[c] = cpanel;
+      }
       spr = PIXI.Sprite.fromImage("assets/img/hex-back.png");
       spr.lit = false;
       spr.anchor.x = 0.5;
       spr.anchor.y = 0.5;
-      panel.addChild(spr);
-      panel.hex = spr;
-      for (i = _i = 0, _ref = Hex.SIDES - 1; _i <= _ref; i = _i += 1) {
+      backpanel.addChild(spr);
+      backpanel.hex = spr;
+      for (i = _j = 0, _ref1 = Hex.SIDES - 1; _j <= _ref1; i = _j += 1) {
         c = hex.colorOfSide(i);
         if (!isNaN(c)) {
-          c = Color.asString(c);
+          c = Color.asString(c).toUpperCase();
+        } else {
+          c = c.toUpperCase();
         }
         nudge = 0.528;
         shrink = 25;
@@ -234,19 +324,20 @@
         cr.rotation = i * radTo60Degree;
         cr.position.x = point.x;
         cr.position.y = point.y;
-        cr.scale.x = 0.20;
-        cr.scale.y = 0.09;
-        filter = Color.filters[c];
-        cr.filters = [filter];
-        panel.addChild(cr);
+        cr.side = i;
+        hColPanel[c].addChild(cr);
       }
-      hex.panel = panel;
-      panel.hex = hex;
-      panel.interactive = true;
-      panel.click = function() {
+      hex.backPanel = backpanel;
+      hex.colorPanels = hColPanel;
+      this.container.addChild(backpanel);
+      for (key in hColPanel) {
+        value = hColPanel[key];
+        this.colorContainers[key].addChild(value);
+      }
+      backpanel.interactive = true;
+      backpanel.click = function() {
         hex.click();
       };
-      this.container.addChild(panel);
     }
     return hex.panel;
   };

@@ -103,9 +103,9 @@
         case this.RED:
           return [1, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
         case this.BLUE:
-          return [0.2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
-        case this.GREEN:
           return [0.2, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+        case this.GREEN:
+          return [0.2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
         case this.ORANGE:
           return [0.7, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
         case this.PURPLE:
