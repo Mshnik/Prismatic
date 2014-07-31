@@ -3,6 +3,8 @@
 /* Begins init processing */
 
 (function() {
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
   this.init = function() {
     return this.initStart();
   };
@@ -29,7 +31,7 @@
 
   this.preloadImages = function() {
     var assets, loader;
-    assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/menu.png", "assets/img/circle_none.png", "assets/img/circle_blue.png", "assets/img/circle_red.png", "assets/img/circle_green.png"];
+    assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/menu.png", "assets/img/connector_off.png", "assets/img/connector_on.png"];
     loader = new PIXI.AssetLoader(assets);
     loader.onComplete = this.initFinish;
     loader.load();
@@ -74,8 +76,11 @@
   this.initFinish = function() {
     var animate;
     window.initMenu();
+    Color.makeFilters();
+    window.count = 0;
     animate = function() {
-      var col, h, i, inc, radTo60Degree, rotSpeed, tex, tolerance, _i, _j, _len, _ref, _ref1;
+      var c, col, filter, h, hLit, i, inc, n, nS, p, radTo60Degree, rotSpeed, tolerance, _i, _j, _k, _len, _ref, _ref1, _ref2;
+      window.count += 1;
       rotSpeed = 1 / 10;
       tolerance = 0.000001;
       radTo60Degree = 1.04719755;
@@ -90,6 +95,21 @@
           if (h.isLit().length === 0 && h.panel.children[0].lit) {
             h.panel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-back.png");
             h.panel.children[0].lit = false;
+          }
+          if (h.lightChange) {
+            hLit = h.isLit();
+            p = h.panel;
+            nS = h.getNeighborsWithBlanks();
+            for (i = _j = 0, _ref1 = Hex.SIDES - 1; _j <= _ref1; i = _j += 1) {
+              c = h.colorOfSide(i);
+              n = nS[i];
+              if ((n != null) && __indexOf.call(hLit, c) >= 0 && n.colorOfSide(n.indexLinked(h)) === c) {
+                p.children[i + 1].texture = PIXI.Texture.fromImage("assets/img/connector_on.png");
+              } else {
+                p.children[i + 1].texture = PIXI.Texture.fromImage("assets/img/connector_off.png");
+              }
+            }
+            h.lightChange = false;
           }
 
           /* Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
@@ -115,9 +135,9 @@
           }
           if ((h instanceof Spark || h instanceof Crystal) && h.toColor !== "") {
             col = !isNaN(h.toColor) ? Color.asString(h.toColor) : h.toColor;
-            tex = PIXI.Texture.fromImage("assets/img/circle_" + col + ".png");
-            for (i = _j = 1, _ref1 = Hex.SIDES; _j <= _ref1; i = _j += 1) {
-              h.panel.children[i].texture = tex;
+            filter = Color.filters[col];
+            for (i = _k = 1, _ref2 = Hex.SIDES; _k <= _ref2; i = _k += 1) {
+              h.panel.children[i].filters = [filter];
             }
             h.toColor = "";
           }
@@ -183,8 +203,9 @@
   /* Creates a single sprite for a hex and adds it to stage */
 
   this.createSpriteForHex = function(hex) {
-    var c, cr, i, nudge, panel, point, shrink, spr, _i, _ref;
+    var c, cr, filter, i, nudge, panel, point, radTo60Degree, shrink, spr, _i, _ref;
     if (typeof hex.panel === "undefined" || hex.panel === null) {
+      radTo60Degree = 1.04719755;
       panel = new PIXI.DisplayObjectContainer();
       panel.position.x = hex.loc.col * this.hexRad * 3 / 4 * 1.11 + this.hexRad * (5 / 8);
       panel.position.y = hex.loc.row * this.hexRad + this.hexRad * (5 / 8);
@@ -204,16 +225,19 @@
         if (!isNaN(c)) {
           c = Color.asString(c);
         }
-        nudge = 0.54;
-        shrink = 8;
+        nudge = 0.528;
+        shrink = 25;
         point = new PIXI.Point((this.hexRad / 2 - shrink) * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + nudge), (this.hexRad / 2 - shrink) * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + nudge));
-        cr = PIXI.Sprite.fromImage("assets/img/circle_" + c.toLowerCase() + ".png");
+        cr = PIXI.Sprite.fromImage("assets/img/connector_off.png");
         cr.anchor.x = 0.5;
-        cr.anchor.y = 0.5;
-        cr.scale.x = 0.15;
-        cr.scale.y = 0.15;
+        cr.anchor.y = 0.8;
+        cr.rotation = i * radTo60Degree;
         cr.position.x = point.x;
         cr.position.y = point.y;
+        cr.scale.x = 0.20;
+        cr.scale.y = 0.09;
+        filter = Color.filters[c];
+        cr.filters = [filter];
         panel.addChild(cr);
       }
       hex.panel = panel;

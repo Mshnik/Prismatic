@@ -44,6 +44,18 @@
 
     Color.SPECIAL_OFFSET = 2;
 
+    Color.filters = {};
+
+    Color.makeFilters = function() {
+      var c, _i, _len, _ref;
+      _ref = this.values();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        c = _ref[_i];
+        this.filters[c.toLowerCase()] = new PIXI.ColorMatrixFilter();
+        this.filters[c.toLowerCase()].matrix = this.matrixFor(c);
+      }
+    };
+
     Color.count = function() {
       return Object.keys(this._val).length;
     };
@@ -79,6 +91,34 @@
         _results.push(col);
       }
       return _results;
+    };
+
+
+    /* Returns a 'matrix' (length 16 array) that transforms a white asset into an asset of this color */
+
+    Color.matrixFor = function(color) {
+      var c;
+      c = isNaN(color) ? this.fromString(color) : color;
+      switch (c) {
+        case this.RED:
+          return [1, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
+        case this.BLUE:
+          return [0.2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
+        case this.GREEN:
+          return [0.2, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+        case this.ORANGE:
+          return [0.7, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
+        case this.PURPLE:
+          return [0.7, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
+        case this.CYAN:
+          return [0.2, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 1];
+        case this.YELLOW:
+          return [0.7, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 1];
+        case this.PINK:
+          return [1, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 1];
+        default:
+          return [0.2, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
+      }
     };
 
     Color.asString = function(color) {
@@ -877,6 +917,7 @@
       this.board.setHex(this, loc);
       this.canLight = true;
       this.lighters = {};
+      this.lightChange = false;
     }
 
 
@@ -1212,7 +1253,8 @@
      */
 
     Crystal.prototype.light = function() {
-      var lighterChanged;
+      var lighterChanged, oldLit;
+      oldLit = this.lit;
       lighterChanged = this.pruneLighters();
       if (lighterChanged || this.lit === Color.NONE || this.lit === Color.asString(Color.NONE)) {
         this.findLightProviders(this.lit);
@@ -1225,6 +1267,7 @@
       } else {
         this.lit = this.isLit()[0];
       }
+      this.lightChange = oldLit !== this.lit;
       this.toColor = this.lit;
       this.update();
     };
@@ -1365,6 +1408,8 @@
      */
 
     Prism.prototype.light = function() {
+      var c, oldLit, _i, _j, _len, _len1, _ref;
+      oldLit = this.isLit();
       if (this.canLight) {
         this.pruneLighters();
         this.stopProvidingLight();
@@ -1373,6 +1418,19 @@
       } else {
         this.lighters = {};
         this.stopProvidingLight();
+      }
+      _ref = this.isLit;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        c = _ref[_i];
+        if (__indexOf.call(oldLit, c) < 0) {
+          this.lightChange = true;
+        }
+      }
+      for (_j = 0, _len1 = oldLit.length; _j < _len1; _j++) {
+        c = oldLit[_j];
+        if (__indexOf.call(this.isLit, c) < 0) {
+          this.lightChange = true;
+        }
       }
       this.update();
     };
@@ -1472,6 +1530,7 @@
     Spark.prototype.click = function() {
       this.useNextColor();
       this.toColor = this.getColor();
+      this.lightChange = true;
     };
 
 

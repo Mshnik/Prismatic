@@ -48,6 +48,8 @@ class @Hex
     @canLight = true ## True if this hex can participate in lighting at all, false otw.
       #Map of location (hex) -> color of hexes that provide this with light
     @lighters = {}
+      # True if this changed lighting since the last frame update, false otherwise
+    @lightChange = false
 
   ###Returns the neighbors of this hex, clockwise from above. Will always return an array of lenght SIDES,
      but may contain nulls.

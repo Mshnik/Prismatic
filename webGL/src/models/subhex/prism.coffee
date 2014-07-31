@@ -68,6 +68,7 @@ class @Prism extends Hex
      Tries to stay the same color of light if multiple are avaliable. Otherwise chooses arbitrarily.
      Returns the color this is lit at the end of the procedure, false otherwise ###
   light : () ->
+    oldLit = @isLit()
     #Check if this can participate in lighting (would be false if this is currently rotating)
     if @canLight
       # Check for any lighters that can't provide light to this anymore
@@ -87,6 +88,12 @@ class @Prism extends Hex
       @stopProvidingLight()
 
     # Redraw (post recursion) and return the color this is now lit
+    for c in @isLit
+      if c not in oldLit
+        @lightChange = true
+    for c in oldLit
+      if c not in @isLit
+        @lightChange = true
     @update()
     return
 

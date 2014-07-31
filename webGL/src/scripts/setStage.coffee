@@ -14,6 +14,7 @@
   @container = new PIXI.DisplayObjectContainer()
   container.position.y = 100
   @stage.addChild(@container)
+
 # stage = new PIXI.Stage(0x66FF99);
 #   renderer = PIXI.autoDetectRenderer(400, 300);
 #   document.body.appendChild(renderer.view);
@@ -35,7 +36,7 @@
 ### Load assets into cache ###
 @preloadImages = ->
   assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/menu.png",
-            "assets/img/circle_none.png", "assets/img/circle_blue.png", "assets/img/circle_red.png", "assets/img/circle_green.png"]
+            "assets/img/connector_off.png", "assets/img/connector_on.png"]
   loader = new PIXI.AssetLoader(assets)
   loader.onComplete = @initFinish
   loader.load()
@@ -81,7 +82,11 @@ window.onresize = () ->
 ### Finish initing after assets are loaded ###
 @initFinish = ->
   window.initMenu()
+  Color.makeFilters()
+  window.count = 0
   animate = () ->
+    ## Color animation
+    window.count += 1;  ## Frame count
     rotSpeed = 1/10
     tolerance = 0.000001 ## For floating point errors - difference below this is considered 'equal'
     radTo60Degree = 1.04719755 ## 1 radian * this coefficient = 60 degrees
@@ -94,6 +99,20 @@ window.onresize = () ->
         if h.isLit().length is 0 and h.panel.children[0].lit
           h.panel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-back.png")
           h.panel.children[0].lit = false
+
+        if h.lightChange
+          hLit = h.isLit()
+          p = h.panel
+          nS = h.getNeighborsWithBlanks()
+          for i in [0 .. Hex.SIDES - 1] by 1
+            c = h.colorOfSide(i)
+            n = nS[i]
+            if n? and c in hLit and n.colorOfSide(n.indexLinked(h)) is c
+              p.children[i+1].texture = PIXI.Texture.fromImage("assets/img/connector_on.png")
+            else
+              p.children[i+1].texture = PIXI.Texture.fromImage("assets/img/connector_off.png")
+          h.lightChange = false
+
         ### Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
             If this is the first notification that this prism wants to rotate, stops providing light.
             If the prism is now done rotating, starts providing light again ###
@@ -120,9 +139,9 @@ window.onresize = () ->
                   Color.asString(h.toColor) 
                 else 
                   h.toColor
-          tex = PIXI.Texture.fromImage("assets/img/circle_" +  col + ".png")
+          filter = Color.filters[col]
           for i in [1 .. Hex.SIDES] by 1
-            h.panel.children[i].texture = tex
+            h.panel.children[i].filters = [filter]
           h.toColor = ""
     requestAnimFrame(animate )
     @renderer.render(@stage)
@@ -176,7 +195,8 @@ window.onresize = () ->
 ### Creates a single sprite for a hex and adds it to stage ###
 @createSpriteForHex = (hex) ->
   if typeof hex.panel is "undefined" or hex.panel is null 
-    
+    radTo60Degree = 1.04719755 ## 1 radian * this coefficient = 60 degrees
+
     ## Create panel that holds hex and all associated sprites
     panel = new PIXI.DisplayObjectContainer()
     panel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
@@ -200,17 +220,23 @@ window.onresize = () ->
       c = hex.colorOfSide(i)
       if(not isNaN(c))
         c = Color.asString(c)
-      nudge = 0.54
-      shrink = 8
+      nudge = 0.528  ## Nudges along radius
+      shrink = 25 ## Moves beam towards center
       point = new PIXI.Point( (@hexRad / 2 - shrink) * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + nudge), 
                              (@hexRad / 2 - shrink) * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + nudge))
-      cr = PIXI.Sprite.fromImage("assets/img/circle_" + c.toLowerCase() + ".png")
+      cr = PIXI.Sprite.fromImage("assets/img/connector_off.png")
       cr.anchor.x = 0.5
-      cr.anchor.y = 0.5
-      cr.scale.x = 0.15
-      cr.scale.y = 0.15
+      cr.anchor.y = 0.8
+      cr.rotation = i * radTo60Degree
       cr.position.x = point.x
       cr.position.y = point.y
+      cr.scale.x = 0.20
+      cr.scale.y = 0.09
+
+      ##Apply color filter
+      filter = Color.filters[c]
+      cr.filters = [filter]
+
       panel.addChild(cr)
 
 

@@ -48,6 +48,7 @@ class @Spark extends Hex
   click : () ->
     @useNextColor()
     @toColor = @getColor()
+    @lightChange = true
     return
   
   ### @Override
