@@ -114,7 +114,7 @@
     Color.makeFilters();
     window.count = 0;
     animate = function() {
-      var c, col, connector, filter, h, hLit, i, inc, key, n, nConnector, nS, panel, radTo60Degree, rotSpeed, spr, tolerance, value, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _n, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var c, ch, col, colr, connector, connectors, h, hLit, inc, key, n, nConnector, nS, panel, radTo60Degree, rotSpeed, spr, tolerance, value, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _p, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       window.count += 1;
       rotSpeed = 1 / 10;
       tolerance = 0.000001;
@@ -204,10 +204,23 @@
 
           /* Spark and crystal color changing */
           if ((h instanceof Spark || h instanceof Crystal) && h.toColor !== "") {
-            col = !isNaN(h.toColor) ? Color.asString(h.toColor) : h.toColor;
-            filter = Color.filters[col];
-            for (i = _n = 1, _ref8 = Hex.SIDES; _n <= _ref8; i = _n += 1) {
-              h.panel.children[i].filters = [filter];
+            col = !isNaN(h.toColor) ? Color.asString(h.toColor).toUpperCase() : h.toColor.toUpperCase();
+            connectors = [];
+            _ref8 = h.colorPanels;
+            for (colr in _ref8) {
+              panel = _ref8[colr];
+              _ref9 = panel.children;
+              for (_n = 0, _len5 = _ref9.length; _n < _len5; _n++) {
+                spr = _ref9[_n];
+                connectors.push(spr);
+              }
+              for (ch = _o = 0, _ref10 = panel.children.length - 1; _o <= _ref10; ch = _o += 1) {
+                panel.removeChild(panel.getChildAt(0));
+              }
+            }
+            for (_p = 0, _len6 = connectors.length; _p < _len6; _p++) {
+              spr = connectors[_p];
+              h.colorPanels[col].addChild(spr);
             }
             h.toColor = "";
           }

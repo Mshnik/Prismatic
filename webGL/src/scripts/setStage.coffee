@@ -164,12 +164,18 @@ window.onresize = () ->
         ### Spark and crystal color changing ###
         if (h instanceof Spark or h instanceof Crystal) and h.toColor isnt ""
           col = if (not isNaN(h.toColor)) 
-                  Color.asString(h.toColor) 
+                  Color.asString(h.toColor).toUpperCase() 
                 else 
-                  h.toColor
-          filter = Color.filters[col]
-          for i in [1 .. Hex.SIDES] by 1
-            h.panel.children[i].filters = [filter]
+                  h.toColor.toUpperCase()
+          # Move connectors to new panel
+          connectors = []
+          for colr, panel of h.colorPanels
+            for spr in panel.children
+              connectors.push(spr)
+            for ch in [0 .. (panel.children.length - 1)] by 1
+              panel.removeChild(panel.getChildAt(0))
+          for spr in connectors
+            h.colorPanels[col].addChild(spr)
           h.toColor = ""
     requestAnimFrame(animate )
     @renderer.render(@stage)
