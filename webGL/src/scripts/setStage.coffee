@@ -5,8 +5,8 @@
 ### Set up a PIXI stage - part before asset loading ###
 @initStart = ->
   
-  @stage = new PIXI.Stage(0x295266, true)
-  margin = 20
+  @stage = new PIXI.Stage(0x000000, true)
+  margin = 0
   @renderer = PIXI.autoDetectRenderer(window.innerWidth - margin, window.innerHeight - margin)
   PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST
 
@@ -17,11 +17,26 @@
   menuHeight = 100
 
   ##The container for the base hexes. The one that actually responds to clicks.
-  @container = new PIXI.DisplayObjectContainer()
-  container.position.y = menuHeight
-  @stage.addChild(@container)
+  @base = new PIXI.DisplayObjectContainer()
+  @base.position.y = menuHeight
+  @stage.addChild(@base)
 
-  ## Containers for elements to be colored. One layer per color 
+  ## The off filter - creates lighting effects for all colors.
+  @flat = new PIXI.ColorMatrixFilter()
+  @flat.matrix = [0.5, 0, 0, 0,
+                  0, 0.5, 0, 0,
+                  0, 0, 0.5, 0,
+                  0, 0, 0, 1]
+
+  ## The pulse filter - creates lighting effects for all colors. Shouldn't favor a color, as it goes overtop other colorizing filters
+  ## Initially flat - advanced in rendering steps
+  @pulse = new PIXI.ColorMatrixFilter()
+  @pulse.matrix = [1, 0, 0, 0,
+                   0, 1, 0, 0,
+                   0, 0, 1, 0,
+                   0, 0, 0, 1]
+
+  ## Containers for elements to be colored. Two layers per color - lit and unlit 
   @colorContainers = {}
   for c in Color.values()
     colr = c
@@ -29,9 +44,23 @@
       colr = Color.asString(colr)
     cContainer = new PIXI.DisplayObjectContainer()
     cContainer.position.y = menuHeight
+
+    ## Add basic color filter to this colorContainer
     f = new PIXI.ColorMatrixFilter()
     f.matrix = Color.matrixFor(colr)
     cContainer.filters = [f]
+
+    ## Create lit and unlit branches for this color Container
+    unlit = new PIXI.DisplayObjectContainer()
+    cContainer.addChild(unlit)
+    lit = new PIXI.DisplayObjectContainer()
+    cContainer.addChild(lit)
+    
+    cContainer.unlit = unlit
+    cContainer.unlit.filters = [@flat]
+    cContainer.lit = lit
+    cContainer.lit.filters = [@pulse]
+
     @stage.addChild(cContainer)
     @colorContainers[colr] = cContainer
 
@@ -40,7 +69,7 @@
 
 ### Load assets into cache ###
 @preloadImages = ->
-  assets = ["assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/menu.png",
+  assets = ["assets/img/galaxy-28.jpg", "/assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/menu.png",
             "assets/img/connector_off.png", "assets/img/connector_on.png"]
   loader = new PIXI.AssetLoader(assets)
   loader.onComplete = @initFinish
@@ -49,7 +78,7 @@
 
 ### Resizes the stage correctly ###
 @resize = () ->
-  margin = 20
+  margin = 0
   window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin)
 
   ## Expand/contract the menu. Horizontal expansion/contraction is on middle sprite. Vertical is on whole menubackground container
@@ -57,6 +86,7 @@
   menuLeft = menuBackground.children[0]
   menuMiddle = menuBackground.children[1]
   menuRight = menuBackground.children[2]
+  bck = @menu.children[1]
 
   ## Default size = 200.
   newScale = (window.innerWidth - 220) / 200
@@ -64,25 +94,30 @@
   menuRight.position.x = 100 + (newScale * 200)
 
   ##Resize vertically - default height = 100
-  newScale2 = Math.min(1, Math.max(0.75, window.innerHeight / 1000))
+  newScale2 = Math.min(1, Math.max(0.5, window.innerHeight / 1000))
   menuBackground.scale.y = newScale2
-  @container.position.y = newScale2 * 100
+  @base.position.y = newScale2 * 100
   for col, cContainer of @colorContainers
     cContainer.position.y = newScale2 * 100
+
+  ##Fix background image
+  bck.position.y = newScale2 * 100
+  bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75) 
+  bck.scale.y = Math.max((window.innerHeight - 100) / bck.texture.baseTexture.height, 0.75) 
 
   ## Fix board
   if @BOARD?
     scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth())
-    @container.scale.x = scale
-    @container.scale.y = scale
+    @base.scale.x = scale
+    @base.scale.y = scale
     for col, cContainer of @colorContainers
       cContainer.scale.x = scale
       cContainer.scale.y = scale
 
     ##Center
-    n = @hexRad * @container.scale.x
+    n = @hexRad * @base.scale.x
     newX = (window.innerWidth - window.BOARD.getWidth() * n)/2
-    @container.position.x = newX
+    @base.position.x = newX
     for col, cContainer of @colorContainers
       cContainer.position.x = newX
 
@@ -92,16 +127,53 @@
 window.onresize = () ->
   window.resize()
 
+@toLit = (connector) ->
+  try
+    @colorContainers[connector.color].unlit.removeChild(connector.panel)
+  catch
+  @colorContainers[connector.color].lit.addChild(connector.panel)
+  connector.linked = true
+  return
+
+@toUnlit = (connector) ->
+  try
+    @colorContainers[connector.color].lit.removeChild(connector.panel)
+  catch
+  @colorContainers[connector.color].unlit.addChild(connector.panel)
+  connector.linked = false
+  return
+
+@colorOffset = {}
+for c in Color.values()
+  if not isNaN(c)
+    c = Color.fromString(c).toUpperCase()
+  else
+    c = c.toUpperCase()
+  @colorOffset[c] = Math.random() + 0.5
+
+### Updates the pulse filter that controls lighting effects ###
+@calcPulseFilter = (count) ->
+  randSmallDev = (Math.random() - 0.5) * 0.05 
+  cont = count/15
+  m = @pulse.matrix
+  m[0] = Math.abs(Math.sin(cont)) * 0.5 + 0.5
+  m[5] = Math.abs(Math.sin(cont)) * 0.5 + 0.5
+  m[10] = Math.abs(Math.sin(cont)) * 0.5 + 0.5
+  m[15] = 1 ## Math.abs(Math.sin(cont))
+  @pulse.matrix = m
+  return
 
 ### Finish initing after assets are loaded ###
 @initFinish = ->
+  ##Make the menu
   window.initMenu()
   Color.makeFilters()
   window.count = 0
   animate = () ->
     ## Color animation
     window.count += 1;  ## Frame count
-    rotSpeed = 1/10
+    @calcPulseFilter(window.count)
+    rotSpeed = 1/5
     tolerance = 0.000001 ## For floating point errors - difference below this is considered 'equal'
     radTo60Degree = 1.04719755 ## 1 radian * this coefficient = 60 degrees
     if (@BOARD?)
@@ -120,17 +192,21 @@ window.onresize = () ->
           for connector in panel.children
             c = h.colorOfSide(connector.side)
             n = nS[connector.side]
-            if n? and c in hLit and n.colorOfSide(n.indexLinked(h)) is c
+            if n? and c in hLit and n.colorOfSide(n.indexLinked(h)) is c and not connector.linked
               connector.texture = PIXI.Texture.fromImage("assets/img/connector_on.png")
-              for nConnector in n.colorPanels[col].children
-                if nConnector.side is n.indexLinked(h)
+              @toLit(connector)
+              for nConnector in n.colorPanels
+                if nConnector.side is n.indexLinked(h) and not nConnector.linked
                   nConnector.texture = PIXI.Texture.fromImage("assets/img/connector_on.png")
-            else
+                  @toLit(nConnector)
+            else if connector.linked and (c not in hLit or n? and n.colorOfSide(n.indexLinked(h)) isnt c)
               connector.texture = PIXI.Texture.fromImage("assets/img/connector_off.png")
+              @toUnlit(connector)
               if n?
-                for nConnector in n.colorPanels[col].children
-                  if nConnector.side is n.indexLinked(h)
+                for nConnector in n.colorPanels
+                  if nConnector.side is n.indexLinked(h) and nConnector.linked
                     nConnector.texture = PIXI.Texture.fromImage("assets/img/connector_off.png")
+                    @toUnlit(nConnector)
 
         ### Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
             If this is the first notification that this prism wants to rotate, stops providing light.
@@ -146,13 +222,13 @@ window.onresize = () ->
               -rotSpeed
           h.backPanel.rotation += inc * radTo60Degree
           h.currentRotation += inc 
-          for key, value of h.colorPanels
+          for value in h.colorPanels
             value.rotation += inc * radTo60Degree
           if Math.abs(h.targetRotation - h.currentRotation) < tolerance
             inc = (h.targetRotation - h.currentRotation)
             h.backPanel.rotation += inc * radTo60Degree
             h.currentRotation += inc
-            for key, value of h.colorPanels
+            for value in h.colorPanels
               value.rotation += inc * radTo60Degree
               ## Update side index of each sprite
               for spr in value.children
@@ -168,14 +244,10 @@ window.onresize = () ->
                 else 
                   h.toColor.toUpperCase()
           # Move connectors to new panel
-          connectors = []
           for colr, panel of h.colorPanels
             for spr in panel.children
-              connectors.push(spr)
-            for ch in [0 .. (panel.children.length - 1)] by 1
-              panel.removeChild(panel.getChildAt(0))
-          for spr in connectors
-            h.colorPanels[col].addChild(spr)
+              spr.color = col
+              @toUnlit(spr)
           h.toColor = ""
     requestAnimFrame(animate )
     @renderer.render(@stage)
@@ -199,6 +271,11 @@ window.onresize = () ->
   menuBackground.addChild(menuBack_Middle)
   menuBackground.addChild(menuBack_Right)
   @menu.addChild(menuBackground)
+
+    ## Create the background itself
+  bck = PIXI.Sprite.fromImage("assets/img/galaxy-28.jpg")
+  bck.position.y = 100
+  @menu.addChild(bck)
   @resize()
   return
 
@@ -239,20 +316,6 @@ window.onresize = () ->
     backpanel.pivot.x = 0.5
     backpanel.pivot.y = 0.5
 
-    ## Create panels for colored parts of hexes
-    hColPanel = {}
-    for color in Color.values()
-      c = color
-      if(not isNaN(c))
-        c = Color.asString(c)
-      cpanel = new PIXI.DisplayObjectContainer()
-      cpanel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
-      cpanel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
-      cpanel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
-      cpanel.pivot.x = 0.5
-      cpanel.pivot.y = 0.5
-      hColPanel[c] = cpanel
-
     ## Create hex and add to panel
     spr = PIXI.Sprite.fromImage("assets/img/hex-back.png")
     spr.lit = false ## Initially unlit
@@ -261,6 +324,7 @@ window.onresize = () ->
     backpanel.addChild(spr)
     backpanel.hex = spr
 
+    sidePanels = []
     ## Create color Circles
     for i in [0 .. Hex.SIDES - 1] by 1
       c = hex.colorOfSide(i)
@@ -273,6 +337,7 @@ window.onresize = () ->
       point = new PIXI.Point( (@hexRad / 2 - shrink) * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + nudge), 
                              (@hexRad / 2 - shrink) * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + nudge))
       cr = PIXI.Sprite.fromImage("assets/img/connector_off.png")
+      cr.linked = false
       cr.anchor.x = 0.5
       cr.anchor.y = 0.8
       cr.rotation = i * radTo60Degree
@@ -280,20 +345,27 @@ window.onresize = () ->
       cr.position.y = point.y
       # The side of the hex this is on
       cr.side = i
-      ## Add to correct hColPanel
-      hColPanel[c].addChild(cr)
+      cr.color = c
+      ## Create a panel for this connector
+      cpanel = new PIXI.DisplayObjectContainer()
+      cpanel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
+      cpanel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
+      cpanel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
+      cpanel.pivot.x = 0.5
+      cpanel.pivot.y = 0.5
+      cpanel.addChild(cr)
+      cr.panel = cpanel
+      sidePanels.push(cpanel)
+      ## Add to unlit (for now)
+      @colorContainers[c].unlit.addChild(cpanel)
 
 
     # Store panels in hex for later access
     hex.backPanel = backpanel
-    hex.colorPanels = hColPanel
+    hex.colorPanels = sidePanels
 
     ## Add to back container
-    @container.addChild(backpanel)
-
-    ## Add to correct color layers
-    for key, value of hColPanel  
-      @colorContainers[key].addChild(value)
+    @base.addChild(backpanel)
 
     #Add a click listener
     backpanel.interactive = true

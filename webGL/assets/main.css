@@ -6,6 +6,11 @@
   background-color: #E6E6E6;
 }
 
+body{
+  margin: 0px;
+  overflow : hidden;
+}
+
 #game-canvas{
   width: 750px !important;
   height: 750px !important;
