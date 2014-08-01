@@ -113,12 +113,12 @@
     bck = this.menu.children[0];
     menuBackground = this.menu.children[1];
     lvlText = this.menu.children[2];
-    goalContainer = this.menu.children[3];
-    resetButton = this.menu.children[4];
-    selectLabel = this.menu.children[5];
-    prevLvl = this.menu.children[6];
-    nextLvl = this.menu.children[7];
-    helpButton = this.menu.children[8];
+    resetButton = this.menu.children[3];
+    selectLabel = this.menu.children[4];
+    prevLvl = this.menu.children[5];
+    nextLvl = this.menu.children[6];
+    helpButton = this.menu.children[7];
+    goalContainer = this.menu.children[8];
     bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75);
     bck.scale.y = Math.max(window.innerHeight / bck.texture.baseTexture.height, 0.75);
     menuBackground.scale.x = window.innerWidth / 200;
@@ -137,13 +137,9 @@
     prevLvl.scale.x = prevLvl.scale.y = newScale3;
     nextLvl.scale.x = nextLvl.scale.y = newScale3;
     helpButton.scale.x = helpButton.scale.y = newScale3;
-    goalContainer.position.y = -10 * newScale3;
-    goalContainer.scale.x = newScale3;
-    goalContainer.scale.y = newScale3;
     menumargin = 20;
     lvlPush = this.level >= 10 ? 35 : 0;
     lvlText.position.x = menumargin;
-    goalContainer.position.x = lvlText.position.x + (575 + lvlPush) * newScale3;
     helpButton.position.x = window.innerWidth - (250 * newScale3);
     nextLvl.position.x = helpButton.position.x - (250. * newScale3);
     prevLvl.position.x = nextLvl.position.x - (300. * newScale3);
@@ -159,6 +155,12 @@
     fixY(prevLvl, newScale3);
     fixY(selectLabel, newScale3);
     if (this.BOARD != null) {
+      if (goalContainer != null) {
+        goalContainer.position.y = -10 * newScale3;
+        goalContainer.scale.x = newScale3;
+        goalContainer.scale.y = newScale3;
+        goalContainer.position.x = lvlText.position.x + (575 + lvlPush) * newScale3;
+      }
       scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth());
       this.base.scale.x = scale;
       this.base.scale.y = scale;
@@ -437,48 +439,68 @@
     this.menu.addChild(menuBar);
     lvlText = new PIXI.Text("Lvl. " + this.level + " of 50", this.menuStyle);
     this.menu.addChild(lvlText);
-    this.menu.addChild(this.goalContainer);
     resetButton = new PIXI.Text("Reset", this.menuStyle);
     resetButton.interactive = true;
     resetButton.click = function() {
-      console.log("Reset clicked");
       window.clearBoard();
       Board.loadBoard(window.BOARDNAME);
-      window.updateMenu;
+      window.updateMenu();
     };
     this.menu.addChild(resetButton);
     selectLabel = new PIXI.Text("Level: ", this.menuStyle);
     this.menu.addChild(selectLabel);
     if (this.level > 1) {
       prevLvl = new PIXI.Text("<< " + (this.level - 1), this.menuStyle);
+      prevLvl.interactive = true;
     } else {
       prevLvl = new PIXI.Text("     ", this.menuStyle);
+      prevLvl.interactive = false;
     }
+    prevLvl.click = function() {
+      var num;
+      num = window.level - 1 < 10 ? "0" + (window.level - 1) : "" + (window.level - 1);
+      window.BOARDNAME = "board" + num;
+      resetButton.click();
+    };
     this.menu.addChild(prevLvl);
     if (this.level < 50) {
       nextLvl = new PIXI.Text((this.level + 1) + " >>", this.menuStyle);
+      nextLvl.interactive = true;
     } else {
       nextLvl = new PIXI.Text("     ", this.menuStyle);
+      nextLvl.interactive = false;
     }
+    nextLvl.click = function() {
+      var num;
+      num = window.level + 1 < 10 ? "0" + (window.level + 1) : "" + (window.level + 1);
+      window.BOARDNAME = "board" + num;
+      resetButton.click();
+    };
     this.menu.addChild(nextLvl);
     helpButton = new PIXI.Text("Help", this.menuStyle);
     this.menu.addChild(helpButton);
+    this.menu.addChild(this.goalContainer);
   };
 
   this.updateMenu = function() {
-    var lvlText, prevLvl;
+    var lvlText, nextLvl, prevLvl;
     lvlText = this.menu.children[2];
     lvlText.setText("Lvl. " + this.level + " of 50");
-    prevLvl = this.menu.children[6];
+    prevLvl = this.menu.children[5];
     if (this.level > 1) {
       prevLvl.setText("<< " + (this.level - 1));
+      prevLvl.interactive = true;
     } else {
       prevLvl.setText("     ");
+      prevLvl.interactive = false;
     }
+    nextLvl = this.menu.children[6];
     if (this.level < 50) {
-      return nextLvl.setText((this.level + 1) + " >>");
+      nextLvl.setText((this.level + 1) + " >>");
+      nextLvl.interactive = true;
     } else {
-      return nextLvl.setText("     ");
+      nextLvl.setText("     ");
+      nextLvl.interactive = false;
     }
   };
 
@@ -486,27 +508,38 @@
   /* Clears board and associated sprites from screen, usually in anticipation of new board being loaded */
 
   this.clearBoard = function() {
-    var i, pan, spr, sprToRemove, _j, _k, _l, _len1, _len2, _len3, _len4, _m, _n, _ref1, _ref2, _ref3, _ref4;
+    var i, pan, spr, sprToRemove, _j, _k, _l, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _p, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
     sprToRemove = [];
-    _ref1 = this.stage.children[1].children;
+    _ref1 = this.menu.children[8].children;
     for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-      spr = _ref1[_j];
+      pan = _ref1[_j];
+      _ref2 = pan.children;
+      for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+        spr = _ref2[_k];
+        sprToRemove.push(spr);
+      }
+    }
+    _ref3 = this.stage.children[1].children;
+    for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+      spr = _ref3[_l];
       sprToRemove.push(spr);
     }
-    for (i = _k = 1, _ref2 = this.stage.children.length - 1; 1 <= _ref2 ? _k <= _ref2 : _k >= _ref2; i = 1 <= _ref2 ? ++_k : --_k) {
-      _ref3 = this.stage.children[i].children;
-      for (_l = 0, _len2 = _ref3.length; _l < _len2; _l++) {
-        pan = _ref3[_l];
-        _ref4 = pan.children;
-        for (_m = 0, _len3 = _ref4.length; _m < _len3; _m++) {
-          spr = _ref4[_m];
+    for (i = _m = 1, _ref4 = this.stage.children.length - 1; 1 <= _ref4 ? _m <= _ref4 : _m >= _ref4; i = 1 <= _ref4 ? ++_m : --_m) {
+      _ref5 = this.stage.children[i].children;
+      for (_n = 0, _len4 = _ref5.length; _n < _len4; _n++) {
+        pan = _ref5[_n];
+        _ref6 = pan.children;
+        for (_o = 0, _len5 = _ref6.length; _o < _len5; _o++) {
+          spr = _ref6[_o];
           sprToRemove.push(spr);
         }
       }
     }
-    for (_n = 0, _len4 = sprToRemove.length; _n < _len4; _n++) {
-      spr = sprToRemove[_n];
-      spr.parent.removeChild(spr);
+    for (_p = 0, _len6 = sprToRemove.length; _p < _len6; _p++) {
+      spr = sprToRemove[_p];
+      if (spr != null) {
+        spr.parent.removeChild(spr);
+      }
     }
     this.BOARD = null;
   };

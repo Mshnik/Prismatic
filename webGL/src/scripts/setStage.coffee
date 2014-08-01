@@ -125,12 +125,12 @@
   bck = @menu.children[0]
   menuBackground = @menu.children[1]
   lvlText = @menu.children[2]
-  goalContainer = @menu.children[3]
-  resetButton = @menu.children[4]
-  selectLabel = @menu.children[5]
-  prevLvl = @menu.children[6]
-  nextLvl = @menu.children[7]
-  helpButton = @menu.children[8]
+  resetButton = @menu.children[3]
+  selectLabel = @menu.children[4]
+  prevLvl = @menu.children[5]
+  nextLvl = @menu.children[6]
+  helpButton = @menu.children[7]
+  goalContainer = @menu.children[8]
 
   ##Fix background image
   bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75) 
@@ -155,11 +155,6 @@
   nextLvl.scale.x = nextLvl.scale.y = newScale3
   helpButton.scale.x = helpButton.scale.y = newScale3
 
-  ## Fix goalContainer
-  goalContainer.position.y = -10 * newScale3
-  goalContainer.scale.x = newScale3
-  goalContainer.scale.y = newScale3
-
   ## Move labels and buttons into place on x axis
   # Left justified elements
   menumargin = 20
@@ -169,7 +164,6 @@
     else
       0
   lvlText.position.x = menumargin
-  goalContainer.position.x = lvlText.position.x + (575 + lvlPush) * newScale3 ## Not using lvlText.getLocalBounds() because it likes to change randomly (width)
   #Right Justified Elements
   helpButton.position.x = (window.innerWidth) - (250 * newScale3)
   nextLvl.position.x = helpButton.position.x - ((250) * newScale3)
@@ -192,6 +186,13 @@
 
   ## Fix board
   if @BOARD?
+    if goalContainer?
+      ## Fix goalContainer
+      goalContainer.position.y = -10 * newScale3
+      goalContainer.scale.x = newScale3
+      goalContainer.scale.y = newScale3
+      goalContainer.position.x = lvlText.position.x + (575 + lvlPush) * newScale3 ## Not using lvlText.getLocalBounds() because it likes to change randomly (width)
+
     scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth())
     @base.scale.x = scale
     @base.scale.y = scale
@@ -396,16 +397,12 @@ for c in Color.values()
   lvlText = new PIXI.Text("Lvl. " + @level + " of 50", @menuStyle)
   @menu.addChild(lvlText)
 
-  ## Add goal components to menu
-  @menu.addChild(@goalContainer)
-
   resetButton = new PIXI.Text("Reset", @menuStyle)
   resetButton.interactive = true
   resetButton.click = ->
-    console.log("Reset clicked")
     window.clearBoard()
     Board.loadBoard(window.BOARDNAME)
-    window.updateMenu
+    window.updateMenu()
     return
 
   @menu.addChild(resetButton)
@@ -416,37 +413,72 @@ for c in Color.values()
 
   if @level > 1
     prevLvl = new PIXI.Text("<< " + (@level - 1), @menuStyle)
+    prevLvl.interactive = true
+    
   else
     prevLvl = new PIXI.Text("     ", @menuStyle)
+    prevLvl.interactive = false
+  prevLvl.click = ->
+    num = 
+      if (window.level - 1 < 10)
+        "0" + (window.level - 1)
+      else
+        "" + (window.level - 1)
+    window.BOARDNAME = "board" + num
+    resetButton.click()
+    return
   @menu.addChild(prevLvl)
 
   if @level < 50
     nextLvl = new PIXI.Text((@level + 1) + " >>", @menuStyle)
+    nextLvl.interactive = true
   else
     nextLvl = new PIXI.Text("     ", @menuStyle)
+    nextLvl.interactive = false
+  nextLvl.click = ->
+    num = 
+      if (window.level + 1 < 10)
+        "0" + (window.level + 1)
+      else
+        "" + (window.level + 1)
+    window.BOARDNAME = "board" + num
+    resetButton.click()
+    return
   @menu.addChild(nextLvl)
 
   helpButton = new PIXI.Text("Help", @menuStyle)  
   @menu.addChild(helpButton)
+
+  ## Add goal components to menu
+  @menu.addChild(@goalContainer)
   return
 
 ## Updates the menu to the most recent text for level - assumes initted
 @updateMenu = () ->
   lvlText = @menu.children[2]
   lvlText.setText("Lvl. " + @level + " of 50")
-  prevLvl = @menu.children[6]
+  prevLvl = @menu.children[5]
   if @level > 1
     prevLvl.setText("<< " + (@level - 1))
+    prevLvl.interactive = true
   else
     prevLvl.setText("     ")
+    prevLvl.interactive = false
+  nextLvl = @menu.children[6]
   if @level < 50
     nextLvl.setText((@level + 1) + " >>")
+    nextLvl.interactive = true
   else
     nextLvl.setText("     ")
+    nextLvl.interactive = false
+  return
 
 ### Clears board and associated sprites from screen, usually in anticipation of new board being loaded ###
 @clearBoard = () ->
   sprToRemove = []
+  for pan in @menu.children[8].children
+    for spr in pan.children
+      sprToRemove.push(spr)
   for spr in @stage.children[1].children
     sprToRemove.push(spr)
   for i in [1 ..(@stage.children.length - 1)]
@@ -454,7 +486,8 @@ for c in Color.values()
       for spr in pan.children
         sprToRemove.push(spr)
   for spr in sprToRemove
-    spr.parent.removeChild(spr)
+    if spr?
+      spr.parent.removeChild(spr)
   @BOARD = null
   return
 
