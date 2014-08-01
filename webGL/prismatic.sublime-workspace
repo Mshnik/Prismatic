@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"over",
+				"overClock"
+			],
+			[
 				"filter",
 				"filter"
 			],
@@ -516,26 +520,10 @@
 	"buffers":
 	[
 		{
-			"file": "src/models/board.coffee",
-			"settings":
-			{
-				"buffer_size": 7279,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "src/scripts/setStage.coffee",
 			"settings":
 			{
-				"buffer_size": 8769,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/util/colorCircle.coffee",
-			"settings":
-			{
-				"buffer_size": 2582,
+				"buffer_size": 16306,
 				"line_ending": "Unix"
 			}
 		},
@@ -544,62 +532,6 @@
 			"settings":
 			{
 				"buffer_size": 3717,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "lib/models.js",
-			"settings":
-			{
-				"buffer_size": 43682,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/util/location.coffee",
-			"settings":
-			{
-				"buffer_size": 2629,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "lib/setStage.js",
-			"settings":
-			{
-				"buffer_size": 9005,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/subhex/crystal.coffee",
-			"settings":
-			{
-				"buffer_size": 2381,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/subhex/prism.coffee",
-			"settings":
-			{
-				"buffer_size": 4007,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/hex.coffee",
-			"settings":
-			{
-				"buffer_size": 8782,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/subhex/spark.coffee",
-			"settings":
-			{
-				"buffer_size": 2044,
 				"line_ending": "Unix"
 			}
 		},
@@ -672,33 +604,33 @@
 	},
 	"file_history":
 	[
+		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/main.css",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/spark.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/hex.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/prism.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/crystal.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/setStage.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/location.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/models.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/colorCircle.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/board.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/board1.json",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/223723243.json",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/Sample Maps/223723243 copy.json",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/models.js",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/location.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/util/Location.java",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Crystal.java",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/crystal.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Spark.java",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/spark.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Prism.java",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/prism.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Board.java",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/board.coffee",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/hex.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Hex.java",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/scripts/setStage.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/color.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Color.java",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/util/Colors.java",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/gui/GUI.java",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/main.css",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/index.html",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/setStage.js",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/scripts/drawBoard.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/prismatic.sublime-project",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/colorCircle.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/brew.sh",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/game.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/brewModels.sh",
@@ -817,6 +749,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"moveLight",
 			"avaliable",
 			"Loc = (f",
 			"Loc ",
@@ -943,8 +876,7 @@
 			"tabrow",
 			"tabs",
 			"tab",
-			"$scope",
-			"tab"
+			"$scope"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -965,23 +897,23 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/models/board.coffee",
+					"file": "src/scripts/setStage.coffee",
 					"settings":
 					{
-						"buffer_size": 7279,
+						"buffer_size": 16306,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6018,
-								6018
+								2273,
+								2273
 							]
 						],
 						"settings":
@@ -991,69 +923,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2360.0,
+						"translation.y": 133.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/scripts/setStage.coffee",
-					"settings":
-					{
-						"buffer_size": 8769,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3606,
-								3606
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1183.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/models/util/colorCircle.coffee",
-					"settings":
-					{
-						"buffer_size": 2582,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1846,
-								1846
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
 					"file": "src/models/util/color.coffee",
 					"settings":
 					{
@@ -1064,8 +940,8 @@
 						"selection":
 						[
 							[
-								637,
-								637
+								1815,
+								1815
 							]
 						],
 						"settings":
@@ -1075,203 +951,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "lib/models.js",
-					"settings":
-					{
-						"buffer_size": 43682,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1356,
-								1356
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/models/util/location.coffee",
-					"settings":
-					{
-						"buffer_size": 2629,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1793,
-								1793
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 65.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "lib/setStage.js",
-					"settings":
-					{
-						"buffer_size": 9005,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3804,
-								3804
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1007.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "src/models/subhex/crystal.coffee",
-					"settings":
-					{
-						"buffer_size": 2381,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1283,
-								1283
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "src/models/subhex/prism.coffee",
-					"settings":
-					{
-						"buffer_size": 4007,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3554,
-								3554
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 425.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "src/models/hex.coffee",
-					"settings":
-					{
-						"buffer_size": 8782,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2244,
-								2255
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 863.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "src/models/subhex/spark.coffee",
-					"settings":
-					{
-						"buffer_size": 2044,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1768,
-								1768
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 623.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1283,7 +963,7 @@
 			"sheets":
 			[
 				{
-					"buffer": 11,
+					"buffer": 2,
 					"file": "/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
 					"settings":
 					{
@@ -1311,7 +991,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 3,
 					"file": "index.html",
 					"settings":
 					{

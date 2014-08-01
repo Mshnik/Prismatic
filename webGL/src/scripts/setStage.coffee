@@ -64,9 +64,9 @@
                    0, 0, 1, 0,
                    0, 0, 0, 1]
     ## Create the length of the pulse for this color
-    cContainer.lit.pulseLength = 132
+    cContainer.lit.pulseLength = 173
     cContainer.lit.pulseOffset = offset
-    offset += 50
+    offset += 70
     cContainer.lit.filters = [pulse]
 
     @stage.addChild(cContainer)

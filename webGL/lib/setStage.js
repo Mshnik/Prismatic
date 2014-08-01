@@ -55,9 +55,9 @@
       cContainer.lit = lit;
       pulse = new PIXI.ColorMatrixFilter();
       pulse.matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
-      cContainer.lit.pulseLength = 50;
+      cContainer.lit.pulseLength = 173;
       cContainer.lit.pulseOffset = offset;
-      offset += 18;
+      offset += 70;
       cContainer.lit.filters = [pulse];
       this.stage.addChild(cContainer);
       this.colorContainers[colr] = cContainer;

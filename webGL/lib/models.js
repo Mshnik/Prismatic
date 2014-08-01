@@ -101,11 +101,11 @@
       c = isNaN(color) ? this.fromString(color) : color;
       switch (c) {
         case this.RED:
-          return [1, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
+          return [1, 0, 0, 0, 0, 84 / 255, 0, 0, 0, 0, 84 / 255, 0, 0, 0, 0, 1];
         case this.BLUE:
-          return [0.2, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+          return [25 / 255, 0, 0, 0, 0, 217 / 255, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
         case this.GREEN:
-          return [0.2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
+          return [56 / 255, 0, 0, 0, 0, 1, 0, 0, 0, 0, 63 / 255, 0, 0, 0, 0, 1];
         case this.ORANGE:
           return [0.7, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 1];
         case this.PURPLE:
