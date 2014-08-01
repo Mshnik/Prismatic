@@ -309,9 +309,15 @@ public class Board implements JSONString{
     for(Hex h : allHexes()){
       s += "\n" + Util.addQ(h.location.toString()) + ":" + h.toJSONString() + ",";
     }
+
+    for(Color c : colorsPresent()){
+      String col = c.toString().toUpperCase();
+      String subStr = puzzle.substring(puzzle.indexOf(col) + col.length() + 2);
+      int count = Integer.parseInt(subStr.substring(0, subStr.indexOf(' ')));
+      s += "\n" + Util.addQ(col) + ":" + count + ",";
+    }
     s += "\n" + Util.addQ("Height") + ":" + getHeight() + ",";
-    s += "\n" + Util.addQ("Width") + ":" + getWidth() + ",";
-    s += "\n" + Util.addQ("Puzzle") + ":" + Util.addQ(puzzle);     //Lack of comma here is very important - not valid JSON otherwise.
+    s += "\n" + Util.addQ("Width") + ":" + getWidth();
     return s + "\n}";
   }
   

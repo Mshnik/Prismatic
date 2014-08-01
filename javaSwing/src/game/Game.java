@@ -60,12 +60,12 @@ public abstract class Game {
   public abstract int getDifficulty();
   
   /** Saves the current board w/ random name*/
-  public void saveBoard(){
+  public void saveBoard(String name){
     Board b = new Board(board);
     if(this instanceof CreatedGame)
       b.puzzle = ((CreatedGame)this).puzzleString();
     try {
-      TextIO.writeJSON("Sample Maps/" + b.hashCode() + ".json", b);
+      TextIO.writeJSON("Sample Maps/" + name + ".json", b);
     } catch (IllegalArgumentException | IOException e) {
       e.printStackTrace();
     }

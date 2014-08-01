@@ -130,7 +130,7 @@ public class GUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
           GUI self = GUI.instance;
-          self.game.saveBoard();
+          self.game.saveBoard(self.game.getBoard().hashCode() + "");
         }
       });
       mnFile.add(mntmSaveBoard);

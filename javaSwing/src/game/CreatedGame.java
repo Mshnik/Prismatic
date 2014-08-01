@@ -21,9 +21,10 @@ public class CreatedGame extends Game{
 
   /** Creates a random board with known solutions. Prints the solution paths in addition to displaying the board */
   public static void main(String[] args){
-    Game g = new CreatedGame(3);
-    g.gui  = new GUI(g, true);
-    g.reset();
+//    Game g = new CreatedGame(3);
+//    g.gui  = new GUI(g, true);
+//    g.reset();
+    makeManyBoards();
   }
 
   @Override
@@ -36,31 +37,36 @@ public class CreatedGame extends Game{
 
   /** Make a buncha boards. */
   public static void makeManyBoards(){
-    int i = 0;
-    while(i < 100){
+    int i = 1;
+    while(i <= 50){
       try{
-//        CreatedGame g = new CreatedGame(3 + (i / 50));
-//        g.reset(4 + (i/25), 5 + (i/20));
-//        String n = i + "";
-//        if (i < 10)
-//          n = "0" + i;
-//        g.saveBoard("board" + n);
-//        System.out.println("Saved board " + (i+1));
-//        i++;
+        CreatedGame g = new CreatedGame(3 + (i / 50));
+        g.reset(4 + (i/25), 6 + (i/20));
+        String n = i + "";
+        if (i < 10)
+          n = "0" + i;
+        g.saveBoard("board" + n);
+        System.out.println("Saved board " + (i));
+        i++;
       } catch(Exception e){}
     }
   }
   
   @Override
   public void reset() {
-    innerGame = Creator.fullColPuzzle(difficulty, 6, 10);
-    printPuzzle();
+    reset(6,10);
+  }
+  
+  public void reset(int rs, int cs){
+    innerGame = Creator.fullColPuzzle(difficulty, rs, cs);
     board = innerGame.board;
     board.setGame(this);
     board.relight();
-    gui.retile();
-    gui.updateScoreLabel();
-    gui.updatePuzzleLabel();
+    if(gui != null){
+      gui.retile();
+      gui.updateScoreLabel();
+      gui.updatePuzzleLabel();
+    }
   }
 
   @Override

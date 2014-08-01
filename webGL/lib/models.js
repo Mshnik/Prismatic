@@ -602,7 +602,7 @@
       _ref = this.allHexesByClass;
       for (key in _ref) {
         value = _ref[key];
-        if (key.toLowerCase === cl.toLowerCase) {
+        if (key.toLowerCase() === cl.toLowerCase()) {
           return value;
         }
       }
@@ -760,6 +760,7 @@
     Board.loadBoard = function(name) {
       var file;
       file = "/assets/boards/" + name + ".json";
+      window.level = parseInt(name.substring(5));
       $.getJSON(file, function(content) {
         var b, key, value;
         console.log("Got board");

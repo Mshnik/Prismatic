@@ -7,6 +7,8 @@
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __modulo = function(a, b) { return (a % b + +b) % b; };
 
+  this.DEFAULTBOARDNAME = "board02";
+
   this.init = function() {
     return this.initStart();
   };
@@ -103,19 +105,22 @@
   /* Resizes the stage correctly */
 
   this.resize = function() {
-    var bck, cContainer, col, goalContainer, margin, menuBackground, menuLeft, menuMiddle, menuRight, n, newScale, newScale2, newScale3, newX, scale, _ref, _ref1, _ref2;
+    var bck, cContainer, col, fixY, goalContainer, helpButton, lvlPush, lvlText, margin, menuBackground, menumargin, n, newScale2, newScale3, newX, nextLvl, prevLvl, resetButton, scale, selectLabel, _ref, _ref1, _ref2;
     margin = 0;
     window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin);
     bck = this.menu.children[0];
     menuBackground = this.menu.children[1];
-    menuLeft = menuBackground.children[0];
-    menuMiddle = menuBackground.children[1];
-    menuRight = menuBackground.children[2];
-    goalContainer = this.menu.children[2];
-    newScale = (window.innerWidth - 220) / 200;
-    menuMiddle.scale.x = newScale;
-    menuRight.position.x = 100 + (newScale * 200);
-    newScale2 = Math.min(1, Math.max(0.5, window.innerHeight / 1000));
+    lvlText = this.menu.children[2];
+    goalContainer = this.menu.children[3];
+    resetButton = this.menu.children[4];
+    selectLabel = this.menu.children[5];
+    prevLvl = this.menu.children[6];
+    nextLvl = this.menu.children[7];
+    helpButton = this.menu.children[8];
+    bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75);
+    bck.scale.y = Math.max(window.innerHeight / bck.texture.baseTexture.height, 0.75);
+    menuBackground.scale.x = window.innerWidth / 200;
+    newScale2 = Math.min(1, Math.max(0.5, window.innerHeight / 1500));
     menuBackground.scale.y = newScale2;
     this.base.position.y = newScale2 * 100;
     _ref = this.colorContainers;
@@ -123,8 +128,34 @@
       cContainer = _ref[col];
       cContainer.position.y = newScale2 * 100;
     }
-    bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75);
-    bck.scale.y = Math.max(window.innerHeight / bck.texture.baseTexture.height, 0.75);
+    newScale3 = newScale2 * 0.5;
+    lvlText.scale.x = lvlText.scale.y = newScale3;
+    resetButton.scale.x = resetButton.scale.y = newScale3;
+    selectLabel.scale.x = selectLabel.scale.y = newScale3;
+    prevLvl.scale.x = prevLvl.scale.y = newScale3;
+    nextLvl.scale.x = nextLvl.scale.y = newScale3;
+    helpButton.scale.x = helpButton.scale.y = newScale3;
+    goalContainer.position.y = -10 * newScale3;
+    goalContainer.scale.x = newScale3;
+    goalContainer.scale.y = newScale3;
+    menumargin = 20;
+    lvlPush = this.level >= 10 ? 35 : 0;
+    lvlText.position.x = menumargin;
+    goalContainer.position.x = lvlText.position.x + (575 + lvlPush) * newScale3;
+    helpButton.position.x = window.innerWidth - (helpButton.getLocalBounds().width * newScale3);
+    nextLvl.position.x = helpButton.position.x - (250. * newScale3);
+    prevLvl.position.x = nextLvl.position.x - (250. * newScale3);
+    selectLabel.position.x = prevLvl.position.x - (300 * newScale3);
+    resetButton.position.x = selectLabel.position.x - 300 * newScale3;
+    fixY = function(comp, scale) {
+      comp.position.y = 35 * scale;
+    };
+    fixY(lvlText, newScale3);
+    fixY(resetButton, newScale3);
+    fixY(helpButton, newScale3);
+    fixY(nextLvl, newScale3);
+    fixY(prevLvl, newScale3);
+    fixY(selectLabel, newScale3);
     if (this.BOARD != null) {
       scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth());
       this.base.scale.x = scale;
@@ -136,7 +167,7 @@
         cContainer.scale.y = scale;
       }
       n = this.hexRad * this.base.scale.x;
-      newX = (window.innerWidth - window.BOARD.getWidth() * n) / 2;
+      newX = (window.innerWidth - window.BOARD.getWidth() * n) / 2 + 20;
       this.base.position.x = newX;
       _ref2 = this.colorContainers;
       for (col in _ref2) {
@@ -144,11 +175,6 @@
         cContainer.position.x = newX;
       }
     }
-    newScale3 = newScale2 * 0.5;
-    goalContainer.position.y = 0;
-    goalContainer.scale.x = newScale3;
-    goalContainer.scale.y = newScale3;
-    goalContainer.position.x = window.innerWidth - newScale3 * (goalContainer.getLocalBounds().width + 20);
   };
 
 
@@ -257,7 +283,6 @@
 
   this.initFinish = function() {
     var animate;
-    window.initMenu();
     Color.makeFilters();
     window.count = 0;
     animate = function() {
@@ -393,34 +418,50 @@
     };
     requestAnimFrame(animate);
     this.BOARD = new Board();
-    Board.loadBoard("board2");
+    Board.loadBoard(window.DEFAULTBOARDNAME);
+  };
+
+  this.menuStyle = {
+    font: "bold 35px Sans-Serif",
+    fill: "white"
   };
 
   this.initMenu = function() {
-    var baseTex, bck, menuBack_Left, menuBack_Middle, menuBack_Right, menuBackground;
+    var bck, helpButton, lvlText, menuBar, nextLvl, prevLvl, resetButton, selectLabel;
     bck = PIXI.Sprite.fromImage("assets/img/galaxy-28.jpg");
     this.menu.addChild(bck);
-    menuBackground = new PIXI.DisplayObjectContainer();
-    menuBackground.alpha = 0.5;
-    baseTex = PIXI.BaseTexture.fromImage("assets/img/menu.png");
-    menuBack_Left = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(0, 0, 100, 100)));
-    menuBack_Middle = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(100, 0, 200, 100)));
-    menuBack_Middle.position.x = 100;
-    menuBack_Right = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(300, 0, 100, 100)));
-    menuBack_Right.position.x = 300;
-    menuBackground.addChild(menuBack_Left);
-    menuBackground.addChild(menuBack_Middle);
-    menuBackground.addChild(menuBack_Right);
-    this.menu.addChild(menuBackground);
+    menuBar = PIXI.Sprite.fromImage("assets/img/menu.png");
+    menuBar.alpha = 0.5;
+    this.menu.addChild(menuBar);
+    lvlText = new PIXI.Text("Lvl. " + this.level + " of 50", this.menuStyle);
+    this.menu.addChild(lvlText);
     this.menu.addChild(this.goalContainer);
-    this.resize();
+    resetButton = new PIXI.Text("Reset", this.menuStyle);
+    this.menu.addChild(resetButton);
+    selectLabel = new PIXI.Text("Level: ", this.menuStyle);
+    this.menu.addChild(selectLabel);
+    if (this.level > 1) {
+      prevLvl = new PIXI.Text("<< " + (this.level - 1), this.menuStyle);
+    } else {
+      prevLvl = new PIXI.Text("     ", this.menuStyle);
+    }
+    this.menu.addChild(prevLvl);
+    if (this.level < 50) {
+      nextLvl = new PIXI.Text((this.level + 1) + " >>", this.menuStyle);
+    } else {
+      nextLvl = new PIXI.Text("     ", this.menuStyle);
+    }
+    this.menu.addChild(nextLvl);
+    helpButton = new PIXI.Text("Help", this.menuStyle);
+    this.menu.addChild(helpButton);
   };
 
 
   /* Called when the board is loaded */
 
   this.onBoardLoad = function() {
-    var color, colors, goalBoard, goalCount, i, spr, text, _j, _k, _len1, _len2, _ref1;
+    var color, colors, goalBoard, goalCount, goalStyle, i, spr, text, _j, _k, _len1, _len2, _ref1;
+    window.initMenu();
     colors = window.BOARD.colorsPresent();
     goalBoard = new Board(colors.length, 1);
     i = 0;
@@ -443,9 +484,9 @@
       this.goalContainer[c.lit.toUpperCase()].addChild(spr);
       goalCount = window.BOARD[c.lit.toUpperCase()];
       this.goalContainer[c.lit.toUpperCase()].goalCount = goalCount;
-      text = new PIXI.Text("x" + goalCount, {
-        font: "100px bold Times New Roman"
-      });
+      goalStyle = this.menuStyle;
+      goalStyle.font = "100px bold Times New Roman";
+      text = new PIXI.Text("x" + goalCount, goalStyle);
       text.position.x = c.loc.row * this.hexRad * 2.2 + this.hexRad * 0.6;
       text.position.y = -60;
       this.goalContainer[c.lit.toUpperCase()].addChild(text);
@@ -454,7 +495,8 @@
     window.BOARD.relight();
     document.body.appendChild(renderer.view);
     window.resize();
-    return window.drawBoard();
+    window.drawBoard();
+    return this.resize();
   };
 
 
