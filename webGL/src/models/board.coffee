@@ -99,7 +99,7 @@ class @Board
   ### Returns the colors present on this board, looking at the sparks. Only includes regular colors ###
   colorsPresent : () ->
     arr = []
-    for spark in allHexesOfClass("Spark")
+    for spark in @allHexesOfClass("Spark")
       for c in spark.getAvailableColors()
         if c not in arr and Color.isRegularColor(c)
           arr.push(c)
@@ -197,7 +197,6 @@ class @Board
       (content) ->
         console.log("Got board")
         b = new Board(content.Height, content.Width)
-        b.puzzle = content.Puzzle
         for key, value of content
           if Loc.isLoc(key)
             if value.Type is "C"
@@ -209,7 +208,7 @@ class @Board
             else
               Console.error("Bad k/v found " + key + ";" + value)
           else
-            # Do nothing
+            b[key] = value  ## Put all other values just on the board. Stuff like puzzle 
         console.log("Board loaded")
         window.BOARD = b
         window.onBoardLoad()

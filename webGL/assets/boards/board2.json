@@ -295,5 +295,7 @@
 },
 "Height":6,
 "Width":10,
-"Puzzle":"GREEN x2 RED x2 BLUE x2 "
+"GREEN":2,
+"RED":2,
+"BLUE":2
 }

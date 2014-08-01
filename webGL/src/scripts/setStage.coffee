@@ -72,6 +72,33 @@
     @stage.addChild(cContainer)
     @colorContainers[colr] = cContainer
 
+  ## Containers for goal elements. Only one layer per color - lit
+  @goalContainer = new PIXI.DisplayObjectContainer()
+  @goalContainer.count = 0  ## Set this later, once the board is loaded
+  offset = 0
+  for c in Color.values()
+    colr = c
+    if(not isNaN(colr))
+      colr = Color.asString(colr)
+    cContainer = new PIXI.DisplayObjectContainer()
+    cContainer.position.y = menuHeight
+
+    ## Add basic color filter to this colorContainer
+    f = new PIXI.ColorMatrixFilter()
+    f.matrix = Color.matrixFor(colr)
+    pulse = new PIXI.ColorMatrixFilter()
+    pulse.matrix = [1, 0, 0, 0,
+                   0, 1, 0, 0,
+                   0, 0, 1, 0,
+                   0, 0, 0, 1]
+    ## Create the length of the pulse for this color
+    cContainer.pulseLength = 173
+    cContainer.pulseOffset = offset
+    offset += 70
+    cContainer.filters = [f, pulse]
+    @goalContainer[colr] = cContainer
+    @goalContainer.addChild(cContainer)
+
   preloadImages()
   return
 
@@ -91,11 +118,12 @@
   window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin)
 
   ## Expand/contract the menu. Horizontal expansion/contraction is on middle sprite. Vertical is on whole menubackground container
-  menuBackground = @menu.children[0]
+  bck = @menu.children[0]
+  menuBackground = @menu.children[1]
   menuLeft = menuBackground.children[0]
   menuMiddle = menuBackground.children[1]
   menuRight = menuBackground.children[2]
-  bck = @menu.children[1]
+  goalContainer = @menu.children[2]
 
   ## Default size = 200.
   newScale = (window.innerWidth - 220) / 200
@@ -110,9 +138,8 @@
     cContainer.position.y = newScale2 * 100
 
   ##Fix background image
-  bck.position.y = newScale2 * 100
   bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75) 
-  bck.scale.y = Math.max((window.innerHeight - 100) / bck.texture.baseTexture.height, 0.75) 
+  bck.scale.y = Math.max((window.innerHeight) / bck.texture.baseTexture.height, 0.75) 
 
   ## Fix board
   if @BOARD?
@@ -129,6 +156,13 @@
     @base.position.x = newX
     for col, cContainer of @colorContainers
       cContainer.position.x = newX
+
+  ## Fix goalContainer
+  newScale3 = newScale2 * 0.5
+  goalContainer.position.y = 0
+  goalContainer.scale.x = newScale3
+  goalContainer.scale.y = newScale3
+  goalContainer.position.x = window.innerWidth - newScale3 * (goalContainer.getLocalBounds().width + 20)
 
   return
 
@@ -191,6 +225,16 @@ for c in Color.values()
     m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
     m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75
     pulse.matrix = m
+  for col, val of @goalContainer
+    if Color.isRegularColor(col)
+      pulse = val.filters[1]
+      cont = (count + val.pulseOffset)/val.pulseLength
+      m = pulse.matrix
+      m[0] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
+      m[5] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
+      m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
+      m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75
+      pulse.matrix = m
   return
 
 ### Finish initing after assets are loaded ###
@@ -294,11 +338,16 @@ for c in Color.values()
     return
   requestAnimFrame(animate )
   @BOARD = new Board() ## Temp board to handle resize requests while loading new board
-  Board.loadBoard("board1")
+  Board.loadBoard("board2")
   return
 
 @initMenu = () ->
+  ## Create the background itself
+  bck = PIXI.Sprite.fromImage("assets/img/galaxy-28.jpg")
+  @menu.addChild(bck)
+
   menuBackground = new PIXI.DisplayObjectContainer()
+  menuBackground.alpha = 0.5
   baseTex = PIXI.BaseTexture.fromImage("assets/img/menu.png")
   menuBack_Left = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(0, 0, 100, 100)))
   menuBack_Middle = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(100, 0, 200, 100)))
@@ -312,15 +361,46 @@ for c in Color.values()
   menuBackground.addChild(menuBack_Right)
   @menu.addChild(menuBackground)
 
-    ## Create the background itself
-  bck = PIXI.Sprite.fromImage("assets/img/galaxy-28.jpg")
-  bck.position.y = 100
-  @menu.addChild(bck)
+  ## Add goal components to menu
+  @menu.addChild(@goalContainer)
+
   @resize()
   return
 
 ### Called when the board is loaded ###
 @onBoardLoad = () ->
+  ## Create the goal board on the right of the main board
+  colors = window.BOARD.colorsPresent()
+
+  ## Goal board has crystal, spark on even rows only.
+  goalBoard = new Board(colors.length,1)
+  i = 0
+  for color in colors
+    c = new Crystal(goalBoard, new Loc(i, 0))
+    c.lit = color
+    i++
+  
+  for c in goalBoard.allHexesOfClass("Crystal")
+    ## Create sprites for crystal
+    spr = PIXI.Sprite.fromImage("assets/img/crystal.png")
+    spr.lit = false
+    spr.color = c.lit
+    spr.hex = c
+    spr.position.x = c.loc.row * @hexRad * 2.2   ## Leaves some space for text between sprites
+    spr.anchor.x = 0.5
+    spr.anchor.y = 0.5
+    @goalContainer[c.lit.toUpperCase()].addChild(spr)
+    goalCount = window.BOARD[c.lit.toUpperCase()]
+    @goalContainer[c.lit.toUpperCase()].goalCount = goalCount
+    text = new PIXI.Text("x" + goalCount, {font:"100px bold Times New Roman"})
+    text.position.x = c.loc.row * @hexRad * 2.2 + @hexRad * 0.6
+    text.position.y = - 60
+    @goalContainer[c.lit.toUpperCase()].addChild(text)
+
+
+
+  @goalContainer.count = 4
+
   window.BOARD.relight()
   ## Fit the canvas to the window
   document.body.appendChild(renderer.view)

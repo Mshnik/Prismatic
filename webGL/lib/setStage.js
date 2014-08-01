@@ -19,7 +19,7 @@
   /* Set up a PIXI stage - part before asset loading */
 
   this.initStart = function() {
-    var c, cContainer, colr, f, lit, margin, menuHeight, offset, pulse, unlit, _i, _len, _ref;
+    var c, cContainer, colr, f, lit, margin, menuHeight, offset, pulse, unlit, _i, _j, _len, _len1, _ref, _ref1;
     this.stage = new PIXI.Stage(0x000000, true);
     margin = 0;
     this.renderer = PIXI.autoDetectRenderer(window.innerWidth - margin, window.innerHeight - margin);
@@ -62,6 +62,29 @@
       this.stage.addChild(cContainer);
       this.colorContainers[colr] = cContainer;
     }
+    this.goalContainer = new PIXI.DisplayObjectContainer();
+    this.goalContainer.count = 0;
+    offset = 0;
+    _ref1 = Color.values();
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      c = _ref1[_j];
+      colr = c;
+      if (!isNaN(colr)) {
+        colr = Color.asString(colr);
+      }
+      cContainer = new PIXI.DisplayObjectContainer();
+      cContainer.position.y = menuHeight;
+      f = new PIXI.ColorMatrixFilter();
+      f.matrix = Color.matrixFor(colr);
+      pulse = new PIXI.ColorMatrixFilter();
+      pulse.matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+      cContainer.pulseLength = 173;
+      cContainer.pulseOffset = offset;
+      offset += 70;
+      cContainer.filters = [f, pulse];
+      this.goalContainer[colr] = cContainer;
+      this.goalContainer.addChild(cContainer);
+    }
     preloadImages();
   };
 
@@ -80,14 +103,15 @@
   /* Resizes the stage correctly */
 
   this.resize = function() {
-    var bck, cContainer, col, margin, menuBackground, menuLeft, menuMiddle, menuRight, n, newScale, newScale2, newX, scale, _ref, _ref1, _ref2;
+    var bck, cContainer, col, goalContainer, margin, menuBackground, menuLeft, menuMiddle, menuRight, n, newScale, newScale2, newScale3, newX, scale, _ref, _ref1, _ref2;
     margin = 0;
     window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin);
-    menuBackground = this.menu.children[0];
+    bck = this.menu.children[0];
+    menuBackground = this.menu.children[1];
     menuLeft = menuBackground.children[0];
     menuMiddle = menuBackground.children[1];
     menuRight = menuBackground.children[2];
-    bck = this.menu.children[1];
+    goalContainer = this.menu.children[2];
     newScale = (window.innerWidth - 220) / 200;
     menuMiddle.scale.x = newScale;
     menuRight.position.x = 100 + (newScale * 200);
@@ -99,9 +123,8 @@
       cContainer = _ref[col];
       cContainer.position.y = newScale2 * 100;
     }
-    bck.position.y = newScale2 * 100;
     bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75);
-    bck.scale.y = Math.max((window.innerHeight - 100) / bck.texture.baseTexture.height, 0.75);
+    bck.scale.y = Math.max(window.innerHeight / bck.texture.baseTexture.height, 0.75);
     if (this.BOARD != null) {
       scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth());
       this.base.scale.x = scale;
@@ -121,6 +144,11 @@
         cContainer.position.x = newX;
       }
     }
+    newScale3 = newScale2 * 0.5;
+    goalContainer.position.y = 0;
+    goalContainer.scale.x = newScale3;
+    goalContainer.scale.y = newScale3;
+    goalContainer.position.x = window.innerWidth - newScale3 * (goalContainer.getLocalBounds().width + 20);
   };
 
 
@@ -195,7 +223,7 @@
   /* Updates the pulse filter that controls lighting effects */
 
   this.calcPulseFilter = function(count) {
-    var col, cont, m, pulse, val, _ref1;
+    var col, cont, m, pulse, val, _ref1, _ref2;
     _ref1 = this.colorContainers;
     for (col in _ref1) {
       val = _ref1[col];
@@ -207,6 +235,20 @@
       m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5;
       m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75;
       pulse.matrix = m;
+    }
+    _ref2 = this.goalContainer;
+    for (col in _ref2) {
+      val = _ref2[col];
+      if (Color.isRegularColor(col)) {
+        pulse = val.filters[1];
+        cont = (count + val.pulseOffset) / val.pulseLength;
+        m = pulse.matrix;
+        m[0] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5;
+        m[5] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5;
+        m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5;
+        m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75;
+        pulse.matrix = m;
+      }
     }
   };
 
@@ -351,12 +393,15 @@
     };
     requestAnimFrame(animate);
     this.BOARD = new Board();
-    Board.loadBoard("board1");
+    Board.loadBoard("board2");
   };
 
   this.initMenu = function() {
     var baseTex, bck, menuBack_Left, menuBack_Middle, menuBack_Right, menuBackground;
+    bck = PIXI.Sprite.fromImage("assets/img/galaxy-28.jpg");
+    this.menu.addChild(bck);
     menuBackground = new PIXI.DisplayObjectContainer();
+    menuBackground.alpha = 0.5;
     baseTex = PIXI.BaseTexture.fromImage("assets/img/menu.png");
     menuBack_Left = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(0, 0, 100, 100)));
     menuBack_Middle = new PIXI.Sprite(new PIXI.Texture(baseTex, new PIXI.Rectangle(100, 0, 200, 100)));
@@ -367,9 +412,7 @@
     menuBackground.addChild(menuBack_Middle);
     menuBackground.addChild(menuBack_Right);
     this.menu.addChild(menuBackground);
-    bck = PIXI.Sprite.fromImage("assets/img/galaxy-28.jpg");
-    bck.position.y = 100;
-    this.menu.addChild(bck);
+    this.menu.addChild(this.goalContainer);
     this.resize();
   };
 
@@ -377,6 +420,37 @@
   /* Called when the board is loaded */
 
   this.onBoardLoad = function() {
+    var color, colors, goalBoard, goalCount, i, spr, text, _j, _k, _len1, _len2, _ref1;
+    colors = window.BOARD.colorsPresent();
+    goalBoard = new Board(colors.length, 1);
+    i = 0;
+    for (_j = 0, _len1 = colors.length; _j < _len1; _j++) {
+      color = colors[_j];
+      c = new Crystal(goalBoard, new Loc(i, 0));
+      c.lit = color;
+      i++;
+    }
+    _ref1 = goalBoard.allHexesOfClass("Crystal");
+    for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
+      c = _ref1[_k];
+      spr = PIXI.Sprite.fromImage("assets/img/crystal.png");
+      spr.lit = false;
+      spr.color = c.lit;
+      spr.hex = c;
+      spr.position.x = c.loc.row * this.hexRad * 2.2;
+      spr.anchor.x = 0.5;
+      spr.anchor.y = 0.5;
+      this.goalContainer[c.lit.toUpperCase()].addChild(spr);
+      goalCount = window.BOARD[c.lit.toUpperCase()];
+      this.goalContainer[c.lit.toUpperCase()].goalCount = goalCount;
+      text = new PIXI.Text("x" + goalCount, {
+        font: "100px bold Times New Roman"
+      });
+      text.position.x = c.loc.row * this.hexRad * 2.2 + this.hexRad * 0.6;
+      text.position.y = -60;
+      this.goalContainer[c.lit.toUpperCase()].addChild(text);
+    }
+    this.goalContainer.count = 4;
     window.BOARD.relight();
     document.body.appendChild(renderer.view);
     window.resize();

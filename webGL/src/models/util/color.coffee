@@ -49,6 +49,13 @@ class @Color
   ### Returns the regular colors ###
   @regularColors : () -> @subValues(Number.MAX_VALUE)
 
+  ## Returns true if the given color is a regular color, false otherwise
+  @isRegularColor : (c) ->
+    if isNaN(c)
+      c.toUpperCase() in @regularColors()
+    else
+      Color.asString(c).toUpperCase() in @regularColors()
+
   ### Returns an array of length length filled with color col ###
   @fill : (length, col) ->
     col for i in [0 ... (length - 1)] by 1

@@ -34,6 +34,23 @@ public class CreatedGame extends Game{
     }
   }
 
+  /** Make a buncha boards. */
+  public static void makeManyBoards(){
+    int i = 0;
+    while(i < 100){
+      try{
+//        CreatedGame g = new CreatedGame(3 + (i / 50));
+//        g.reset(4 + (i/25), 5 + (i/20));
+//        String n = i + "";
+//        if (i < 10)
+//          n = "0" + i;
+//        g.saveBoard("board" + n);
+//        System.out.println("Saved board " + (i+1));
+//        i++;
+      } catch(Exception e){}
+    }
+  }
+  
   @Override
   public void reset() {
     innerGame = Creator.fullColPuzzle(difficulty, 6, 10);
