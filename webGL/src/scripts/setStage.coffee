@@ -1,5 +1,8 @@
 ### Begins init processing ###
-@DEFAULTBOARDNAME = "board02"
+
+@BOARDNAME = "board29" ## Most recent board loaded. Initial value is default
+@initted  = false       ## True if a full init process has occured. False until then
+
 @init = -> 
   @initStart()
 
@@ -168,9 +171,9 @@
   lvlText.position.x = menumargin
   goalContainer.position.x = lvlText.position.x + (575 + lvlPush) * newScale3 ## Not using lvlText.getLocalBounds() because it likes to change randomly (width)
   #Right Justified Elements
-  helpButton.position.x = (window.innerWidth) - (helpButton.getLocalBounds().width * newScale3)
+  helpButton.position.x = (window.innerWidth) - (250 * newScale3)
   nextLvl.position.x = helpButton.position.x - ((250) * newScale3)
-  prevLvl.position.x = nextLvl.position.x - ((250) * newScale3)
+  prevLvl.position.x = nextLvl.position.x - ((300) * newScale3)
   selectLabel.position.x = prevLvl.position.x - (300 * newScale3)
   resetButton.position.x =  selectLabel.position.x - 300 * newScale3
 
@@ -375,7 +378,7 @@ for c in Color.values()
     return
   requestAnimFrame(animate )
   @BOARD = new Board() ## Temp board to handle resize requests while loading new board
-  Board.loadBoard(window.DEFAULTBOARDNAME)
+  Board.loadBoard(window.BOARDNAME)
   return
 
 ## Font for text in the menu
@@ -397,7 +400,16 @@ for c in Color.values()
   @menu.addChild(@goalContainer)
 
   resetButton = new PIXI.Text("Reset", @menuStyle)
+  resetButton.interactive = true
+  resetButton.click = ->
+    console.log("Reset clicked")
+    window.clearBoard()
+    Board.loadBoard(window.BOARDNAME)
+    window.updateMenu
+    return
+
   @menu.addChild(resetButton)
+
 
   selectLabel = new PIXI.Text("Level: ", @menuStyle)
   @menu.addChild(selectLabel)
@@ -418,10 +430,41 @@ for c in Color.values()
   @menu.addChild(helpButton)
   return
 
+## Updates the menu to the most recent text for level - assumes initted
+@updateMenu = () ->
+  lvlText = @menu.children[2]
+  lvlText.setText("Lvl. " + @level + " of 50")
+  prevLvl = @menu.children[6]
+  if @level > 1
+    prevLvl.setText("<< " + (@level - 1))
+  else
+    prevLvl.setText("     ")
+  if @level < 50
+    nextLvl.setText((@level + 1) + " >>")
+  else
+    nextLvl.setText("     ")
+
+### Clears board and associated sprites from screen, usually in anticipation of new board being loaded ###
+@clearBoard = () ->
+  sprToRemove = []
+  for spr in @stage.children[1].children
+    sprToRemove.push(spr)
+  for i in [1 ..(@stage.children.length - 1)]
+    for pan in @stage.children[i].children
+      for spr in pan.children
+        sprToRemove.push(spr)
+  for spr in sprToRemove
+    spr.parent.removeChild(spr)
+  @BOARD = null
+  return
+
 ### Called when the board is loaded ###
 @onBoardLoad = () ->
   ##Make the menu, now that we know what level we're on
-  window.initMenu()
+  if not @initted
+    window.initMenu()
+    @initted = true
+
   ## Create the goal board on the right of the main board
   colors = window.BOARD.colorsPresent()
 
