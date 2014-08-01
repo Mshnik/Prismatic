@@ -2,6 +2,9 @@
 @init = -> 
   @initStart()
 
+## A helper 
+@typeIsArray = Array.isArray || ( value ) -> return {}.toString.call( value ) is '[object Array]'
+
 ### Set up a PIXI stage - part before asset loading ###
 @initStart = ->
   
@@ -28,14 +31,8 @@
                   0, 0, 0.5, 0,
                   0, 0, 0, 1]
 
-  ## The pulse filter - creates lighting effects for all colors. Shouldn't favor a color, as it goes overtop other colorizing filters
-  ## Initially flat - advanced in rendering steps
-  @pulse = new PIXI.ColorMatrixFilter()
-  @pulse.matrix = [1, 0, 0, 0,
-                   0, 1, 0, 0,
-                   0, 0, 1, 0,
-                   0, 0, 0, 1]
 
+  offset = 0
   ## Containers for elements to be colored. Two layers per color - lit and unlit 
   @colorContainers = {}
   for c in Color.values()
@@ -59,7 +56,18 @@
     cContainer.unlit = unlit
     cContainer.unlit.filters = [@flat]
     cContainer.lit = lit
-    cContainer.lit.filters = [@pulse]
+    ## The pulse filter - creates lighting effects for all colors. Shouldn't favor a color, as it goes overtop other colorizing filters
+    ## Initially flat - advanced in rendering steps
+    pulse = new PIXI.ColorMatrixFilter()
+    pulse.matrix = [1, 0, 0, 0,
+                   0, 1, 0, 0,
+                   0, 0, 1, 0,
+                   0, 0, 0, 1]
+    ## Create the length of the pulse for this color
+    cContainer.lit.pulseLength = 132
+    cContainer.lit.pulseOffset = offset
+    offset += 50
+    cContainer.lit.filters = [pulse]
 
     @stage.addChild(cContainer)
     @colorContainers[colr] = cContainer
@@ -69,8 +77,9 @@
 
 ### Load assets into cache ###
 @preloadImages = ->
-  assets = ["assets/img/galaxy-28.jpg", "/assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/menu.png",
-            "assets/img/connector_off.png", "assets/img/connector_on.png"]
+  assets = ["assets/img/galaxy-28.jpg", "/assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/core.png"
+            "assets/img/spark.png", "assets/img/crystal.png",
+            "assets/img/menu.png", "assets/img/connector_off.png", "assets/img/connector_on.png"]
   loader = new PIXI.AssetLoader(assets)
   loader.onComplete = @initFinish
   loader.load()
@@ -131,15 +140,35 @@ window.onresize = () ->
   try
     @colorContainers[connector.color].unlit.removeChild(connector.panel)
   catch
-  @colorContainers[connector.color].lit.addChild(connector.panel)
-  connector.linked = true
+  if @typeIsArray connector.color
+    if connector.color.length > 0
+      c = connector.color[0].toUpperCase()
+    else
+      c = Color.asString(Color.NONE).toUpperCase()
+  else
+    c = connector.color.toUpperCase()
+  if c is Color.asString(Color.NONE).toUpperCase()
+    @toUnlit(connector) ## Prevent lighting of color.NONE
+  else
+    @colorContainers[c.toUpperCase()].lit.addChild(connector.panel)
+    connector.linked = true
   return
 
 @toUnlit = (connector) ->
   try
     @colorContainers[connector.color].lit.removeChild(connector.panel)
   catch
-  @colorContainers[connector.color].unlit.addChild(connector.panel)
+  if @typeIsArray connector.color
+    if connector.color.length > 0
+      c = connector.color[0]
+    else
+      c = Color.asString(Color.NONE)
+  else
+    c = connector.color
+  if connector.hex? and connector.hex instanceof Crystal  
+    @colorContainers[Color.asString(Color.NONE).toUpperCase()].unlit.addChild(connector.panel)
+  else
+    @colorContainers[c.toUpperCase()].unlit.addChild(connector.panel)
   connector.linked = false
   return
 
@@ -153,14 +182,15 @@ for c in Color.values()
 
 ### Updates the pulse filter that controls lighting effects ###
 @calcPulseFilter = (count) ->
-  randSmallDev = (Math.random() - 0.5) * 0.05 
-  cont = count/15
-  m = @pulse.matrix
-  m[0] = Math.abs(Math.sin(cont)) * 0.5 + 0.5
-  m[5] = Math.abs(Math.sin(cont)) * 0.5 + 0.5
-  m[10] = Math.abs(Math.sin(cont)) * 0.5 + 0.5
-  m[15] = 1 ## Math.abs(Math.sin(cont))
-  @pulse.matrix = m
+  for col, val of @colorContainers
+    pulse = val.lit.filters[0]
+    cont = (count + val.lit.pulseOffset)/val.lit.pulseLength
+    m = pulse.matrix
+    m[0] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
+    m[5] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
+    m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
+    m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75
+    pulse.matrix = m
   return
 
 ### Finish initing after assets are loaded ###
@@ -178,15 +208,24 @@ for c in Color.values()
     radTo60Degree = 1.04719755 ## 1 radian * this coefficient = 60 degrees
     if (@BOARD?)
       for h in @BOARD.allHexes()
-        # Update lighting of all hexes
+        ##Update lighting of all hexes
         if h.isLit().length > 0 and not h.backPanel.children[0].lit
-          h.backPanel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-lit.png")
           h.backPanel.children[0].lit = true
+          if not (h instanceof Prism)
+            @toLit(h.backPanel.spr)
         if h.isLit().length is 0 and h.backPanel.children[0].lit
-          h.backPanel.children[0].texture = PIXI.Texture.fromImage("assets/img/hex-back.png")
           h.backPanel.children[0].lit = false
+          if not (h instanceof Prism)
+            @toUnlit(h.backPanel.spr)
 
         hLit = h.isLit()
+        if h instanceof Prism
+          for col, core of h.cores
+            if col.toLowerCase() not in hLit and core.alpha > 0
+              core.alpha = 0
+            else if col.toLowerCase() in hLit and core.alpha is 0
+              core.alpha = 0.75
+
         nS = h.getNeighborsWithBlanks()
         for col, panel of h.colorPanels
           for connector in panel.children
@@ -224,10 +263,14 @@ for c in Color.values()
           h.currentRotation += inc 
           for value in h.colorPanels
             value.rotation += inc * radTo60Degree
+          for col, core of h.cores
+            core.currentRotation += inc
           if Math.abs(h.targetRotation - h.currentRotation) < tolerance
             inc = (h.targetRotation - h.currentRotation)
             h.backPanel.rotation += inc * radTo60Degree
             h.currentRotation += inc
+            for col, core of h.cores
+              core.currentRotation += inc
             for value in h.colorPanels
               value.rotation += inc * radTo60Degree
               ## Update side index of each sprite
@@ -243,11 +286,8 @@ for c in Color.values()
                   Color.asString(h.toColor).toUpperCase() 
                 else 
                   h.toColor.toUpperCase()
-          # Move connectors to new panel
-          for colr, panel of h.colorPanels
-            for spr in panel.children
-              spr.color = col
-              @toUnlit(spr)
+          h.backPanel.spr.color = col
+          @toLit(h.backPanel.spr)
           h.toColor = ""
     requestAnimFrame(animate )
     @renderer.render(@stage)
@@ -317,55 +357,98 @@ for c in Color.values()
     backpanel.pivot.y = 0.5
 
     ## Create hex and add to panel
-    spr = PIXI.Sprite.fromImage("assets/img/hex-back.png")
+    if hex instanceof Prism
+      spr = PIXI.Sprite.fromImage("assets/img/hex-back.png")
+    else if hex instanceof Crystal
+      spr = PIXI.Sprite.fromImage("assets/img/crystal.png")
+    else if hex instanceof Spark
+      spr = PIXI.Sprite.fromImage("assets/img/spark.png")
     spr.lit = false ## Initially unlit
     spr.anchor.x = 0.5
     spr.anchor.y = 0.5
+    spr.hex = hex
     backpanel.addChild(spr)
-    backpanel.hex = spr
+    backpanel.spr = spr
+    hex.spr = spr
 
     sidePanels = []
     ## Create color Circles
-    for i in [0 .. Hex.SIDES - 1] by 1
-      c = hex.colorOfSide(i)
-      if(not isNaN(c))
-        c = Color.asString(c).toUpperCase()
-      else
-        c = c.toUpperCase()
-      nudge = 0.528  ## Nudges along radius
-      shrink = 25 ## Moves beam towards center
-      point = new PIXI.Point( (@hexRad / 2 - shrink) * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + nudge), 
-                             (@hexRad / 2 - shrink) * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + nudge))
-      cr = PIXI.Sprite.fromImage("assets/img/connector_off.png")
-      cr.linked = false
-      cr.anchor.x = 0.5
-      cr.anchor.y = 0.8
-      cr.rotation = i * radTo60Degree
-      cr.position.x = point.x
-      cr.position.y = point.y
-      # The side of the hex this is on
-      cr.side = i
-      cr.color = c
-      ## Create a panel for this connector
-      cpanel = new PIXI.DisplayObjectContainer()
-      cpanel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
-      cpanel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
-      cpanel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
-      cpanel.pivot.x = 0.5
-      cpanel.pivot.y = 0.5
-      cpanel.addChild(cr)
-      cr.panel = cpanel
-      sidePanels.push(cpanel)
-      ## Add to unlit (for now)
-      @colorContainers[c].unlit.addChild(cpanel)
+    if hex instanceof Prism
+      for i in [0 .. Hex.SIDES - 1] by 1
+        c = hex.colorOfSide(i)
+        if(not isNaN(c))
+          c = Color.asString(c).toUpperCase()
+        else
+          c = c.toUpperCase()
+        nudge = 0.528  ## Nudges along radius
+        shrink = 25 ## Moves beam towards center
+        point = new PIXI.Point( (@hexRad / 2 - shrink) * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + nudge), 
+                               (@hexRad / 2 - shrink) * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + nudge))
+        cr = PIXI.Sprite.fromImage("assets/img/connector_off.png")
+        cr.linked = false
+        cr.anchor.x = 0.5
+        cr.anchor.y = 0.8
+        cr.rotation = i * radTo60Degree
+        cr.position.x = point.x
+        cr.position.y = point.y
+        # The side of the hex this is on
+        cr.side = i
+        cr.color = c
+        ## Create a panel for this connector
+        cpanel = new PIXI.DisplayObjectContainer()
+        cpanel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
+        cpanel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
+        cpanel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
+        cpanel.pivot.x = 0.5
+        cpanel.pivot.y = 0.5
+        cpanel.addChild(cr)
+        cr.panel = cpanel
+        sidePanels.push(cpanel)
+        ## Add to unlit (for now)
+        @colorContainers[c].unlit.addChild(cpanel)
+
+        ## Create cores
+        coreContainer = {}
+        for col in Color.regularColors()
+          col = 
+            if not isNaN(col)
+              Color.asString(col).toUpperCase()
+            else
+              col.toUpperCase()
+          core = PIXI.Sprite.fromImage("assets/img/core.png")
+          core.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (7/16)
+          core.position.y = hex.loc.row * @hexRad + @hexRad * (7/16) - 0.5
+          core.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
+          core.pivot.x = 0.5
+          core.pivot.y = 0.5
+          core.alpha = 0
+          coreContainer[col] = core
+          @colorContainers[col].lit.addChild(core)
+
+
+    ## Store the color this is currently lit (if non-prism)
+    else if hex instanceof Crystal
+      spr.color = 
+        if hex.lit is Color.NONE
+          "NONE"
+        else
+          hex.lit.toUpperCase()
+      spr.panel = backpanel
+      @toUnlit(spr)
+    else if hex instanceof Spark
+      spr.color = hex.getColor().toUpperCase()
+      spr.panel = backpanel
+      @toLit(spr)
 
 
     # Store panels in hex for later access
     hex.backPanel = backpanel
     hex.colorPanels = sidePanels
+    hex.cores = coreContainer
 
-    ## Add to back container
-    @base.addChild(backpanel)
+    ## Add to back container, if prism
+    if hex instanceof Prism
+      @base.addChild(backpanel)
 
     #Add a click listener
     backpanel.interactive = true
