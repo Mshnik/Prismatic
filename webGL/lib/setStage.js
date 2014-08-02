@@ -290,16 +290,29 @@
     Color.makeFilters();
     window.count = 0;
     animate = function() {
-      var col, connector, core, h, hLit, inc, n, nConnector, nS, panel, radTo60Degree, rotSpeed, spr, tolerance, value, _j, _k, _l, _len1, _len2, _len3, _len4, _len5, _len6, _len7, _m, _n, _o, _p, _ref1, _ref10, _ref11, _ref12, _ref13, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var col, connector, core, curLit, goalContainer, h, hLit, inc, n, nConnector, nS, pan, panel, radTo60Degree, rotSpeed, spr, tolerance, value, _j, _k, _l, _len1, _len2, _len3, _len4, _len5, _len6, _len7, _len8, _len9, _m, _n, _o, _p, _q, _r, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       window.count += 1;
       this.calcPulseFilter(window.count);
       rotSpeed = 1 / 5;
       tolerance = 0.000001;
       radTo60Degree = 1.04719755;
       if ((this.BOARD != null)) {
-        _ref1 = this.BOARD.allHexes();
+        curLit = this.BOARD.crystalLitCount();
+        goalContainer = this.menu.children[8];
+        _ref1 = goalContainer.children;
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          h = _ref1[_j];
+          pan = _ref1[_j];
+          _ref2 = pan.children;
+          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+            spr = _ref2[_k];
+            if (spr instanceof PIXI.Text && spr.color.toUpperCase() in curLit) {
+              spr.setText(curLit[spr.color.toUpperCase()] + spr.text.substring(1));
+            }
+          }
+        }
+        _ref3 = this.BOARD.allHexes();
+        for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+          h = _ref3[_l];
           if (h.isLit().length > 0 && !h.backPanel.children[0].lit) {
             h.backPanel.children[0].lit = true;
             if (!(h instanceof Prism)) {
@@ -314,31 +327,31 @@
           }
           hLit = h.isLit();
           if (h instanceof Prism) {
-            _ref2 = h.cores;
-            for (col in _ref2) {
-              core = _ref2[col];
-              if ((_ref3 = col.toLowerCase(), __indexOf.call(hLit, _ref3) < 0) && core.alpha > 0) {
+            _ref4 = h.cores;
+            for (col in _ref4) {
+              core = _ref4[col];
+              if ((_ref5 = col.toLowerCase(), __indexOf.call(hLit, _ref5) < 0) && core.alpha > 0) {
                 core.alpha = 0;
-              } else if ((_ref4 = col.toLowerCase(), __indexOf.call(hLit, _ref4) >= 0) && core.alpha === 0) {
+              } else if ((_ref6 = col.toLowerCase(), __indexOf.call(hLit, _ref6) >= 0) && core.alpha === 0) {
                 core.alpha = 0.75;
               }
             }
           }
           nS = h.getNeighborsWithBlanks();
-          _ref5 = h.colorPanels;
-          for (col in _ref5) {
-            panel = _ref5[col];
-            _ref6 = panel.children;
-            for (_k = 0, _len2 = _ref6.length; _k < _len2; _k++) {
-              connector = _ref6[_k];
+          _ref7 = h.colorPanels;
+          for (col in _ref7) {
+            panel = _ref7[col];
+            _ref8 = panel.children;
+            for (_m = 0, _len4 = _ref8.length; _m < _len4; _m++) {
+              connector = _ref8[_m];
               c = h.colorOfSide(connector.side);
               n = nS[connector.side];
               if ((n != null) && __indexOf.call(hLit, c) >= 0 && n.colorOfSide(n.indexLinked(h)) === c && !connector.linked) {
                 connector.texture = PIXI.Texture.fromImage("assets/img/connector_on.png");
                 this.toLit(connector);
-                _ref7 = n.colorPanels;
-                for (_l = 0, _len3 = _ref7.length; _l < _len3; _l++) {
-                  nConnector = _ref7[_l];
+                _ref9 = n.colorPanels;
+                for (_n = 0, _len5 = _ref9.length; _n < _len5; _n++) {
+                  nConnector = _ref9[_n];
                   if (nConnector.side === n.indexLinked(h) && !nConnector.linked) {
                     nConnector.texture = PIXI.Texture.fromImage("assets/img/connector_on.png");
                     this.toLit(nConnector);
@@ -348,9 +361,9 @@
                 connector.texture = PIXI.Texture.fromImage("assets/img/connector_off.png");
                 this.toUnlit(connector);
                 if (n != null) {
-                  _ref8 = n.colorPanels;
-                  for (_m = 0, _len4 = _ref8.length; _m < _len4; _m++) {
-                    nConnector = _ref8[_m];
+                  _ref10 = n.colorPanels;
+                  for (_o = 0, _len6 = _ref10.length; _o < _len6; _o++) {
+                    nConnector = _ref10[_o];
                     if (nConnector.side === n.indexLinked(h) && nConnector.linked) {
                       nConnector.texture = PIXI.Texture.fromImage("assets/img/connector_off.png");
                       this.toUnlit(nConnector);
@@ -373,32 +386,32 @@
             inc = (h.targetRotation - h.prevRotation) >= 0 ? rotSpeed : -rotSpeed;
             h.backPanel.rotation += inc * radTo60Degree;
             h.currentRotation += inc;
-            _ref9 = h.colorPanels;
-            for (_n = 0, _len5 = _ref9.length; _n < _len5; _n++) {
-              value = _ref9[_n];
+            _ref11 = h.colorPanels;
+            for (_p = 0, _len7 = _ref11.length; _p < _len7; _p++) {
+              value = _ref11[_p];
               value.rotation += inc * radTo60Degree;
             }
-            _ref10 = h.cores;
-            for (col in _ref10) {
-              core = _ref10[col];
+            _ref12 = h.cores;
+            for (col in _ref12) {
+              core = _ref12[col];
               core.currentRotation += inc;
             }
             if (Math.abs(h.targetRotation - h.currentRotation) < tolerance) {
               inc = h.targetRotation - h.currentRotation;
               h.backPanel.rotation += inc * radTo60Degree;
               h.currentRotation += inc;
-              _ref11 = h.cores;
-              for (col in _ref11) {
-                core = _ref11[col];
+              _ref13 = h.cores;
+              for (col in _ref13) {
+                core = _ref13[col];
                 core.currentRotation += inc;
               }
-              _ref12 = h.colorPanels;
-              for (_o = 0, _len6 = _ref12.length; _o < _len6; _o++) {
-                value = _ref12[_o];
+              _ref14 = h.colorPanels;
+              for (_q = 0, _len8 = _ref14.length; _q < _len8; _q++) {
+                value = _ref14[_q];
                 value.rotation += inc * radTo60Degree;
-                _ref13 = value.children;
-                for (_p = 0, _len7 = _ref13.length; _p < _len7; _p++) {
-                  spr = _ref13[_p];
+                _ref15 = value.children;
+                for (_r = 0, _len9 = _ref15.length; _r < _len9; _r++) {
+                  spr = _ref15[_r];
                   spr.side = __modulo(spr.side + (h.currentRotation - h.prevRotation), Hex.SIDES);
                 }
               }
@@ -569,7 +582,7 @@
       spr.lit = false;
       spr.color = c.lit;
       spr.hex = c;
-      spr.position.x = c.loc.row * this.hexRad * 2.2;
+      spr.position.x = c.loc.row * this.hexRad * 2.75;
       spr.anchor.x = 0.5;
       spr.anchor.y = 0.5;
       this.goalContainer[c.lit.toUpperCase()].addChild(spr);
@@ -577,9 +590,10 @@
       this.goalContainer[c.lit.toUpperCase()].goalCount = goalCount;
       goalStyle = this.menuStyle;
       goalStyle.font = "100px bold Times New Roman";
-      text = new PIXI.Text("x" + goalCount, goalStyle);
-      text.position.x = c.loc.row * this.hexRad * 2.2 + this.hexRad * 0.6;
+      text = new PIXI.Text("0/" + goalCount, goalStyle);
+      text.position.x = c.loc.row * this.hexRad * 2.75 + this.hexRad * 0.75;
       text.position.y = -60;
+      text.color = c.lit;
       this.goalContainer[c.lit.toUpperCase()].addChild(text);
     }
     this.goalContainer.count = 4;

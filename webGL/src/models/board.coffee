@@ -108,12 +108,35 @@ class @Board
   ### Returns a map of color -> int that is the sides of prisms that are the color ###
   colorCount : () ->
     o = {}
-    for prism in allHexesOfClass("Prism")
+    for prism in @allHexesOfClass("Prism")
       for c in Color.values()
         if(c not of o)
           o[c] = prism.colorCount(c)
         else
           o[c] = o[c] + prism.colorCount(c)
+    return o
+
+  ### Returns a map of color -> int that is the number of crystals that are currently lit that color ###
+  crystalLitCount : () ->
+    o = {}
+    crystals = @allHexesOfClass("Crystal")
+    for c in Color.regularColors()
+      if not isNaN(c)
+        c = Color.asString(c).toUpperCase()
+      else
+        c = c.toUpperCase()
+      o[c] = 0
+      for cr in crystals
+        lit =
+          if cr? and cr.lit? 
+            if not isNaN(cr.lit)
+              Color.asString(cr.lit).toUpperCase()
+            else
+              cr.lit.toUpperCase()
+          else
+            Color.asString(Color.NONE)
+        if lit is c
+          o[c]++
     return o
 
   ### Returns all prisms that have at least one side with color.ANY on it. Useful for finding part of the board not finished ###

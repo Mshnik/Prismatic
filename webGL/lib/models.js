@@ -635,7 +635,7 @@
     Board.prototype.colorCount = function() {
       var c, o, prism, _i, _j, _len, _len1, _ref, _ref1;
       o = {};
-      _ref = allHexesOfClass("Prism");
+      _ref = this.allHexesOfClass("Prism");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         prism = _ref[_i];
         _ref1 = Color.values();
@@ -645,6 +645,33 @@
             o[c] = prism.colorCount(c);
           } else {
             o[c] = o[c] + prism.colorCount(c);
+          }
+        }
+      }
+      return o;
+    };
+
+
+    /* Returns a map of color -> int that is the number of crystals that are currently lit that color */
+
+    Board.prototype.crystalLitCount = function() {
+      var c, cr, crystals, lit, o, _i, _j, _len, _len1, _ref;
+      o = {};
+      crystals = this.allHexesOfClass("Crystal");
+      _ref = Color.regularColors();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        c = _ref[_i];
+        if (!isNaN(c)) {
+          c = Color.asString(c).toUpperCase();
+        } else {
+          c = c.toUpperCase();
+        }
+        o[c] = 0;
+        for (_j = 0, _len1 = crystals.length; _j < _len1; _j++) {
+          cr = crystals[_j];
+          lit = (cr != null) && (cr.lit != null) ? !isNaN(cr.lit) ? Color.asString(cr.lit).toUpperCase() : cr.lit.toUpperCase() : Color.asString(Color.NONE);
+          if (lit === c) {
+            o[c]++;
           }
         }
       }

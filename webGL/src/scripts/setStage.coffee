@@ -292,6 +292,14 @@ for c in Color.values()
     tolerance = 0.000001 ## For floating point errors - difference below this is considered 'equal'
     radTo60Degree = 1.04719755 ## 1 radian * this coefficient = 60 degrees
     if (@BOARD?)
+      ## Update text on goal
+      curLit = @BOARD.crystalLitCount()
+      goalContainer = @menu.children[8]
+      for pan in goalContainer.children
+        for spr in pan.children
+          if spr instanceof PIXI.Text and spr.color.toUpperCase() of curLit
+            spr.setText(curLit[spr.color.toUpperCase()] + spr.text.substring(1))
+
       for h in @BOARD.allHexes()
         ##Update lighting of all hexes
         if h.isLit().length > 0 and not h.backPanel.children[0].lit
@@ -515,7 +523,7 @@ for c in Color.values()
     spr.lit = false
     spr.color = c.lit
     spr.hex = c
-    spr.position.x = c.loc.row * @hexRad * 2.2   ## Leaves some space for text between sprites
+    spr.position.x = c.loc.row * @hexRad * 2.75   ## Leaves some space for text between sprites
     spr.anchor.x = 0.5
     spr.anchor.y = 0.5
     @goalContainer[c.lit.toUpperCase()].addChild(spr)
@@ -523,9 +531,10 @@ for c in Color.values()
     @goalContainer[c.lit.toUpperCase()].goalCount = goalCount
     goalStyle = @menuStyle
     goalStyle.font = "100px bold Times New Roman"
-    text = new PIXI.Text("x" + goalCount, goalStyle)
-    text.position.x = c.loc.row * @hexRad * 2.2 + @hexRad * 0.6
+    text = new PIXI.Text("0/" + goalCount, goalStyle)
+    text.position.x = c.loc.row * @hexRad * 2.75 + @hexRad * 0.75
     text.position.y = - 60
+    text.color = c.lit
     @goalContainer[c.lit.toUpperCase()].addChild(text)
 
 
