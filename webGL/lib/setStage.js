@@ -11,6 +11,8 @@
 
   this.initted = false;
 
+  this.gameOn = true;
+
   this.init = function() {
     return this.initStart();
   };
@@ -84,7 +86,84 @@
       this.goalContainer[colr] = cContainer;
       this.goalContainer.addChild(cContainer);
     }
+    this.helpContainer = new PIXI.DisplayObjectContainer();
     preloadImages();
+  };
+
+
+  /* Creates the help menu. Called after images are loaded */
+
+  this.createHelpMenu = function() {
+    var bottomContent, close, contentStyle, crystalsContent, crystalsHeader, headerStyle, helpContainer, prismsContent, prismsHeader, sparksContent, sparksHeader, tagText, title, topContent;
+    helpContainer = window.helpContainer;
+    helpContainer.position.x = 450;
+    helpContainer.position.y = 200;
+    helpContainer.alpha = 0;
+    window.stage.addChild(helpContainer);
+    helpContainer.addChild(PIXI.Sprite.fromImage("assets/img/helpBackground.png"));
+    headerStyle = {
+      font: "bold 15px Sans-Serif",
+      fill: "#6E6E6E"
+    };
+    contentStyle = {
+      font: "15px Sans-Serif",
+      fill: "#6E6E6E"
+    };
+    close = new PIXI.Text("X", {
+      font: "bold 20px Sans-Serif",
+      fill: "gray"
+    });
+    close.position.x = 480;
+    close.position.y = 5;
+    close.interactive = true;
+    close.click = function() {
+      window.helpContainer.alpha = 0;
+      window.gameOn = true;
+    };
+    helpContainer.addChild(close);
+    title = new PIXI.Text("Prismatic", headerStyle);
+    title.position.x = 200;
+    title.position.y = 10;
+    helpContainer.addChild(title);
+    topContent = new PIXI.Text("Prismatic is a light-based color game. Get the right \nnumber of Crystals to light up for each color.", contentStyle);
+    topContent.position.x = 20;
+    topContent.position.y = 40;
+    helpContainer.addChild(topContent);
+    sparksHeader = new PIXI.Text("Sparks", headerStyle);
+    sparksHeader.position.x = 100;
+    sparksHeader.position.y = 90;
+    helpContainer.addChild(sparksHeader);
+    sparksContent = new PIXI.Text(" - the start point. They emit one color of light.", contentStyle);
+    sparksContent.position.x = 150;
+    sparksContent.position.y = 90;
+    helpContainer.addChild(sparksContent);
+    prismsHeader = new PIXI.Text("Prisms", headerStyle);
+    prismsHeader.position.x = 100;
+    prismsHeader.position.y = 130;
+    helpContainer.addChild(prismsHeader);
+    prismsContent = new PIXI.Text(" - the basic piece. The channel light and rotate.", contentStyle);
+    prismsContent.position.x = 150;
+    prismsContent.position.y = 130;
+    helpContainer.addChild(prismsContent);
+    crystalsHeader = new PIXI.Text("Crystals", headerStyle);
+    crystalsHeader.position.x = 100;
+    crystalsHeader.position.y = 170;
+    helpContainer.addChild(crystalsHeader);
+    crystalsContent = new PIXI.Text(" - the end goal. They recieve light.", contentStyle);
+    crystalsContent.position.x = 160;
+    crystalsContent.position.y = 170;
+    helpContainer.addChild(crystalsContent);
+    bottomContent = new PIXI.Text("> Click on Sparks to change their color. \n> Click on Prisms to rotate their alignment.", contentStyle);
+    bottomContent.position.x = 20;
+    bottomContent.position.y = 210;
+    helpContainer.addChild(bottomContent);
+    tagText = new PIXI.Text("created by Michael Patashnik - Mgpshnik@gmail.com", {
+      font: "italic 10px Sans-Serif",
+      fill: "gray"
+    });
+    tagText.position.x = 100;
+    tagText.position.y = 250;
+    helpContainer.addChild(tagText);
   };
 
 
@@ -92,7 +171,7 @@
 
   this.preloadImages = function() {
     var assets, loader;
-    assets = ["assets/img/galaxy-28.jpg", "/assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/core.png", "assets/img/spark.png", "assets/img/crystal.png", "assets/img/menu.png", "assets/img/connector_off.png", "assets/img/connector_on.png"];
+    assets = ["assets/img/galaxy-28.jpg", "assets/img/helpBackground.png", "/assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/core.png", "assets/img/spark.png", "assets/img/crystal.png", "assets/img/menu.png", "assets/img/connector_off.png", "assets/img/connector_on.png"];
     loader = new PIXI.AssetLoader(assets);
     loader.onComplete = this.initFinish;
     loader.load();
@@ -415,6 +494,7 @@
       this.renderer.render(this.stage);
     };
     requestAnimFrame(animate);
+    window.createHelpMenu();
     this.BOARD = new Board();
     Board.loadBoard(window.BOARDNAME);
   };
@@ -472,6 +552,11 @@
     };
     this.menu.addChild(nextLvl);
     helpButton = new PIXI.Text("Help", this.menuStyle);
+    helpButton.interactive = true;
+    helpButton.click = function() {
+      window.gameOn = false;
+      window.helpContainer.alpha = 1;
+    };
     this.menu.addChild(helpButton);
     this.menu.addChild(this.goalContainer);
   };
@@ -704,7 +789,9 @@
       }
       backpanel.interactive = true;
       backpanel.click = function() {
-        hex.click();
+        if (window.gameOn) {
+          hex.click();
+        }
       };
     }
     return hex.panel;
