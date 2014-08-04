@@ -61,6 +61,33 @@ class @Color
     col for i in [0 ... (length - 1)] by 1
 
 
+  ### Returns a hex value for a color ###
+  @hexValueFor : (color) ->
+    c = 
+      if isNaN(color)
+        @fromString(color)
+      else
+        color
+    switch c
+      when @RED
+        return 0xFF3300
+      when @BLUE
+        return 0x3399FF
+      when @GREEN
+        return 0x66FF66
+      when @ORANGE
+        return 0xFF9900
+      when @PURPLE
+        return 0x9966FF
+      when @CYAN
+        return 0x66FFFF
+      when @YELLOW
+        return 0xFFFF66
+      when @PINK
+        return 0xFF66CC
+      else ## Returns a muted gray for other color
+        return 0xCCCCCC
+
   ### Returns a 'matrix' (length 16 array) that transforms a white asset into an asset of this color ###
   @matrixFor : (color) ->
     c = 

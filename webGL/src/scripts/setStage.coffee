@@ -546,7 +546,7 @@ for c in Color.values()
   resetButton = new PIXI.Text("Reset", @menuStyle)
   resetButton.interactive = true
   resetButton.click = ->
-    if window.winContainer isnt null
+    if window.winContainer isnt undefined and window.winContainer isnt null
       window.stage.removeChild(window.winContainer)
     window.winContainer = null
     window.gameOn = true

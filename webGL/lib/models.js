@@ -103,6 +103,34 @@
     };
 
 
+    /* Returns a hex value for a color */
+
+    Color.hexValueFor = function(color) {
+      var c;
+      c = isNaN(color) ? this.fromString(color) : color;
+      switch (c) {
+        case this.RED:
+          return 0xFF3300;
+        case this.BLUE:
+          return 0x3399FF;
+        case this.GREEN:
+          return 0x66FF66;
+        case this.ORANGE:
+          return 0xFF9900;
+        case this.PURPLE:
+          return 0x9966FF;
+        case this.CYAN:
+          return 0x66FFFF;
+        case this.YELLOW:
+          return 0xFFFF66;
+        case this.PINK:
+          return 0xFF66CC;
+        default:
+          return 0xCCCCCC;
+      }
+    };
+
+
     /* Returns a 'matrix' (length 16 array) that transforms a white asset into an asset of this color */
 
     Color.matrixFor = function(color) {

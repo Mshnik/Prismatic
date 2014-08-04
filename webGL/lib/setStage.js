@@ -594,7 +594,7 @@
     resetButton = new PIXI.Text("Reset", this.menuStyle);
     resetButton.interactive = true;
     resetButton.click = function() {
-      if (window.winContainer !== null) {
+      if (window.winContainer !== void 0 && window.winContainer !== null) {
         window.stage.removeChild(window.winContainer);
       }
       window.winContainer = null;
