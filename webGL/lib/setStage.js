@@ -94,7 +94,7 @@
   /* Creates the help menu. Called after images are loaded */
 
   this.createHelpMenu = function() {
-    var bottomContent, close, contentStyle, crystalsContent, crystalsHeader, headerStyle, helpContainer, prismsContent, prismsHeader, sparksContent, sparksHeader, tagText, title, topContent;
+    var bottomContent, close, contentStyle, crystalIcon, crystalsContent, crystalsHeader, headerStyle, helpContainer, prismIcon, prismsContent, prismsHeader, sparkIcon, sparksContent, sparksHeader, tagText, title, topContent;
     helpContainer = window.helpContainer;
     helpContainer.position.x = 450;
     helpContainer.position.y = 200;
@@ -129,40 +129,58 @@
     topContent.position.x = 20;
     topContent.position.y = 40;
     helpContainer.addChild(topContent);
+    sparkIcon = PIXI.Sprite.fromImage("assets/img/spark.png");
+    sparkIcon.position.x = 50;
+    sparkIcon.position.y = 95;
+    sparkIcon.scale.x = 0.25;
+    sparkIcon.scale.y = 0.25;
+    helpContainer.addChild(sparkIcon);
     sparksHeader = new PIXI.Text("Sparks", headerStyle);
     sparksHeader.position.x = 100;
-    sparksHeader.position.y = 90;
+    sparksHeader.position.y = 100;
     helpContainer.addChild(sparksHeader);
     sparksContent = new PIXI.Text(" - the start point. They emit one color of light.", contentStyle);
     sparksContent.position.x = 150;
-    sparksContent.position.y = 90;
+    sparksContent.position.y = 100;
     helpContainer.addChild(sparksContent);
+    prismIcon = PIXI.Sprite.fromImage("assets/img/hex-back.png");
+    prismIcon.position.x = 50;
+    prismIcon.position.y = 135;
+    prismIcon.scale.x = 0.25;
+    prismIcon.scale.y = 0.25;
+    helpContainer.addChild(prismIcon);
     prismsHeader = new PIXI.Text("Prisms", headerStyle);
     prismsHeader.position.x = 100;
-    prismsHeader.position.y = 130;
+    prismsHeader.position.y = 140;
     helpContainer.addChild(prismsHeader);
     prismsContent = new PIXI.Text(" - the basic piece. The channel light and rotate.", contentStyle);
     prismsContent.position.x = 150;
-    prismsContent.position.y = 130;
+    prismsContent.position.y = 140;
     helpContainer.addChild(prismsContent);
+    crystalIcon = PIXI.Sprite.fromImage("assets/img/hex-lit.png");
+    crystalIcon.position.x = 50;
+    crystalIcon.position.y = 175;
+    crystalIcon.scale.x = 0.25;
+    crystalIcon.scale.y = 0.25;
+    helpContainer.addChild(crystalIcon);
     crystalsHeader = new PIXI.Text("Crystals", headerStyle);
     crystalsHeader.position.x = 100;
-    crystalsHeader.position.y = 170;
+    crystalsHeader.position.y = 180;
     helpContainer.addChild(crystalsHeader);
     crystalsContent = new PIXI.Text(" - the end goal. They recieve light.", contentStyle);
     crystalsContent.position.x = 160;
-    crystalsContent.position.y = 170;
+    crystalsContent.position.y = 180;
     helpContainer.addChild(crystalsContent);
     bottomContent = new PIXI.Text("> Click on Sparks to change their color. \n> Click on Prisms to rotate their alignment.", contentStyle);
     bottomContent.position.x = 20;
-    bottomContent.position.y = 210;
+    bottomContent.position.y = 230;
     helpContainer.addChild(bottomContent);
     tagText = new PIXI.Text("created by Michael Patashnik - Mgpshnik@gmail.com", {
       font: "italic 10px Sans-Serif",
       fill: "gray"
     });
-    tagText.position.x = 100;
-    tagText.position.y = 250;
+    tagText.position.x = 120;
+    tagText.position.y = 275;
     helpContainer.addChild(tagText);
   };
 
