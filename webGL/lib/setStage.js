@@ -7,7 +7,7 @@
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __modulo = function(a, b) { return (a % b + +b) % b; };
 
-  this.BOARDNAME = "board29";
+  this.BOARDNAME = "board01";
 
   this.initted = false;
 
@@ -100,11 +100,11 @@
     helpContainer.position.y = 200;
     helpContainer.addChild(PIXI.Sprite.fromImage("assets/img/helpBackground.png"));
     headerStyle = {
-      font: "bold 15px Sans-Serif",
+      font: "bold 15px Futura",
       fill: "#6E6E6E"
     };
     contentStyle = {
-      font: "15px Sans-Serif",
+      font: "15px Futura",
       fill: "#6E6E6E"
     };
     close = new PIXI.Text("X", {
@@ -183,6 +183,50 @@
   };
 
 
+  /* Makes and adds the win container. Called when the player beats this level */
+
+  this.makeWinGameContainer = function() {
+    var contentStyle, headerStyle, nextLvl, title, topContent;
+    this.winContainer = new PIXI.DisplayObjectContainer();
+    this.winContainer.addChild(new PIXI.Sprite(new PIXI.Texture(PIXI.BaseTexture.fromImage("assets/img/helpBackground.png"), new PIXI.Rectangle(0, 0, 500, 200))));
+    this.winContainer.position.x = 450;
+    this.winContainer.position.y = 250;
+    headerStyle = {
+      font: "bold 15px Futura",
+      fill: "#6E6E6E"
+    };
+    contentStyle = {
+      font: "15px Futura",
+      fill: "#6E6E6E"
+    };
+    title = new PIXI.Text("You Win!", headerStyle);
+    title.position.x = 200;
+    title.position.y = 10;
+    this.winContainer.addChild(title);
+    topContent = new PIXI.Text("You beat level " + this.level + " in " + this.BOARD.moves + " moves.", contentStyle);
+    topContent.position.x = 20;
+    topContent.position.y = 40;
+    this.winContainer.addChild(topContent);
+    if (this.level < 50) {
+      nextLvl = new PIXI.Text((this.level + 1) + " >>", contentStyle);
+      nextLvl.interactive = true;
+    } else {
+      nextLvl = new PIXI.Text("Thank you for playing!", contentStyle);
+      nextLvl.interactive = false;
+    }
+    nextLvl.click = function() {
+      var num;
+      num = window.level + 1 < 10 ? "0" + (window.level + 1) : "" + (window.level + 1);
+      window.BOARDNAME = "board" + num;
+      window.menu.children[3].click();
+    };
+    nextLvl.position.x = 225;
+    nextLvl.position.y = 175;
+    this.winContainer.addChild(nextLvl);
+    this.stage.addChild(this.winContainer);
+  };
+
+
   /* Load assets into cache */
 
   this.preloadImages = function() {
@@ -197,7 +241,7 @@
   /* Resizes the stage correctly */
 
   this.resize = function() {
-    var bck, cContainer, col, fixY, goalContainer, helpButton, helpHeight, helpWidth, lvlPush, lvlText, margin, menuBackground, menumargin, n, newScale2, newScale3, newX, nextLvl, prevLvl, resetButton, scale, selectLabel, _ref, _ref1, _ref2;
+    var bck, cContainer, col, fixY, goalContainer, helpButton, helpHeight, helpWidth, lvlPush, lvlText, margin, menu, menuBackground, menumargin, n, newScale2, newScale3, newX, nextLvl, optMenu, prevLvl, resetButton, scale, selectLabel, _i, _len, _ref, _ref1, _ref2;
     margin = 0;
     window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin);
     bck = this.menu.children[0];
@@ -220,11 +264,15 @@
       cContainer = _ref[col];
       cContainer.position.y = newScale2 * 100;
     }
-    if (this.helpContainer != null) {
-      helpWidth = this.helpContainer.getLocalBounds().width;
-      helpHeight = this.helpContainer.getLocalBounds().height;
-      this.helpContainer.position.x = (window.innerWidth - helpWidth) / 2;
-      this.helpContainer.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100;
+    optMenu = [this.helpContainer, this.winContainer];
+    for (_i = 0, _len = optMenu.length; _i < _len; _i++) {
+      menu = optMenu[_i];
+      if (menu != null) {
+        helpWidth = menu.getLocalBounds().width;
+        helpHeight = menu.getLocalBounds().height;
+        menu.position.x = (window.innerWidth - helpWidth) / 2;
+        menu.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100;
+      }
     }
     newScale3 = newScale2 * 0.5;
     lvlText.scale.x = lvlText.scale.y = newScale3;
@@ -372,7 +420,7 @@
     Color.makeFilters();
     window.count = 0;
     animate = function() {
-      var col, connector, core, curLit, goalContainer, h, hLit, inc, n, nConnector, nS, pan, panel, radTo60Degree, rotSpeed, spr, tolerance, value, _j, _k, _l, _len1, _len2, _len3, _len4, _len5, _len6, _len7, _len8, _len9, _m, _n, _o, _p, _q, _r, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var col, connector, core, curLit, goalContainer, h, hLit, inc, isWin, n, nConnector, nS, pan, panel, radTo60Degree, rotSpeed, spr, tolerance, value, _j, _k, _l, _len1, _len2, _len3, _len4, _len5, _len6, _len7, _len8, _len9, _m, _n, _o, _p, _q, _r, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       window.count += 1;
       this.calcPulseFilter(window.count);
       rotSpeed = 1 / 5;
@@ -381,6 +429,7 @@
       if ((this.BOARD != null)) {
         curLit = this.BOARD.crystalLitCount();
         goalContainer = this.menu.children[8];
+        isWin = true;
         _ref1 = goalContainer.children;
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
           pan = _ref1[_j];
@@ -389,8 +438,15 @@
             spr = _ref2[_k];
             if (spr instanceof PIXI.Text && spr.color.toUpperCase() in curLit) {
               spr.setText(curLit[spr.color.toUpperCase()] + spr.text.substring(1));
+              if (curLit[spr.color.toUpperCase()] < parseInt(spr.text.substring(2))) {
+                isWin = false;
+              }
             }
           }
+        }
+        if (isWin && (this.winContainer == null)) {
+          this.gameOn = false;
+          this.makeWinGameContainer();
         }
         _ref3 = this.BOARD.allHexes();
         for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
@@ -538,6 +594,11 @@
     resetButton = new PIXI.Text("Reset", this.menuStyle);
     resetButton.interactive = true;
     resetButton.click = function() {
+      if (window.winContainer !== null) {
+        window.stage.removeChild(window.winContainer);
+      }
+      window.winContainer = null;
+      window.gameOn = true;
       window.clearBoard();
       Board.loadBoard(window.BOARDNAME);
       window.updateMenu();
@@ -576,8 +637,10 @@
     helpButton = new PIXI.Text("Help", this.menuStyle);
     helpButton.interactive = true;
     helpButton.click = function() {
-      window.gameOn = false;
-      window.stage.addChild(window.helpContainer);
+      if (window.winContainer === null) {
+        window.gameOn = false;
+        window.stage.addChild(window.helpContainer);
+      }
     };
     this.menu.addChild(helpButton);
     this.menu.addChild(this.goalContainer);

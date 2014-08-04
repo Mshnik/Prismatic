@@ -475,6 +475,7 @@
       }
       this.allHexesByClass = {};
       this.game = null;
+      this.moves = 0;
     }
 
 

@@ -1,6 +1,6 @@
 ### Begins init processing ###
 
-@BOARDNAME = "board29" ## Most recent board loaded. Initial value is default
+@BOARDNAME = "board01" ## Most recent board loaded. Initial value is default
 @initted  = false       ## True if a full init process has occured. False until then
 @gameOn   = true       ## True if the board should respond to clicks, false otherwise (false when help is up)
 
@@ -109,8 +109,8 @@
   ## Add background as first child  - 500x300 in original size ##
   helpContainer.addChild(PIXI.Sprite.fromImage("assets/img/helpBackground.png"))
 
-  headerStyle = {font:"bold 15px Sans-Serif", fill: "#6E6E6E"}
-  contentStyle = {font: "15px Sans-Serif", fill: "#6E6E6E"}
+  headerStyle = {font:"bold 15px Futura", fill: "#6E6E6E"}
+  contentStyle = {font: "15px Futura", fill: "#6E6E6E"}
   
   close = new PIXI.Text("X", {font: "bold 20px Sans-Serif", fill: "gray"})
   close.position.x = 480
@@ -194,6 +194,47 @@
   helpContainer.addChild(tagText)
   return
 
+### Makes and adds the win container. Called when the player beats this level ###
+@makeWinGameContainer = ->
+  @winContainer = new PIXI.DisplayObjectContainer()
+  @winContainer.addChild(new PIXI.Sprite(new PIXI.Texture(PIXI.BaseTexture.fromImage("assets/img/helpBackground.png"), new PIXI.Rectangle(0,0,500,200))))
+  @winContainer.position.x = 450
+  @winContainer.position.y = 250
+
+  headerStyle = {font:"bold 15px Futura", fill: "#6E6E6E"}
+  contentStyle = {font: "15px Futura", fill: "#6E6E6E"}
+
+  title = new PIXI.Text("You Win!", headerStyle)
+  title.position.x = 200
+  title.position.y = 10
+  @winContainer.addChild(title)
+
+  topContent = new PIXI.Text("You beat level " + @level + " in " + @BOARD.moves + " moves.", contentStyle)
+  topContent.position.x = 20
+  topContent.position.y = 40
+  @winContainer.addChild(topContent)
+
+  if @level < 50
+    nextLvl = new PIXI.Text((@level + 1) + " >>", contentStyle)
+    nextLvl.interactive = true
+  else
+    nextLvl = new PIXI.Text("Thank you for playing!", contentStyle)
+    nextLvl.interactive = false
+  nextLvl.click = ->
+    num = 
+      if (window.level + 1 < 10)
+        "0" + (window.level + 1)
+      else
+        "" + (window.level + 1)
+    window.BOARDNAME = "board" + num
+    window.menu.children[3].click()
+    return
+  nextLvl.position.x = 225
+  nextLvl.position.y = 175
+  @winContainer.addChild(nextLvl)
+
+  @stage.addChild(@winContainer)
+  return
 
 ### Load assets into cache ###
 @preloadImages = ->
@@ -236,12 +277,14 @@
   for col, cContainer of @colorContainers
     cContainer.position.y = newScale2 * 100
 
+  optMenu = [@helpContainer, @winContainer]
   ## Fix the help menu. No resizing, just reposition
-  if @helpContainer?
-    helpWidth = @helpContainer.getLocalBounds().width
-    helpHeight = @helpContainer.getLocalBounds().height
-    @helpContainer.position.x = (window.innerWidth - helpWidth) / 2
-    @helpContainer.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100
+  for menu in optMenu
+    if menu?
+      helpWidth = menu.getLocalBounds().width
+      helpHeight = menu.getLocalBounds().height
+      menu.position.x = (window.innerWidth - helpWidth) / 2
+      menu.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100
 
   ## Scale all menu labels and buttons
   newScale3 = newScale2 * 0.5
@@ -382,10 +425,17 @@ for c in Color.values()
       ## Update text on goal
       curLit = @BOARD.crystalLitCount()
       goalContainer = @menu.children[8]
+      isWin = true ## True if this user has won - every goal set.
       for pan in goalContainer.children
         for spr in pan.children
           if spr instanceof PIXI.Text and spr.color.toUpperCase() of curLit
             spr.setText(curLit[spr.color.toUpperCase()] + spr.text.substring(1))
+            if curLit[spr.color.toUpperCase()] < parseInt(spr.text.substring(2))
+              isWin = false
+
+      if isWin and (not @winContainer?)
+        @gameOn = false
+        @makeWinGameContainer()
 
       for h in @BOARD.allHexes()
         ##Update lighting of all hexes
@@ -496,6 +546,10 @@ for c in Color.values()
   resetButton = new PIXI.Text("Reset", @menuStyle)
   resetButton.interactive = true
   resetButton.click = ->
+    if window.winContainer isnt null
+      window.stage.removeChild(window.winContainer)
+    window.winContainer = null
+    window.gameOn = true
     window.clearBoard()
     Board.loadBoard(window.BOARDNAME)
     window.updateMenu()
@@ -545,8 +599,9 @@ for c in Color.values()
   helpButton = new PIXI.Text("Help", @menuStyle)
   helpButton.interactive = true
   helpButton.click = ->
-    window.gameOn = false
-    window.stage.addChild(window.helpContainer)
+    if (window.winContainer is null)
+      window.gameOn = false
+      window.stage.addChild(window.helpContainer)
     return
   @menu.addChild(helpButton)
 

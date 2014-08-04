@@ -13,6 +13,7 @@ class @Board
         @board[r].push(null)
     @allHexesByClass = {} ## Lists of hexes by their class (a string)
     @game = null # Game this board belongs to
+    @moves = 0 ## Moves made on this board
 
   ### Returns the height of this board ###
   getHeight : () -> @height
