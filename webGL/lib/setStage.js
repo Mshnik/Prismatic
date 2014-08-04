@@ -98,8 +98,6 @@
     helpContainer = window.helpContainer;
     helpContainer.position.x = 450;
     helpContainer.position.y = 200;
-    helpContainer.alpha = 0;
-    window.stage.addChild(helpContainer);
     helpContainer.addChild(PIXI.Sprite.fromImage("assets/img/helpBackground.png"));
     headerStyle = {
       font: "bold 15px Sans-Serif",
@@ -117,7 +115,7 @@
     close.position.y = 5;
     close.interactive = true;
     close.click = function() {
-      window.helpContainer.alpha = 0;
+      window.stage.removeChild(window.helpContainer);
       window.gameOn = true;
     };
     helpContainer.addChild(close);
@@ -573,7 +571,7 @@
     helpButton.interactive = true;
     helpButton.click = function() {
       window.gameOn = false;
-      window.helpContainer.alpha = 1;
+      window.stage.addChild(window.helpContainer);
     };
     this.menu.addChild(helpButton);
     this.menu.addChild(this.goalContainer);

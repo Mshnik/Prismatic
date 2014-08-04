@@ -106,8 +106,6 @@
   helpContainer = window.helpContainer
   helpContainer.position.x = 450
   helpContainer.position.y = 200
-  helpContainer.alpha = 0
-  window.stage.addChild(helpContainer)
   ## Add background as first child  - 500x300 in original size ##
   helpContainer.addChild(PIXI.Sprite.fromImage("assets/img/helpBackground.png"))
 
@@ -119,7 +117,7 @@
   close.position.y = 5
   close.interactive = true
   close.click = ->
-    window.helpContainer.alpha = 0
+    window.stage.removeChild(window.helpContainer)
     window.gameOn = true
     return
   helpContainer.addChild(close)
@@ -541,7 +539,7 @@ for c in Color.values()
   helpButton.interactive = true
   helpButton.click = ->
     window.gameOn = false
-    window.helpContainer.alpha = 1
+    window.stage.addChild(window.helpContainer)
     return
   @menu.addChild(helpButton)
 
