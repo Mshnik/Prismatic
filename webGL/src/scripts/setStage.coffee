@@ -106,7 +106,23 @@
   helpContainer = window.helpContainer
   helpContainer.position.x = 450
   helpContainer.position.y = 200
-  ## Add background as first child  - 500x300 in original size ##
+
+  ## Overaly that covers the rest of the screen when the help menu is up
+  overlay = new PIXI.Graphics()
+  overlay.beginFill(0x000000, 1)
+  overlay.drawRect(0,0,window.innerWidth,window.innerHeight)
+  overlay.endFill()
+  overlaySprite = new PIXI.Sprite(overlay.generateTexture())
+  overlaySprite.interactive = true
+  overlaySprite.alpha = 0.35
+  overlaySprite.position.x = -450
+  overlaySprite.position.y = -200
+  overlaySprite.click = ->
+    window.stage.removeChild(window.helpContainer)
+    window.gameOn = true
+    return
+  helpContainer.addChild(overlaySprite)
+  ## Add background as second child  - 500x300 in original size ##
   helpContainer.addChild(PIXI.Sprite.fromImage("assets/img/helpBackground.png"))
 
   headerStyle = {font:"bold 15px Futura", fill: "#6E6E6E"}
@@ -195,6 +211,8 @@
   tagText.position.x = 120
   tagText.position.y = 275
   helpContainer.addChild(tagText)
+
+  @resize()
   return
 
 ### Makes and adds the win container. Called when the player beats this level ###
@@ -238,6 +256,7 @@
   @winContainer.addChild(nextLvl)
 
   @stage.addChild(@winContainer)
+  @resize()
   return
 
 ### Load assets into cache ###
@@ -255,78 +274,89 @@
 @resize = () ->
   margin = 0
   window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin)
+  
+  newScale2 = Math.min(1, Math.max(0.5, window.innerHeight / 1500))
+  newScale3 = newScale2 * 0.5
 
   ## Expand/contract the menu. Horizontal expansion/contraction is on middle sprite. Vertical is on whole menubackground container
-  bck = @menu.children[0]
-  menuBackground = @menu.children[1]
-  lvlText = @menu.children[2]
-  resetButton = @menu.children[3]
-  selectLabel = @menu.children[4]
-  prevLvl = @menu.children[5]
-  nextLvl = @menu.children[6]
-  helpButton = @menu.children[7]
-  goalContainer = @menu.children[8]
+  if @menu? and @menu.children.length > 0
+    bck = @menu.children[0]
+    menuBackground = @menu.children[1]
+    lvlText = @menu.children[2]
+    resetButton = @menu.children[3]
+    selectLabel = @menu.children[4]
+    prevLvl = @menu.children[5]
+    nextLvl = @menu.children[6]
+    helpButton = @menu.children[7]
+    goalContainer = @menu.children[8]
 
-  ##Fix background image
-  bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75) 
-  bck.scale.y = Math.max((window.innerHeight) / bck.texture.baseTexture.height, 0.75) 
+    ##Fix background image
+    bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75) 
+    bck.scale.y = Math.max((window.innerHeight) / bck.texture.baseTexture.height, 0.75) 
 
-  ## Default size = 200.
-  menuBackground.scale.x = window.innerWidth / 200
+    ## Default size = 200.
+    menuBackground.scale.x = window.innerWidth / 200
 
-  ##Resize vertically - default height = 100
-  newScale2 = Math.min(1, Math.max(0.5, window.innerHeight / 1500))
-  menuBackground.scale.y = newScale2
-  @base.position.y = newScale2 * 100
-  for col, cContainer of @colorContainers
-    cContainer.position.y = newScale2 * 100
+    ##Resize vertically - default height = 100
+    menuBackground.scale.y = newScale2
+    @base.position.y = newScale2 * 100
+    for col, cContainer of @colorContainers
+      cContainer.position.y = newScale2 * 100
 
-  optMenu = [@helpContainer, @winContainer]
-  ## Fix the help menu. No resizing, just reposition
-  for menu in optMenu
-    if menu?
-      helpWidth = menu.getLocalBounds().width
-      helpHeight = menu.getLocalBounds().height
-      menu.position.x = (window.innerWidth - helpWidth) / 2
-      menu.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100
+    ## Scale all menu labels and buttons
+    lvlText.scale.x = lvlText.scale.y = newScale3
+    resetButton.scale.x = resetButton.scale.y = newScale3
+    selectLabel.scale.x = selectLabel.scale.y = newScale3
+    prevLvl.scale.x = prevLvl.scale.y = newScale3
+    nextLvl.scale.x = nextLvl.scale.y = newScale3
+    helpButton.scale.x = helpButton.scale.y = newScale3
 
-  ## Scale all menu labels and buttons
-  newScale3 = newScale2 * 0.5
-  lvlText.scale.x = lvlText.scale.y = newScale3
-  resetButton.scale.x = resetButton.scale.y = newScale3
-  selectLabel.scale.x = selectLabel.scale.y = newScale3
-  prevLvl.scale.x = prevLvl.scale.y = newScale3
-  nextLvl.scale.x = nextLvl.scale.y = newScale3
-  helpButton.scale.x = helpButton.scale.y = newScale3
-
-  ## Move labels and buttons into place on x axis
-  # Left justified elements
-  menumargin = 20
-  lvlPush = 
-    if @level >= 10
-      35
-    else
-      0
-  lvlText.position.x = menumargin
-  #Right Justified Elements
-  helpButton.position.x = (window.innerWidth) - (250 * newScale3)
-  nextLvl.position.x = helpButton.position.x - ((275) * newScale3)
-  prevLvl.position.x = nextLvl.position.x - ((300) * newScale3)
-  selectLabel.position.x = prevLvl.position.x - (300 * newScale3)
-  resetButton.position.x =  selectLabel.position.x - 300 * newScale3
+    ## Move labels and buttons into place on x axis
+    # Left justified elements
+    menumargin = 20
+    lvlPush = 
+      if @level >= 10
+        35
+      else
+        0
+    lvlText.position.x = menumargin
+    #Right Justified Elements
+    helpButton.position.x = (window.innerWidth) - (250 * newScale3)
+    nextLvl.position.x = helpButton.position.x - ((275) * newScale3)
+    prevLvl.position.x = nextLvl.position.x - ((300) * newScale3)
+    selectLabel.position.x = prevLvl.position.x - (300 * newScale3)
+    resetButton.position.x =  selectLabel.position.x - 300 * newScale3
 
 
-  fixY = (comp, scale) ->
-    comp.position.y = 35 * scale
-    return
+    fixY = (comp, scale) ->
+      comp.position.y = 35 * scale
+      return
 
-  fixY(lvlText, newScale3)
-  fixY(resetButton, newScale3)
-  fixY(helpButton, newScale3)
-  fixY(nextLvl, newScale3)
-  fixY(prevLvl, newScale3)
-  fixY(selectLabel, newScale3)
+    fixY(lvlText, newScale3)
+    fixY(resetButton, newScale3)
+    fixY(helpButton, newScale3)
+    fixY(nextLvl, newScale3)
+    fixY(prevLvl, newScale3)
+    fixY(selectLabel, newScale3)
 
+  ## Fix the help menu. resize the back opacity layer, reposition the rest
+  if @helpContainer?
+    helpWidth = @helpContainer.children[1].getLocalBounds().width
+    helpHeight = @helpContainer.children[1].getLocalBounds().height
+    @helpContainer.position.x = (window.innerWidth - helpWidth) / 2
+    @helpContainer.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100
+    helpBack = @helpContainer.children[0]
+    helpBack.position.x = -@helpContainer.position.x - 15
+    helpBack.position.y = -@helpContainer.position.y - 15
+    helpBack.height = window.innerHeight + 25
+    helpBack.width = window.innerWidth + 25
+
+  ## Fix the win menu. No resizing, just reposition
+  if @winContainer? 
+    helpWidth = @winContainer.getLocalBounds().width
+    helpHeight = @winContainer.getLocalBounds().height
+    @winContainer.position.x = (window.innerWidth - helpWidth) / 2
+    @winContainer.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100
 
   ## Fix board
   if @BOARD?
@@ -682,7 +712,7 @@ for c in Color.values()
     spr.lit = false
     spr.color = c.lit
     spr.hex = c
-    spr.position.x = c.loc.row * @hexRad * 2.75   ## Leaves some space for text between sprites
+    spr.position.x = c.loc.row * @hexRad * 3   ## Leaves some space for text between sprites
     spr.anchor.x = 0.5
     spr.anchor.y = 0.5
     @goalContainer[c.lit.toUpperCase()].addChild(spr)
@@ -690,7 +720,7 @@ for c in Color.values()
     @goalContainer[c.lit.toUpperCase()].goalCount = goalCount
     goalStyle = @menuStyle
     text = new PIXI.Text("0/" + goalCount, goalStyle)
-    text.position.x = c.loc.row * @hexRad * 2.75 + @hexRad * 0.75
+    text.position.x = c.loc.row * @hexRad * 3 + @hexRad * 0.725
     text.position.y = - 60
     text.color = c.lit
     @goalContainer[c.lit.toUpperCase()].addChild(text)

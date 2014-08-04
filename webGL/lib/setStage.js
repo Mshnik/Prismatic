@@ -94,10 +94,24 @@
   /* Creates the help menu. Called after images are loaded */
 
   this.createHelpMenu = function() {
-    var bottomContent, close, contentStyle, crystalIcon, crystalsContent, crystalsHeader, headerStyle, helpContainer, prismIcon, prismsContent, prismsHeader, sparkIcon, sparksContent, sparksHeader, tagText, title, topContent;
+    var bottomContent, close, contentStyle, crystalIcon, crystalsContent, crystalsHeader, headerStyle, helpContainer, overlay, overlaySprite, prismIcon, prismsContent, prismsHeader, sparkIcon, sparksContent, sparksHeader, tagText, title, topContent;
     helpContainer = window.helpContainer;
     helpContainer.position.x = 450;
     helpContainer.position.y = 200;
+    overlay = new PIXI.Graphics();
+    overlay.beginFill(0x000000, 1);
+    overlay.drawRect(0, 0, window.innerWidth, window.innerHeight);
+    overlay.endFill();
+    overlaySprite = new PIXI.Sprite(overlay.generateTexture());
+    overlaySprite.interactive = true;
+    overlaySprite.alpha = 0.35;
+    overlaySprite.position.x = -450;
+    overlaySprite.position.y = -200;
+    overlaySprite.click = function() {
+      window.stage.removeChild(window.helpContainer);
+      window.gameOn = true;
+    };
+    helpContainer.addChild(overlaySprite);
     helpContainer.addChild(PIXI.Sprite.fromImage("assets/img/helpBackground.png"));
     headerStyle = {
       font: "bold 15px Futura",
@@ -182,6 +196,7 @@
     tagText.position.x = 120;
     tagText.position.y = 275;
     helpContainer.addChild(tagText);
+    this.resize();
   };
 
 
@@ -227,6 +242,7 @@
     nextLvl.position.y = 175;
     this.winContainer.addChild(nextLvl);
     this.stage.addChild(this.winContainer);
+    this.resize();
   };
 
 
@@ -244,63 +260,72 @@
   /* Resizes the stage correctly */
 
   this.resize = function() {
-    var bck, cContainer, col, fixY, goalContainer, helpButton, helpHeight, helpWidth, lvlPush, lvlText, margin, menu, menuBackground, menumargin, n, newScale2, newScale3, newX, nextLvl, optMenu, prevLvl, resetButton, scale, selectLabel, _i, _len, _ref, _ref1, _ref2;
+    var bck, cContainer, col, fixY, goalContainer, helpBack, helpButton, helpHeight, helpWidth, lvlPush, lvlText, margin, menuBackground, menumargin, n, newScale2, newScale3, newX, nextLvl, prevLvl, resetButton, scale, selectLabel, _ref, _ref1, _ref2;
     margin = 0;
     window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin);
-    bck = this.menu.children[0];
-    menuBackground = this.menu.children[1];
-    lvlText = this.menu.children[2];
-    resetButton = this.menu.children[3];
-    selectLabel = this.menu.children[4];
-    prevLvl = this.menu.children[5];
-    nextLvl = this.menu.children[6];
-    helpButton = this.menu.children[7];
-    goalContainer = this.menu.children[8];
-    bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75);
-    bck.scale.y = Math.max(window.innerHeight / bck.texture.baseTexture.height, 0.75);
-    menuBackground.scale.x = window.innerWidth / 200;
     newScale2 = Math.min(1, Math.max(0.5, window.innerHeight / 1500));
-    menuBackground.scale.y = newScale2;
-    this.base.position.y = newScale2 * 100;
-    _ref = this.colorContainers;
-    for (col in _ref) {
-      cContainer = _ref[col];
-      cContainer.position.y = newScale2 * 100;
-    }
-    optMenu = [this.helpContainer, this.winContainer];
-    for (_i = 0, _len = optMenu.length; _i < _len; _i++) {
-      menu = optMenu[_i];
-      if (menu != null) {
-        helpWidth = menu.getLocalBounds().width;
-        helpHeight = menu.getLocalBounds().height;
-        menu.position.x = (window.innerWidth - helpWidth) / 2;
-        menu.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100;
-      }
-    }
     newScale3 = newScale2 * 0.5;
-    lvlText.scale.x = lvlText.scale.y = newScale3;
-    resetButton.scale.x = resetButton.scale.y = newScale3;
-    selectLabel.scale.x = selectLabel.scale.y = newScale3;
-    prevLvl.scale.x = prevLvl.scale.y = newScale3;
-    nextLvl.scale.x = nextLvl.scale.y = newScale3;
-    helpButton.scale.x = helpButton.scale.y = newScale3;
-    menumargin = 20;
-    lvlPush = this.level >= 10 ? 35 : 0;
-    lvlText.position.x = menumargin;
-    helpButton.position.x = window.innerWidth - (250 * newScale3);
-    nextLvl.position.x = helpButton.position.x - (275. * newScale3);
-    prevLvl.position.x = nextLvl.position.x - (300. * newScale3);
-    selectLabel.position.x = prevLvl.position.x - (300 * newScale3);
-    resetButton.position.x = selectLabel.position.x - 300 * newScale3;
-    fixY = function(comp, scale) {
-      comp.position.y = 35 * scale;
-    };
-    fixY(lvlText, newScale3);
-    fixY(resetButton, newScale3);
-    fixY(helpButton, newScale3);
-    fixY(nextLvl, newScale3);
-    fixY(prevLvl, newScale3);
-    fixY(selectLabel, newScale3);
+    if ((this.menu != null) && this.menu.children.length > 0) {
+      bck = this.menu.children[0];
+      menuBackground = this.menu.children[1];
+      lvlText = this.menu.children[2];
+      resetButton = this.menu.children[3];
+      selectLabel = this.menu.children[4];
+      prevLvl = this.menu.children[5];
+      nextLvl = this.menu.children[6];
+      helpButton = this.menu.children[7];
+      goalContainer = this.menu.children[8];
+      bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75);
+      bck.scale.y = Math.max(window.innerHeight / bck.texture.baseTexture.height, 0.75);
+      menuBackground.scale.x = window.innerWidth / 200;
+      menuBackground.scale.y = newScale2;
+      this.base.position.y = newScale2 * 100;
+      _ref = this.colorContainers;
+      for (col in _ref) {
+        cContainer = _ref[col];
+        cContainer.position.y = newScale2 * 100;
+      }
+      lvlText.scale.x = lvlText.scale.y = newScale3;
+      resetButton.scale.x = resetButton.scale.y = newScale3;
+      selectLabel.scale.x = selectLabel.scale.y = newScale3;
+      prevLvl.scale.x = prevLvl.scale.y = newScale3;
+      nextLvl.scale.x = nextLvl.scale.y = newScale3;
+      helpButton.scale.x = helpButton.scale.y = newScale3;
+      menumargin = 20;
+      lvlPush = this.level >= 10 ? 35 : 0;
+      lvlText.position.x = menumargin;
+      helpButton.position.x = window.innerWidth - (250 * newScale3);
+      nextLvl.position.x = helpButton.position.x - (275. * newScale3);
+      prevLvl.position.x = nextLvl.position.x - (300. * newScale3);
+      selectLabel.position.x = prevLvl.position.x - (300 * newScale3);
+      resetButton.position.x = selectLabel.position.x - 300 * newScale3;
+      fixY = function(comp, scale) {
+        comp.position.y = 35 * scale;
+      };
+      fixY(lvlText, newScale3);
+      fixY(resetButton, newScale3);
+      fixY(helpButton, newScale3);
+      fixY(nextLvl, newScale3);
+      fixY(prevLvl, newScale3);
+      fixY(selectLabel, newScale3);
+    }
+    if (this.helpContainer != null) {
+      helpWidth = this.helpContainer.children[1].getLocalBounds().width;
+      helpHeight = this.helpContainer.children[1].getLocalBounds().height;
+      this.helpContainer.position.x = (window.innerWidth - helpWidth) / 2;
+      this.helpContainer.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100;
+      helpBack = this.helpContainer.children[0];
+      helpBack.position.x = -this.helpContainer.position.x - 15;
+      helpBack.position.y = -this.helpContainer.position.y - 15;
+      helpBack.height = window.innerHeight + 25;
+      helpBack.width = window.innerWidth + 25;
+    }
+    if (this.winContainer != null) {
+      helpWidth = this.winContainer.getLocalBounds().width;
+      helpHeight = this.winContainer.getLocalBounds().height;
+      this.winContainer.position.x = (window.innerWidth - helpWidth) / 2;
+      this.winContainer.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100;
+    }
     if (this.BOARD != null) {
       if (goalContainer != null) {
         goalContainer.position.y = -10 * newScale3;
@@ -744,7 +769,7 @@
       spr.lit = false;
       spr.color = c.lit;
       spr.hex = c;
-      spr.position.x = c.loc.row * this.hexRad * 2.75;
+      spr.position.x = c.loc.row * this.hexRad * 3;
       spr.anchor.x = 0.5;
       spr.anchor.y = 0.5;
       this.goalContainer[c.lit.toUpperCase()].addChild(spr);
@@ -752,7 +777,7 @@
       this.goalContainer[c.lit.toUpperCase()].goalCount = goalCount;
       goalStyle = this.menuStyle;
       text = new PIXI.Text("0/" + goalCount, goalStyle);
-      text.position.x = c.loc.row * this.hexRad * 2.75 + this.hexRad * 0.75;
+      text.position.x = c.loc.row * this.hexRad * 3 + this.hexRad * 0.725;
       text.position.y = -60;
       text.color = c.lit;
       this.goalContainer[c.lit.toUpperCase()].addChild(text);
