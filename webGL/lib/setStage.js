@@ -197,7 +197,7 @@
   /* Resizes the stage correctly */
 
   this.resize = function() {
-    var bck, cContainer, col, fixY, goalContainer, helpButton, lvlPush, lvlText, margin, menuBackground, menumargin, n, newScale2, newScale3, newX, nextLvl, prevLvl, resetButton, scale, selectLabel, _ref, _ref1, _ref2;
+    var bck, cContainer, col, fixY, goalContainer, helpButton, helpHeight, helpWidth, lvlPush, lvlText, margin, menuBackground, menumargin, n, newScale2, newScale3, newX, nextLvl, prevLvl, resetButton, scale, selectLabel, _ref, _ref1, _ref2;
     margin = 0;
     window.renderer.resize(window.innerWidth - margin, window.innerHeight - margin);
     bck = this.menu.children[0];
@@ -219,6 +219,12 @@
     for (col in _ref) {
       cContainer = _ref[col];
       cContainer.position.y = newScale2 * 100;
+    }
+    if (this.helpContainer != null) {
+      helpWidth = this.helpContainer.getLocalBounds().width;
+      helpHeight = this.helpContainer.getLocalBounds().height;
+      this.helpContainer.position.x = (window.innerWidth - helpWidth) / 2;
+      this.helpContainer.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100;
     }
     newScale3 = newScale2 * 0.5;
     lvlText.scale.x = lvlText.scale.y = newScale3;
@@ -516,7 +522,7 @@
   };
 
   this.menuStyle = {
-    font: "bold 35px Sans-Serif",
+    font: "bold 85px 'Futura' ",
     fill: "white"
   };
 
@@ -671,7 +677,6 @@
       goalCount = window.BOARD[c.lit.toUpperCase()];
       this.goalContainer[c.lit.toUpperCase()].goalCount = goalCount;
       goalStyle = this.menuStyle;
-      goalStyle.font = "100px bold Times New Roman";
       text = new PIXI.Text("0/" + goalCount, goalStyle);
       text.position.x = c.loc.row * this.hexRad * 2.75 + this.hexRad * 0.75;
       text.position.y = -60;

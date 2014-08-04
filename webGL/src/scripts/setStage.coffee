@@ -236,6 +236,13 @@
   for col, cContainer of @colorContainers
     cContainer.position.y = newScale2 * 100
 
+  ## Fix the help menu. No resizing, just reposition
+  if @helpContainer?
+    helpWidth = @helpContainer.getLocalBounds().width
+    helpHeight = @helpContainer.getLocalBounds().height
+    @helpContainer.position.x = (window.innerWidth - helpWidth) / 2
+    @helpContainer.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100
+
   ## Scale all menu labels and buttons
   newScale3 = newScale2 * 0.5
   lvlText.scale.x = lvlText.scale.y = newScale3
@@ -472,7 +479,7 @@ for c in Color.values()
   return
 
 ## Font for text in the menu
-@menuStyle = {font:"bold 35px Sans-Serif", fill:"white"}
+@menuStyle = {font:"bold 85px 'Futura' ", fill:"white"}
 
 @initMenu = () ->
   ## Create the background itself
@@ -616,7 +623,6 @@ for c in Color.values()
     goalCount = window.BOARD[c.lit.toUpperCase()]
     @goalContainer[c.lit.toUpperCase()].goalCount = goalCount
     goalStyle = @menuStyle
-    goalStyle.font = "100px bold Times New Roman"
     text = new PIXI.Text("0/" + goalCount, goalStyle)
     text.position.x = c.loc.row * @hexRad * 2.75 + @hexRad * 0.75
     text.position.y = - 60

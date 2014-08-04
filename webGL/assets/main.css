@@ -1,16 +1,14 @@
-.canvas-container{
-  text-align: center;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 5px;
-  background-color: #E6E6E6;
-}
-
 body{
   margin: 0px;
   overflow : hidden;
-  min-width: 400px !important;
-  min-height: 600px !important;
-  width: auto !important;
-  height: auto !important;
+}
+
+@font-face{
+  font-family: "Futura";
+  src: "/assets/other/FuturaExtended.ttf";
+}
+
+#texttest{
+  font-family: "Futura";
+  position: absolute;
 }
