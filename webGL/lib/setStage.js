@@ -114,11 +114,13 @@
     close.position.x = 480;
     close.position.y = 5;
     close.interactive = true;
+    close.buttonMode = true;
     close.click = function() {
       window.stage.removeChild(window.helpContainer);
       window.gameOn = true;
     };
     helpContainer.addChild(close);
+    helpContainer.close = close.click;
     title = new PIXI.Text("Prismatic", headerStyle);
     title.position.x = 200;
     title.position.y = 10;
@@ -214,6 +216,7 @@
       nextLvl = new PIXI.Text("Thank you for playing!", contentStyle);
       nextLvl.interactive = false;
     }
+    nextLvl.buttonMode = true;
     nextLvl.click = function() {
       var num;
       num = window.level + 1 < 10 ? "0" + (window.level + 1) : "" + (window.level + 1);
@@ -593,6 +596,7 @@
     this.menu.addChild(lvlText);
     resetButton = new PIXI.Text("Reset", this.menuStyle);
     resetButton.interactive = true;
+    resetButton.buttonMode = true;
     resetButton.click = function() {
       if (window.winContainer !== void 0 && window.winContainer !== null) {
         window.stage.removeChild(window.winContainer);
@@ -613,6 +617,7 @@
       prevLvl = new PIXI.Text("     ", this.menuStyle);
       prevLvl.interactive = false;
     }
+    prevLvl.buttonMode = true;
     prevLvl.click = function() {
       var num;
       num = window.level - 1 < 10 ? "0" + (window.level - 1) : "" + (window.level - 1);
@@ -627,6 +632,7 @@
       nextLvl = new PIXI.Text("     ", this.menuStyle);
       nextLvl.interactive = false;
     }
+    nextLvl.buttonMode = true;
     nextLvl.click = function() {
       var num;
       num = window.level + 1 < 10 ? "0" + (window.level + 1) : "" + (window.level + 1);
@@ -636,10 +642,15 @@
     this.menu.addChild(nextLvl);
     helpButton = new PIXI.Text("Help", this.menuStyle);
     helpButton.interactive = true;
+    helpButton.buttonMode = true;
     helpButton.click = function() {
-      if (window.winContainer === null) {
-        window.gameOn = false;
-        window.stage.addChild(window.helpContainer);
+      if (window.winContainer === void 0 || window.winContainer === null) {
+        if (window.gameOn) {
+          window.gameOn = false;
+          window.stage.addChild(window.helpContainer);
+        } else {
+          helpContainer.close();
+        }
       }
     };
     this.menu.addChild(helpButton);

@@ -116,11 +116,14 @@
   close.position.x = 480
   close.position.y = 5
   close.interactive = true
+  close.buttonMode = true
   close.click = ->
     window.stage.removeChild(window.helpContainer)
     window.gameOn = true
     return
   helpContainer.addChild(close)
+  ## Store in container for an extra reference to this
+  helpContainer.close = close.click
 
   title = new PIXI.Text("Prismatic", headerStyle)
   title.position.x = 200
@@ -220,6 +223,7 @@
   else
     nextLvl = new PIXI.Text("Thank you for playing!", contentStyle)
     nextLvl.interactive = false
+  nextLvl.buttonMode = true
   nextLvl.click = ->
     num = 
       if (window.level + 1 < 10)
@@ -545,6 +549,7 @@ for c in Color.values()
 
   resetButton = new PIXI.Text("Reset", @menuStyle)
   resetButton.interactive = true
+  resetButton.buttonMode = true
   resetButton.click = ->
     if window.winContainer isnt undefined and window.winContainer isnt null
       window.stage.removeChild(window.winContainer)
@@ -568,6 +573,7 @@ for c in Color.values()
   else
     prevLvl = new PIXI.Text("     ", @menuStyle)
     prevLvl.interactive = false
+  prevLvl.buttonMode = true
   prevLvl.click = ->
     num = 
       if (window.level - 1 < 10)
@@ -585,6 +591,7 @@ for c in Color.values()
   else
     nextLvl = new PIXI.Text("     ", @menuStyle)
     nextLvl.interactive = false
+  nextLvl.buttonMode = true
   nextLvl.click = ->
     num = 
       if (window.level + 1 < 10)
@@ -598,10 +605,14 @@ for c in Color.values()
 
   helpButton = new PIXI.Text("Help", @menuStyle)
   helpButton.interactive = true
+  helpButton.buttonMode = true
   helpButton.click = ->
-    if (window.winContainer is null)
-      window.gameOn = false
-      window.stage.addChild(window.helpContainer)
+    if (window.winContainer is undefined or window.winContainer is null)
+      if window.gameOn
+        window.gameOn = false
+        window.stage.addChild(window.helpContainer)
+      else
+        helpContainer.close()
     return
   @menu.addChild(helpButton)
 
