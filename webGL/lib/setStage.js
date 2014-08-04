@@ -80,12 +80,7 @@
       cContainer.position.y = menuHeight;
       f = new PIXI.ColorMatrixFilter();
       f.matrix = Color.matrixFor(colr);
-      pulse = new PIXI.ColorMatrixFilter();
-      pulse.matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
-      cContainer.pulseLength = 173;
-      cContainer.pulseOffset = offset;
-      offset += 70;
-      cContainer.filters = [f, pulse];
+      cContainer.filters = [f];
       this.goalContainer[colr] = cContainer;
       this.goalContainer.addChild(cContainer);
     }
@@ -141,7 +136,7 @@
     lvlPush = this.level >= 10 ? 35 : 0;
     lvlText.position.x = menumargin;
     helpButton.position.x = window.innerWidth - (250 * newScale3);
-    nextLvl.position.x = helpButton.position.x - (250. * newScale3);
+    nextLvl.position.x = helpButton.position.x - (275. * newScale3);
     prevLvl.position.x = nextLvl.position.x - (300. * newScale3);
     selectLabel.position.x = prevLvl.position.x - (300 * newScale3);
     resetButton.position.x = selectLabel.position.x - 300 * newScale3;
@@ -253,7 +248,7 @@
   /* Updates the pulse filter that controls lighting effects */
 
   this.calcPulseFilter = function(count) {
-    var col, cont, m, pulse, val, _ref1, _ref2;
+    var col, cont, m, pulse, val, _ref1;
     _ref1 = this.colorContainers;
     for (col in _ref1) {
       val = _ref1[col];
@@ -265,20 +260,6 @@
       m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5;
       m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75;
       pulse.matrix = m;
-    }
-    _ref2 = this.goalContainer;
-    for (col in _ref2) {
-      val = _ref2[col];
-      if (Color.isRegularColor(col)) {
-        pulse = val.filters[1];
-        cont = (count + val.pulseOffset) / val.pulseLength;
-        m = pulse.matrix;
-        m[0] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5;
-        m[5] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5;
-        m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5;
-        m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75;
-        pulse.matrix = m;
-      }
     }
   };
 

@@ -90,16 +90,7 @@
     ## Add basic color filter to this colorContainer
     f = new PIXI.ColorMatrixFilter()
     f.matrix = Color.matrixFor(colr)
-    pulse = new PIXI.ColorMatrixFilter()
-    pulse.matrix = [1, 0, 0, 0,
-                   0, 1, 0, 0,
-                   0, 0, 1, 0,
-                   0, 0, 0, 1]
-    ## Create the length of the pulse for this color
-    cContainer.pulseLength = 173
-    cContainer.pulseOffset = offset
-    offset += 70
-    cContainer.filters = [f, pulse]
+    cContainer.filters = [f]
     @goalContainer[colr] = cContainer
     @goalContainer.addChild(cContainer)
 
@@ -166,7 +157,7 @@
   lvlText.position.x = menumargin
   #Right Justified Elements
   helpButton.position.x = (window.innerWidth) - (250 * newScale3)
-  nextLvl.position.x = helpButton.position.x - ((250) * newScale3)
+  nextLvl.position.x = helpButton.position.x - ((275) * newScale3)
   prevLvl.position.x = nextLvl.position.x - ((300) * newScale3)
   selectLabel.position.x = prevLvl.position.x - (300 * newScale3)
   resetButton.position.x =  selectLabel.position.x - 300 * newScale3
@@ -268,16 +259,6 @@ for c in Color.values()
     m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
     m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75
     pulse.matrix = m
-  for col, val of @goalContainer
-    if Color.isRegularColor(col)
-      pulse = val.filters[1]
-      cont = (count + val.pulseOffset)/val.pulseLength
-      m = pulse.matrix
-      m[0] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
-      m[5] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
-      m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
-      m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75
-      pulse.matrix = m
   return
 
 ### Finish initing after assets are loaded ###

@@ -4,6 +4,30 @@
 		"selected_items":
 		[
 			[
+				"BOARD",
+				"BOARDNAME"
+			],
+			[
+				"row",
+				"row"
+			],
+			[
+				"DEFAULT",
+				"DEFAULTBOARDNAME"
+			],
+			[
+				"help",
+				"helpButton"
+			],
+			[
+				"hel",
+				"helpButton"
+			],
+			[
+				"goalCon",
+				"goalContainer"
+			],
+			[
 				"over",
 				"overClock"
 			],
@@ -490,30 +514,6 @@
 			[
 				"numb",
 				"number_of_int"
-			],
-			[
-				"pp_",
-				"pp_print_string"
-			],
-			[
-				"help",
-				"help_canonicalize"
-			],
-			[
-				"Floats",
-				"FloatsType"
-			],
-			[
-				"update",
-				"update_tree"
-			],
-			[
-				"fold",
-				"fold_left2"
-			],
-			[
-				"le",
-				"drop_lead_zeros"
 			]
 		]
 	},
@@ -523,7 +523,15 @@
 			"file": "src/scripts/setStage.coffee",
 			"settings":
 			{
-				"buffer_size": 16306,
+				"buffer_size": 23035,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/board.coffee",
+			"settings":
+			{
+				"buffer_size": 8080,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,7 +539,31 @@
 			"file": "src/models/util/color.coffee",
 			"settings":
 			{
-				"buffer_size": 3717,
+				"buffer_size": 3974,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/spark.coffee",
+			"settings":
+			{
+				"buffer_size": 2044,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/main.css",
+			"settings":
+			{
+				"buffer_size": 287,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/boards/board01.json",
+			"settings":
+			{
+				"buffer_size": 2072,
 				"line_ending": "Unix"
 			}
 		},
@@ -604,6 +636,7 @@
 	},
 	"file_history":
 	[
+		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/board1.json",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/main.css",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/spark.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/hex.coffee",
@@ -614,7 +647,6 @@
 		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/models.js",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/colorCircle.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/board.coffee",
-		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/board1.json",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/223723243.json",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/Sample Maps/223723243 copy.json",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/util/Location.java",
@@ -749,6 +781,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"goalContainer.position.x",
+			"@goalContainer.position.x",
+			"@goalContainer",
+			"@goalContainers",
 			"moveLight",
 			"avaliable",
 			"Loc = (f",
@@ -872,11 +908,7 @@
 			"get",
 			"plays",
 			"views",
-			"stats",
-			"tabrow",
-			"tabs",
-			"tab",
-			"$scope"
+			"stats"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -905,15 +937,15 @@
 					"file": "src/scripts/setStage.coffee",
 					"settings":
 					{
-						"buffer_size": 16306,
+						"buffer_size": 23035,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2273,
-								2273
+								10173,
+								10173
 							]
 						],
 						"settings":
@@ -923,25 +955,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 133.0,
+						"translation.y": 3968.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/models/util/color.coffee",
+					"file": "src/models/board.coffee",
 					"settings":
 					{
-						"buffer_size": 3717,
+						"buffer_size": 8080,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1815,
-								1815
+								4167,
+								4167
 							]
 						],
 						"settings":
@@ -951,7 +983,117 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 623.0,
+						"translation.y": 987.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/models/util/color.coffee",
+					"settings":
+					{
+						"buffer_size": 3974,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1031,
+								1031
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/models/subhex/spark.coffee",
+					"settings":
+					{
+						"buffer_size": 2044,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "assets/main.css",
+					"settings":
+					{
+						"buffer_size": 287,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								216,
+								216
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "assets/boards/board01.json",
+					"settings":
+					{
+						"buffer_size": 2072,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								140,
+								140
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -963,7 +1105,7 @@
 			"sheets":
 			[
 				{
-					"buffer": 2,
+					"buffer": 6,
 					"file": "/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
 					"settings":
 					{
@@ -991,7 +1133,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 7,
 					"file": "index.html",
 					"settings":
 					{
