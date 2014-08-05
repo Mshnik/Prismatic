@@ -1,6 +1,6 @@
 ### Begins init processing ###
 
-@BOARDNAME = "board01" ## Most recent board loaded. Initial value is default
+@BOARDNAME = "board50" ## Most recent board loaded. Initial value is default
 @initted  = false       ## True if a full init process has occured. False until then
 @gameOn   = true       ## True if the board should respond to clicks, false otherwise (false when help is up)
 
@@ -106,6 +106,8 @@
   helpContainer = window.helpContainer
   helpContainer.position.x = 450
   helpContainer.position.y = 200
+  headerStyle = {font:"bold 15px Futura", fill: "#6E6E6E"}
+  contentStyle = {font: "15px Futura", fill: "#6E6E6E"}
 
   ## Overaly that covers the rest of the screen when the help menu is up
   overlay = new PIXI.Graphics()
@@ -122,11 +124,21 @@
     window.gameOn = true
     return
   helpContainer.addChild(overlaySprite)
+
+  overlay.clear()
+  overlay.beginFill(0xFFFFFF, 0.25)
+  overlay.drawRect(0,0,100,50)
+  overlay.endFill()
+  overlay.lineStyle(1, 0x999999, 1)
+  overlay.drawRect(0,0,100, 50)
+  goalOverlay = new PIXI.Sprite(overlay.generateTexture())
+  helpContainer.addChild(goalOverlay)
+
+  goalText = new PIXI.Text("Light this many crystals to beat the level", {font: "14px 'Futura'", fill: "white"})
+  helpContainer.addChild(goalText)
+
   ## Add background as second child  - 500x300 in original size ##
   helpContainer.addChild(PIXI.Sprite.fromImage("assets/img/helpBackground.png"))
-
-  headerStyle = {font:"bold 15px Futura", fill: "#6E6E6E"}
-  contentStyle = {font: "15px Futura", fill: "#6E6E6E"}
   
   close = new PIXI.Text("X", {font: "bold 20px Sans-Serif", fill: "gray"})
   close.position.x = 480
@@ -180,7 +192,7 @@
   prismsHeader.position.y = 140
   helpContainer.addChild(prismsHeader)
 
-  prismsContent = new PIXI.Text(" - the basic piece. The channel light and rotate.", contentStyle)
+  prismsContent = new PIXI.Text(" - the basic piece. They channel light and rotate.", contentStyle)
   prismsContent.position.x = 150
   prismsContent.position.y = 140
   helpContainer.addChild(prismsContent)
@@ -249,7 +261,7 @@
       else
         "" + (window.level + 1)
     window.BOARDNAME = "board" + num
-    window.menu.children[3].click()
+    window.menu.children[5].click()
     return
   nextLvl.position.x = 225
   nextLvl.position.y = 175
@@ -350,8 +362,8 @@
 
   ## Fix the help menu. resize the back opacity layer, reposition the rest
   if @helpContainer?
-    helpWidth = @helpContainer.children[1].getLocalBounds().width
-    helpHeight = @helpContainer.children[1].getLocalBounds().height
+    helpWidth = @helpContainer.children[3].getLocalBounds().width
+    helpHeight = @helpContainer.children[3].getLocalBounds().height
     @helpContainer.position.x = (window.innerWidth - helpWidth) / 2
     @helpContainer.position.y = (window.innerHeight - menuHeight - helpHeight) / 2 + menuHeight
     helpBack = @helpContainer.children[0]
@@ -359,6 +371,16 @@
     helpBack.position.y = -@helpContainer.position.y - 15
     helpBack.height = window.innerHeight + 25
     helpBack.width = window.innerWidth + 25
+    if goalContainer?
+      helpGoalHighlight = @helpContainer.children[1]
+      helpGoalHighlight.position.y = -@helpContainer.position.y
+      helpGoalHighlight.scale.x = 90*goalContainer.count / 100
+      helpGoalHighlight.position.x = goalContainer.position.x - @helpContainer.position.x - helpGoalHighlight.scale.x * 11 - 20
+      helpGoalText = @helpContainer.children[2]
+      helpGoalText.position.y = -@helpContainer.position.y + 40
+      helpGoalText.position.x = helpGoalHighlight.position.x + 8 + 9 * goalContainer.count
+
+
 
   ## Fix the win menu. No resizing, just reposition
   if @winContainer? 
