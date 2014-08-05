@@ -261,10 +261,10 @@
 
 ### Load assets into cache ###
 @preloadImages = ->
-  assets = ["assets/img/galaxy-28.jpg", "assets/img/helpBackground.png",
+  assets = ["assets/img/galaxy-28.jpg", "assets/img/helpBackground.png", "assets/img/icon.png",
             "/assets/img/hex-back.png", "assets/img/core.png",
             "assets/img/spark.png", "assets/img/crystal.png",
-            "assets/img/menu.png", "assets/img/connector_off.png", "assets/img/connector_on.png"]
+            "assets/img/connector_off.png", "assets/img/connector_on.png"]
   loader = new PIXI.AssetLoader(assets)
   loader.onComplete = @initFinish
   loader.load()
@@ -281,12 +281,12 @@
   ## Expand/contract the menu. Horizontal expansion/contraction is on middle sprite. Vertical is on whole menubackground container
   if @menu? and @menu.children.length > 0
     bck = @menu.children[0]
-    menuBackground = @menu.children[1]
-    lvlText = @menu.children[2]
-    resetButton = @menu.children[3]
-    selectLabel = @menu.children[4]
-    prevLvl = @menu.children[5]
-    nextLvl = @menu.children[6]
+    icon = @menu.children[1]
+    title = @menu.children[2]
+    prevLvl = @menu.children[3]
+    lvlText = @menu.children[4]
+    nextLvl = @menu.children[5]
+    resetButton = @menu.children[6]
     helpButton = @menu.children[7]
     goalContainer = @menu.children[8]
 
@@ -294,57 +294,66 @@
     bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75) 
     bck.scale.y = Math.max((window.innerHeight) / bck.texture.baseTexture.height, 0.75) 
 
-    ## Default size = 200.
-    menuBackground.scale.x = window.innerWidth / 200
-
-    ##Resize vertically - default height = 100
-    menuBackground.scale.y = newScale2
-    @base.position.y = newScale2 * 100
+    ## Resize vertically
+    menuHeight = 75
+    @base.position.y =  menuHeight
     for col, cContainer of @colorContainers
-      cContainer.position.y = newScale2 * 100
+      cContainer.position.y = menuHeight
 
     ## Scale all menu labels and buttons
-    lvlText.scale.x = lvlText.scale.y = newScale3
-    resetButton.scale.x = resetButton.scale.y = newScale3
-    selectLabel.scale.x = selectLabel.scale.y = newScale3
-    prevLvl.scale.x = prevLvl.scale.y = newScale3
-    nextLvl.scale.x = nextLvl.scale.y = newScale3
-    helpButton.scale.x = helpButton.scale.y = newScale3
+    # lvlText.scale.x = lvlText.scale.y = newScale3
+    # resetButton.scale.x = resetButton.scale.y = newScale3
+    # selectLabel.scale.x = selectLabel.scale.y = newScale3
+    # prevLvl.scale.x = prevLvl.scale.y = newScale3
+    # nextLvl.scale.x = nextLvl.scale.y = newScale3
+    # helpButton.scale.x = helpButton.scale.y = newScale3
 
     ## Move labels and buttons into place on x axis
     # Left justified elements
     menumargin = 20
-    lvlPush = 
-      if @level >= 10
-        35
+    lvlPush = (n) -> 
+      if @level + n >= 10
+        5
       else
         0
-    lvlText.position.x = menumargin
+    prevLvl.position.x = menumargin
+    lvlText.position.x = prevLvl.position.x + 50 + lvlPush(-1)
+    nextLvl.position.x = lvlText.position.x + 75 + lvlPush(0)
+    resetButton.position.x =  nextLvl.position.x + 60 + lvlPush(1)
+
+    ## Center Justified Elements
+    icon.position.x = (window.innerWidth - 125)/2
+    title.position.x = (window.innerWidth - 50)/2
+
     #Right Justified Elements
-    helpButton.position.x = (window.innerWidth) - (250 * newScale3)
-    nextLvl.position.x = helpButton.position.x - ((275) * newScale3)
-    prevLvl.position.x = nextLvl.position.x - ((300) * newScale3)
-    selectLabel.position.x = prevLvl.position.x - (300 * newScale3)
-    resetButton.position.x =  selectLabel.position.x - 300 * newScale3
+    helpButton.position.x = window.innerWidth - menumargin - 40
 
 
     fixY = (comp, scale) ->
-      comp.position.y = 35 * scale
+      comp.position.y = 45 * scale
       return
 
+    fixY(icon, newScale3)
+    icon.position.y -= 4
+    fixY(title, newScale3)
+    title.position.y -= 5
     fixY(lvlText, newScale3)
     fixY(resetButton, newScale3)
     fixY(helpButton, newScale3)
     fixY(nextLvl, newScale3)
     fixY(prevLvl, newScale3)
-    fixY(selectLabel, newScale3)
+
+    if goalContainer?
+      ## Fix goalContainer
+      goalContainer.position.y = -75
+      goalContainer.position.x = helpButton.position.x -  90 * goalContainer.count
 
   ## Fix the help menu. resize the back opacity layer, reposition the rest
   if @helpContainer?
     helpWidth = @helpContainer.children[1].getLocalBounds().width
     helpHeight = @helpContainer.children[1].getLocalBounds().height
     @helpContainer.position.x = (window.innerWidth - helpWidth) / 2
-    @helpContainer.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100
+    @helpContainer.position.y = (window.innerHeight - menuHeight - helpHeight) / 2 + menuHeight
     helpBack = @helpContainer.children[0]
     helpBack.position.x = -@helpContainer.position.x - 15
     helpBack.position.y = -@helpContainer.position.y - 15
@@ -356,17 +365,10 @@
     helpWidth = @winContainer.getLocalBounds().width
     helpHeight = @winContainer.getLocalBounds().height
     @winContainer.position.x = (window.innerWidth - helpWidth) / 2
-    @winContainer.position.y = (window.innerHeight - newScale2 * 100 - helpHeight) / 2 + newScale2 * 100
+    @winContainer.position.y = (window.innerHeight - menuHeight - helpHeight) / 2 + menuHeight
 
   ## Fix board
   if @BOARD?
-    if goalContainer?
-      ## Fix goalContainer
-      goalContainer.position.y = -10 * newScale3
-      goalContainer.scale.x = newScale3
-      goalContainer.scale.y = newScale3
-      goalContainer.position.x = lvlText.position.x + (575 + lvlPush) * newScale3 ## Not using lvlText.getLocalBounds() because it likes to change randomly (width)
-
     scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth())
     @base.scale.x = scale
     @base.scale.y = scale
@@ -563,45 +565,38 @@ for c in Color.values()
   return
 
 ## Font for text in the menu
-@menuStyle = {font:"bold 85px 'Futura' ", fill:"white"}
+@menuHeaderStyle = {font:"bold 20px 'Futura' ", fill:"white"}
+@menuContentStyle = {font: "16px 'Futura' ", fill: "gray"}
 
+### Creates the menu. Has children:
+    0) background image
+    1) icon
+    2) title
+    3) prev level
+    4) level text
+    5) next level
+    6) reset level
+    7) help button
+    8) goal container
+###
 @initMenu = () ->
   ## Create the background itself
   bck = PIXI.Sprite.fromImage("assets/img/galaxy-28.jpg")
   @menu.addChild(bck)
-  ## Create the bar, with some transparency
-  menuBar = PIXI.Sprite.fromImage("assets/img/menu.png")
-  menuBar.alpha = 0.5
-  @menu.addChild(menuBar)
+  
+  menuicon = PIXI.Sprite.fromImage("assets/img/icon.png")
+  menuicon.scale.x = menuicon.scale.y = 0.5
+  @menu.addChild(menuicon)
 
-  lvlText = new PIXI.Text("Lvl. " + @level + " of 50", @menuStyle)
-  @menu.addChild(lvlText)
-
-  resetButton = new PIXI.Text("Reset", @menuStyle)
-  resetButton.interactive = true
-  resetButton.buttonMode = true
-  resetButton.click = ->
-    if window.winContainer isnt undefined and window.winContainer isnt null
-      window.stage.removeChild(window.winContainer)
-    window.winContainer = null
-    window.gameOn = true
-    window.clearBoard()
-    Board.loadBoard(window.BOARDNAME)
-    window.updateMenu()
-    return
-
-  @menu.addChild(resetButton)
-
-
-  selectLabel = new PIXI.Text("Level: ", @menuStyle)
-  @menu.addChild(selectLabel)
+  titleText = new PIXI.Text("prismatic", @menuHeaderStyle)
+  @menu.addChild(titleText)
 
   if @level > 1
-    prevLvl = new PIXI.Text("<< " + (@level - 1), @menuStyle)
+    prevLvl = new PIXI.Text("<< " + (@level - 1), @menuContentStyle)
     prevLvl.interactive = true
     
   else
-    prevLvl = new PIXI.Text("     ", @menuStyle)
+    prevLvl = new PIXI.Text("     ", @menuContentStyle)
     prevLvl.interactive = false
   prevLvl.buttonMode = true
   prevLvl.click = ->
@@ -615,11 +610,14 @@ for c in Color.values()
     return
   @menu.addChild(prevLvl)
 
+  lvlText = new PIXI.Text(@level + " of 50", @menuContentStyle)
+  @menu.addChild(lvlText)
+
   if @level < 50
-    nextLvl = new PIXI.Text((@level + 1) + " >>", @menuStyle)
+    nextLvl = new PIXI.Text((@level + 1) + " >>", @menuContentStyle)
     nextLvl.interactive = true
   else
-    nextLvl = new PIXI.Text("     ", @menuStyle)
+    nextLvl = new PIXI.Text("     ", @menuContentStyle)
     nextLvl.interactive = false
   nextLvl.buttonMode = true
   nextLvl.click = ->
@@ -633,7 +631,26 @@ for c in Color.values()
     return
   @menu.addChild(nextLvl)
 
-  helpButton = new PIXI.Text("Help", @menuStyle)
+  resetButton = new PIXI.Text("Reset", @menuContentStyle)
+  resetButton.interactive = true
+  resetButton.buttonMode = true
+  resetButton.click = ->
+    if window.winContainer isnt undefined and window.winContainer isnt null
+      window.stage.removeChild(window.winContainer)
+    window.winContainer = null
+    window.gameOn = true
+    window.clearBoard()
+    Board.loadBoard(window.BOARDNAME)
+    window.updateMenu()
+    return
+  resetBorder = new PIXI.Sprite(@borderBox(50 , 25))
+  resetBorder.position.x = -15
+  resetBorder.position.y = -11
+  resetButton.addChild(resetBorder)
+
+  @menu.addChild(resetButton)
+
+  helpButton = new PIXI.Text("Help", @menuContentStyle)
   helpButton.interactive = true
   helpButton.buttonMode = true
   helpButton.click = ->
@@ -644,27 +661,65 @@ for c in Color.values()
       else
         helpContainer.close()
     return
+  helpBorder = new PIXI.Sprite(@borderBox(45 , 25))
+  helpBorder.position.x = -15
+  helpBorder.position.y = -11
+  helpButton.addChild(helpBorder)
   @menu.addChild(helpButton)
 
   ## Add goal components to menu
   @menu.addChild(@goalContainer)
+  @updateMenu()
   return
+
+@g = new PIXI.Graphics()
+## Returns a simple gray box texture with the given dimensions
+@borderBox = (width, height) ->
+  g.lineStyle(1.5, 0x777777, 1)
+  g.drawRect(0,0,width, height)
+  tex = g.generateTexture()
+  g.clear()
+  return tex
 
 ## Updates the menu to the most recent text for level - assumes initted
 @updateMenu = () ->
-  lvlText = @menu.children[2]
-  lvlText.setText("Lvl. " + @level + " of 50")
-  prevLvl = @menu.children[5]
+  
+
+  lvlText = @menu.children[4]
+  lvlText.setText(@level + " of 50")
+  prevLvl = @menu.children[3]
+  if prevLvl.children.length > 0
+    prevLvl.removeChild(prevLvl.getChildAt(0))  ## Get rid of the old box
   if @level > 1
     prevLvl.setText("<< " + (@level - 1))
     prevLvl.interactive = true
+    size = 
+      if @level > 10
+        55
+      else
+        45
+    prevBorder = new PIXI.Sprite(@borderBox(size , 25))
+    prevBorder.position.x = -15
+    prevBorder.position.y = -11
+    prevLvl.addChild(prevBorder)
   else
     prevLvl.setText("     ")
     prevLvl.interactive = false
-  nextLvl = @menu.children[6]
+  nextLvl = @menu.children[5]
+  if nextLvl.children.length > 0
+    nextLvl.removeChild(nextLvl.getChildAt(0))  ## Get rid of the old box
   if @level < 50
     nextLvl.setText((@level + 1) + " >>")
     nextLvl.interactive = true
+    size = 
+      if @level > 8
+        55
+      else
+        45
+    nextBorder = new PIXI.Sprite(@borderBox(size , 25))
+    nextBorder.position.x = -15
+    nextBorder.position.y = -11
+    nextLvl.addChild(nextBorder)
   else
     nextLvl.setText("     ")
     nextLvl.interactive = false
@@ -706,28 +761,27 @@ for c in Color.values()
     c.lit = color
     i++
   
+  @goalContainer.count = colors.length
+  spaceCoef = 5/6
+  pushCoef = 1/4
   for c in goalBoard.allHexesOfClass("Crystal")
     ## Create sprites for crystal
     spr = PIXI.Sprite.fromImage("assets/img/crystal.png")
     spr.lit = false
     spr.color = c.lit
     spr.hex = c
-    spr.position.x = c.loc.row * @hexRad * 3   ## Leaves some space for text between sprites
-    spr.anchor.x = 0.5
-    spr.anchor.y = 0.5
+    spr.position.x = c.loc.row * @hexRad * spaceCoef  ## Leaves some space for text between sprites
+    spr.anchor.x = spr.anchor.y = 0.5
+    spr.scale.x = spr.scale.y = 0.25
     @goalContainer[c.lit.toUpperCase()].addChild(spr)
     goalCount = window.BOARD[c.lit.toUpperCase()]
     @goalContainer[c.lit.toUpperCase()].goalCount = goalCount
-    goalStyle = @menuStyle
+    goalStyle = @menuContentStyle
     text = new PIXI.Text("0/" + goalCount, goalStyle)
-    text.position.x = c.loc.row * @hexRad * 3 + @hexRad * 0.725
-    text.position.y = - 60
+    text.position.x = c.loc.row * @hexRad * spaceCoef + @hexRad * pushCoef
+    text.position.y = -12
     text.color = c.lit
     @goalContainer[c.lit.toUpperCase()].addChild(text)
-
-
-
-  @goalContainer.count = 4
 
   window.BOARD.relight()
   ## Fit the canvas to the window
