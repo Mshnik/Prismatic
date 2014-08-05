@@ -1,143 +1,203 @@
 {
-"(2,6)":{
+"(2,7)":{
 "Type":"C",
-"Loc":"(2,6)"
+"Loc":"(2,7)"
 },
-"(3,6)":{
+"(0,7)":{
 "Type":"C",
-"Loc":"(3,6)"
+"Loc":"(0,7)"
 },
-"(1,6)":{
+"(1,7)":{
 "Type":"C",
-"Loc":"(1,6)"
+"Loc":"(1,7)"
 },
-"(0,6)":{
+"(4,7)":{
 "Type":"C",
-"Loc":"(0,6)"
+"Loc":"(4,7)"
+},
+"(3,7)":{
+"Type":"C",
+"Loc":"(3,7)"
 },
 "(0,1)":{
 "Type":"P",
 "Loc":"(0,1)",
-"Colors":["green", "red", "green", "red", "blue", "blue"]
+"Colors":["red", "blue", "red", "green", "blue", "orange"]
 },
 "(0,2)":{
 "Type":"P",
 "Loc":"(0,2)",
-"Colors":["red", "green", "red", "blue", "blue", "green"]
+"Colors":["green", "red", "orange", "blue", "blue", "orange"]
 },
 "(0,3)":{
 "Type":"P",
 "Loc":"(0,3)",
-"Colors":["red", "blue", "green", "red", "blue", "green"]
+"Colors":["red", "orange", "red", "orange", "green", "blue"]
 },
 "(0,4)":{
 "Type":"P",
 "Loc":"(0,4)",
-"Colors":["red", "blue", "green", "red", "green", "blue"]
+"Colors":["orange", "green", "blue", "red", "orange", "green"]
 },
 "(0,5)":{
 "Type":"P",
 "Loc":"(0,5)",
-"Colors":["green", "blue", "red", "green", "blue", "red"]
+"Colors":["green", "blue", "red", "green", "orange", "orange"]
+},
+"(0,6)":{
+"Type":"P",
+"Loc":"(0,6)",
+"Colors":["orange", "green", "green", "orange", "blue", "red"]
 },
 "(1,1)":{
 "Type":"P",
 "Loc":"(1,1)",
-"Colors":["green", "red", "blue", "blue", "green", "red"]
+"Colors":["green", "red", "green", "orange", "red", "red"]
 },
 "(1,2)":{
 "Type":"P",
 "Loc":"(1,2)",
-"Colors":["blue", "green", "green", "blue", "red", "green"]
+"Colors":["red", "blue", "orange", "red", "green", "blue"]
 },
 "(1,3)":{
 "Type":"P",
 "Loc":"(1,3)",
-"Colors":["blue", "green", "blue", "red", "green", "red"]
+"Colors":["red", "green", "orange", "blue", "green", "blue"]
 },
 "(1,4)":{
 "Type":"P",
 "Loc":"(1,4)",
-"Colors":["green", "blue", "red", "green", "red", "blue"]
+"Colors":["blue", "red", "green", "red", "orange", "green"]
 },
 "(1,5)":{
 "Type":"P",
 "Loc":"(1,5)",
-"Colors":["green", "blue", "red", "green", "red", "blue"]
+"Colors":["red", "green", "blue", "orange", "red", "orange"]
+},
+"(1,6)":{
+"Type":"P",
+"Loc":"(1,6)",
+"Colors":["red", "green", "orange", "blue", "green", "orange"]
 },
 "(2,1)":{
 "Type":"P",
 "Loc":"(2,1)",
-"Colors":["red", "blue", "green", "red", "green", "green"]
+"Colors":["red", "orange", "red", "orange", "green", "red"]
 },
 "(2,2)":{
 "Type":"P",
 "Loc":"(2,2)",
-"Colors":["green", "red", "red", "blue", "green", "blue"]
+"Colors":["red", "green", "orange", "green", "blue", "red"]
 },
 "(2,3)":{
 "Type":"P",
 "Loc":"(2,3)",
-"Colors":["green", "red", "blue", "green", "blue", "red"]
+"Colors":["orange", "blue", "green", "red", "orange", "blue"]
 },
 "(2,4)":{
 "Type":"P",
 "Loc":"(2,4)",
-"Colors":["blue", "red", "red", "green", "blue", "green"]
+"Colors":["orange", "red", "red", "orange", "green", "blue"]
 },
 "(2,5)":{
 "Type":"P",
 "Loc":"(2,5)",
-"Colors":["red", "green", "blue", "red", "green", "blue"]
+"Colors":["orange", "orange", "blue", "red", "blue", "green"]
+},
+"(2,6)":{
+"Type":"P",
+"Loc":"(2,6)",
+"Colors":["green", "green", "red", "orange", "orange", "red"]
 },
 "(3,1)":{
 "Type":"P",
 "Loc":"(3,1)",
-"Colors":["red", "blue", "red", "blue", "green", "green"]
+"Colors":["green", "blue", "red", "orange", "red", "orange"]
 },
 "(3,2)":{
 "Type":"P",
 "Loc":"(3,2)",
-"Colors":["red", "blue", "green", "blue", "red", "green"]
+"Colors":["green", "orange", "red", "blue", "orange", "red"]
 },
 "(3,3)":{
 "Type":"P",
 "Loc":"(3,3)",
-"Colors":["blue", "red", "green", "red", "blue", "green"]
+"Colors":["blue", "orange", "red", "green", "orange", "green"]
 },
 "(3,4)":{
 "Type":"P",
 "Loc":"(3,4)",
-"Colors":["red", "blue", "blue", "red", "blue", "green"]
+"Colors":["orange", "red", "blue", "green", "blue", "orange"]
 },
 "(3,5)":{
 "Type":"P",
 "Loc":"(3,5)",
-"Colors":["red", "green", "red", "green", "blue", "blue"]
+"Colors":["green", "orange", "green", "blue", "red", "orange"]
+},
+"(3,6)":{
+"Type":"P",
+"Loc":"(3,6)",
+"Colors":["red", "blue", "orange", "blue", "orange", "green"]
+},
+"(4,1)":{
+"Type":"P",
+"Loc":"(4,1)",
+"Colors":["orange", "green", "blue", "red", "orange", "green"]
+},
+"(4,2)":{
+"Type":"P",
+"Loc":"(4,2)",
+"Colors":["green", "blue", "orange", "red", "orange", "red"]
+},
+"(4,3)":{
+"Type":"P",
+"Loc":"(4,3)",
+"Colors":["green", "blue", "red", "orange", "red", "orange"]
+},
+"(4,4)":{
+"Type":"P",
+"Loc":"(4,4)",
+"Colors":["red", "green", "red", "orange", "orange", "blue"]
+},
+"(4,5)":{
+"Type":"P",
+"Loc":"(4,5)",
+"Colors":["green", "blue", "red", "orange", "red", "orange"]
+},
+"(4,6)":{
+"Type":"P",
+"Loc":"(4,6)",
+"Colors":["red", "green", "blue", "red", "blue", "orange"]
+},
+"(4,0)":{
+"Type":"S",
+"Loc":"(4,0)",
+"Colors":["orange", "red", "blue", "green"]
 },
 "(3,0)":{
 "Type":"S",
 "Loc":"(3,0)",
-"Colors":["red", "blue", "green"]
+"Colors":["orange", "red", "blue", "green"]
 },
 "(2,0)":{
 "Type":"S",
 "Loc":"(2,0)",
-"Colors":["red", "blue", "green"]
+"Colors":["orange", "red", "blue", "green"]
 },
 "(1,0)":{
 "Type":"S",
 "Loc":"(1,0)",
-"Colors":["red", "blue", "green"]
+"Colors":["orange", "red", "blue", "green"]
 },
 "(0,0)":{
 "Type":"S",
 "Loc":"(0,0)",
-"Colors":["red", "blue", "green"]
+"Colors":["orange", "red", "blue", "green"]
 },
-"RED":2,
+"ORANGE":1,
 "GREEN":1,
 "BLUE":1,
-"Height":4,
-"Width":7
+"RED":2,
+"Height":5,
+"Width":8
 }

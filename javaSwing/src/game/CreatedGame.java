@@ -37,11 +37,11 @@ public class CreatedGame extends Game{
 
   /** Make a buncha boards. */
   public static void makeManyBoards(){
-    int i = 1;
+    int i = 17;
     while(i <= 50){
       try{
-        CreatedGame g = new CreatedGame(3 + (i / 50));
-        g.reset(4 + (i/25), 6 + (i/20));
+        CreatedGame g = new CreatedGame(3 + (i / 15));
+        g.reset(4 + (i/15), 6 + (i/15) + (i % 15 / 5));
         String n = i + "";
         if (i < 10)
           n = "0" + i;

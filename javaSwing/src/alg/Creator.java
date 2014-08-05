@@ -88,6 +88,7 @@ public class Creator {
     
     game.solutions.put(Colors.hashArray(usedColors), solutions);
     
+    scramble(game);
     branch(game, 3);
     fuzzify(game);
     scramble(game);
