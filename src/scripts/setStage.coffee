@@ -1,6 +1,6 @@
 ### Begins init processing ###
 
-@BOARDNAME = "board50" ## Most recent board loaded. Initial value is default
+@BOARDNAME = "board16" ## Most recent board loaded. Initial value is default
 @initted  = false       ## True if a full init process has occured. False until then
 @gameOn   = true       ## True if the board should respond to clicks, false otherwise (false when help is up)
 
@@ -859,16 +859,16 @@ for c in Color.values()
     sidePanels = []
     ## Create color Circles
     if hex instanceof Prism
-      coreRad = 32 # Radius of the core hexagon
-      trim = 0
+      coreRad = 32        # Radius of the core hexagon
+      cumulative = [0.01, -0.02, 0.01, 0, 0, 0.02]
       for i in [0 .. Hex.SIDES - 1] by 1
         c = hex.colorOfSide(i)
         if(not isNaN(c))
           c = Color.asString(c).toUpperCase()
         else
           c = c.toUpperCase()
-        point = new PIXI.Point(coreRad * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + radTo60Degree/2 + trim), 
-                               coreRad * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + radTo60Degree/2 + trim))
+        point = new PIXI.Point(coreRad * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + radTo60Degree/2 + cumulative[i]), 
+                               coreRad * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + radTo60Degree/2 + cumulative[i]))
         cr = PIXI.Sprite.fromImage("assets/img/connector_off.png")
         cr.linked = false
         cr.anchor.x = 0.5
