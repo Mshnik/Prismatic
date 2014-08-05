@@ -1,0 +1,1237 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"BOARD",
+				"BOARDNAME"
+			],
+			[
+				"row",
+				"row"
+			],
+			[
+				"DEFAULT",
+				"DEFAULTBOARDNAME"
+			],
+			[
+				"help",
+				"helpButton"
+			],
+			[
+				"hel",
+				"helpButton"
+			],
+			[
+				"goalCon",
+				"goalContainer"
+			],
+			[
+				"over",
+				"overClock"
+			],
+			[
+				"filter",
+				"filter"
+			],
+			[
+				"menuBa",
+				"menuBackground"
+			],
+			[
+				"menuB",
+				"menuBack_Right"
+			],
+			[
+				"menu",
+				"menuBack_Middle"
+			],
+			[
+				"m",
+				"menuBack_Left"
+			],
+			[
+				"cube",
+				"cubeCoordinates"
+			],
+			[
+				"allHe",
+				"allHexesByClass"
+			],
+			[
+				"all",
+				"allHexesByClass"
+			],
+			[
+				"allHex",
+				"allHexesOfClass"
+			],
+			[
+				"getNei",
+				"getNeighbors"
+			],
+			[
+				"next",
+				"next"
+			],
+			[
+				"ava",
+				"avaliableColors"
+			],
+			[
+				"null",
+				"null"
+			],
+			[
+				"get",
+				"getNeighborsWithBlanks"
+			],
+			[
+				"bootra",
+				"bootstrap-3"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"T",
+				"T"
+			],
+			[
+				"Assign",
+				"AssignmentTemplate"
+			],
+			[
+				"assign",
+				"assignmentIds"
+			],
+			[
+				"Assignme",
+				"assignmentTemplate"
+			],
+			[
+				"Data",
+				"DataManagement"
+			],
+			[
+				"studd",
+				"studentIds"
+			],
+			[
+				"courseId",
+				"courseId"
+			],
+			[
+				"assignme",
+				"assignmentIds"
+			],
+			[
+				"ASS",
+				"ASSIGNMENTTEMPLATE_LIB"
+			],
+			[
+				"hovered",
+				"hoveredElement"
+			],
+			[
+				"updated",
+				"updated_USER_LIB"
+			],
+			[
+				"up",
+				"updated_USER_LIB"
+			],
+			[
+				"Course",
+				"COURSE_LIB"
+			],
+			[
+				"overW",
+				"overwriteOk"
+			],
+			[
+				"js",
+				"js"
+			],
+			[
+				"faceb",
+				"facebookPages"
+			],
+			[
+				"getFace",
+				"getFacebookPageIds"
+			],
+			[
+				"face",
+				"facebookPages"
+			],
+			[
+				"selecteD_",
+				"selected_post_name"
+			],
+			[
+				"sch",
+				"scheduled_publish_time"
+			],
+			[
+				"me",
+				"medium_image_url"
+			],
+			[
+				"uploa",
+				"upload_progress"
+			],
+			[
+				"upl",
+				"upload_progress"
+			],
+			[
+				"med",
+				"medium_image_url"
+			],
+			[
+				"height",
+				"heightValue"
+			],
+			[
+				"sche",
+				"scheduledPublishTime"
+			],
+			[
+				"campaign",
+				"campaign_id"
+			],
+			[
+				"camp",
+				"campaign_id"
+			],
+			[
+				"textAr",
+				"textAreaFrom"
+			],
+			[
+				"DEFA",
+				"DEFAULT_SORT_ARRAY"
+			],
+			[
+				"Odd",
+				"Odd"
+			],
+			[
+				"Eq",
+				"eq"
+			],
+			[
+				"Or",
+				"Or"
+			],
+			[
+				"Var",
+				"VarB"
+			],
+			[
+				"Logi",
+				"LogicVal"
+			],
+			[
+				"Log",
+				"LogicVal"
+			],
+			[
+				"Date",
+				"Date"
+			],
+			[
+				"value",
+				"value"
+			],
+			[
+				"su",
+				"submission"
+			],
+			[
+				"rever",
+				"reverseHelper"
+			],
+			[
+				"in",
+				"invincibleFrames"
+			],
+			[
+				"b",
+				"bombInvincibleFrames"
+			],
+			[
+				"bombIn",
+				"bombInvincibleFrames"
+			],
+			[
+				"defe",
+				"defendingMinCharge"
+			],
+			[
+				"seekingM",
+				"seekingMinCharge"
+			],
+			[
+				"opp",
+				"oppInvincibleFrames"
+			],
+			[
+				"power",
+				"powers"
+			],
+			[
+				"ufos",
+				"ufosLock"
+			],
+			[
+				"ufo",
+				"ufosLock"
+			],
+			[
+				"bull",
+				"bulletsLock"
+			],
+			[
+				"h",
+				"h"
+			],
+			[
+				"g",
+				"g"
+			],
+			[
+				"val",
+				"valStripped"
+			],
+			[
+				"valSp",
+				"valSplitSorted"
+			],
+			[
+				"t",
+				"t"
+			],
+			[
+				"kv",
+				"kv_pairs"
+			],
+			[
+				"result",
+				"results"
+			],
+			[
+				"map",
+				"map_filename"
+			],
+			[
+				"add",
+				"addListToHashTbl"
+			],
+			[
+				"ini",
+				"initial_size"
+			],
+			[
+				"init",
+				"initialize_mappers"
+			],
+			[
+				"un",
+				"unfinished_jobs"
+			],
+			[
+				"min",
+				"min_float"
+			],
+			[
+				"number",
+				"number"
+			],
+			[
+				"div",
+				"div_big_int"
+			],
+			[
+				"remove",
+				"removefromHull"
+			],
+			[
+				"mink",
+				"minkowski_difference_shift_by"
+			],
+			[
+				"string",
+				"stringOfNumber"
+			],
+			[
+				"strin",
+				"stringOfNumber"
+			],
+			[
+				"big_",
+				"big_int_of_string"
+			],
+			[
+				"Fr",
+				"fromTuple"
+			],
+			[
+				"from",
+				"fromTuple"
+			],
+			[
+				"one",
+				"oneOverNPow"
+			],
+			[
+				"e",
+				"euclidDiv"
+			],
+			[
+				"Mouse",
+				"mousePoint"
+			],
+			[
+				"mouse",
+				"mousePoint"
+			],
+			[
+				"compare",
+				"compare_slopes_from"
+			],
+			[
+				"closest",
+				"closest_on_vertex"
+			],
+			[
+				"find",
+				"findStartPoint"
+			],
+			[
+				"float",
+				"float_of_number"
+			],
+			[
+				"star",
+				"startPoint"
+			],
+			[
+				"prev",
+				"prevApprox"
+			],
+			[
+				"ten",
+				"tenPowCap"
+			],
+			[
+				"Nice",
+				"NiceRing"
+			],
+			[
+				"float_of",
+				"float_of_int"
+			],
+			[
+				"float_",
+				"float_of_int"
+			],
+			[
+				"zero",
+				"zero"
+			],
+			[
+				"tenth",
+				"tenthPow"
+			],
+			[
+				"Integers",
+				"Integers"
+			],
+			[
+				"Bit",
+				"BigInt"
+			],
+			[
+				"r",
+				"r"
+			],
+			[
+				"nU",
+				"nUnder1"
+			],
+			[
+				"Ordere",
+				"OrderedRingUtils"
+			],
+			[
+				"Quo",
+				"QuotientUtils"
+			],
+			[
+				"nu",
+				"nUnder2"
+			],
+			[
+				"OrderedRing",
+				"OrderedRingUtils"
+			],
+			[
+				"floa",
+				"float_of_number"
+			],
+			[
+				"is",
+				"is_non_neg"
+			],
+			[
+				"Field",
+				"FieldOfFractionsType"
+			],
+			[
+				"pol",
+				"polygon"
+			],
+			[
+				"fl",
+				"float_of_number"
+			],
+			[
+				"forma",
+				"formatter"
+			],
+			[
+				"Ring",
+				"RingUtils"
+			],
+			[
+				"appro",
+				"approxRoot2"
+			],
+			[
+				"numb",
+				"number_of_int"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/scripts/setStage.coffee",
+			"settings":
+			{
+				"buffer_size": 23035,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/board.coffee",
+			"settings":
+			{
+				"buffer_size": 8080,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/util/color.coffee",
+			"settings":
+			{
+				"buffer_size": 3974,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/spark.coffee",
+			"settings":
+			{
+				"buffer_size": 2044,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/main.css",
+			"settings":
+			{
+				"buffer_size": 287,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/boards/board01.json",
+			"settings":
+			{
+				"buffer_size": 2072,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
+			"settings":
+			{
+				"buffer_size": 4678,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 354,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Better CoffeeScript/CoffeeScript.sublime-build",
+	"command_palette":
+	{
+		"height": 287.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Remove Package"
+			],
+			[
+				"istall",
+				"Package Control: Install Package"
+			],
+			[
+				"packageC",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Enable Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 485.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/board1.json",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/main.css",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/spark.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/hex.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/prism.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/crystal.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/setStage.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/location.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/models.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/colorCircle.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/board.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/223723243.json",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/Sample Maps/223723243 copy.json",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/util/Location.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Crystal.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Spark.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Prism.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Board.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Hex.java",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/scripts/setStage.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/color.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/Color.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/util/Colors.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/gui/GUI.java",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/index.html",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/scripts/drawBoard.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/prismatic.sublime-project",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/brew.sh",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/game.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/brewModels.sh",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/game/RandomPuzzle.java",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/util/a.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/drawBoard.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/crystal.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/prism.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/spark.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/colorCircle.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/color.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/brewScripts.sh",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/SublimeOnSaveBuild/SublimeOnSaveBuild.sublime-settings",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/User/SublimeOnSaveBuild.sublime-settings",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/User/CoffeeScript_Me.sublime-build",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/SublimeOnSaveBuild/README.md",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/User/CoffeeScript.sublime-settings",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Better CoffeeScript/CoffeeScript.sublime-settings",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/board.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/beans.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/watchCoffee.sh",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/brewCoffee.sh",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/game/Game.java",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/spark.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/color.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/crystal.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/hex.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/prism.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/colorCircle.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/game.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/hex.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/location.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/location.js",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Package Control/Package Control.sublime-settings",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/src/asdgseta.coffee",
+		"/Users/MPatashnik/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/models/hex.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/models/util/Loc.js",
+		"/Users/MPatashnik/Documents/Prismatic/webGL/models/util/Util.js",
+		"/Users/MPatashnik/Documents/Originate/training-website/data/userLib.conf",
+		"/Users/MPatashnik/Documents/Originate/Bootstrap/Sitethingy/index.html",
+		"/Users/MPatashnik/Documents/Originate/training-website/WebSite/app/views/home_show.scala.html",
+		"/Users/MPatashnik/Documents/Originate/training-website/conf/test/userLib.conf",
+		"/Users/MPatashnik/Documents/Originate/training-website/conf/userLib.conf",
+		"/Users/MPatashnik/Documents/Originate/training-website/test/Database.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/CourseController.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/UserController.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/TestController.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/HomeController.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/public/css/main.css",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/DataController.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/conf/assignmentTemplateLib.conf",
+		"/Users/MPatashnik/Documents/Originate/training-website/conf/assignmentLib.conf",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/views/course_show.scala.html",
+		"/Users/MPatashnik/Documents/Originate/training-website/conf/courseLib.conf",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/views/nav_bar.scala.html",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/Application.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/models/User.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/models/Course.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/models/Data.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/views/user_control_show.scala.html",
+		"/Users/MPatashnik/Documents/Originate/training-website/conf/application.conf",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/views/bootstrap_demo.scala.html",
+		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/build.sbt",
+		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/project/plugins.sbt",
+		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/config/build.sbt",
+		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/project/Build.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/project/build.properties",
+		"/Users/MPatashnik/Documents/Originate/training-website/build.sbt",
+		"/Users/MPatashnik/.sbt/0.13/plugins/gpg.sbt",
+		"/Users/MPatashnik/Documents/Originate/training-website/project/build.properties",
+		"/Users/MPatashnik/.sbt/0.13/plugins/plugins.sbt",
+		"/Users/MPatashnik/Documents/Originate/training-website/project/plugins.sbt",
+		"/Users/MPatashnik/Desktop/plugins.sbt",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/views/audition.scss",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_auditions.scala.html",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.campaign_auditions.js",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.submission_manage.js",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.submission.js",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.campaign_schedule.js",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.campaign_manage.js",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.story_editor.js",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_schedule.scala.html",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/views/campaign.scss",
+		"/Users/MPatashnik/Desktop/storyJSON.txt",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/data/data.campaign.js",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.campaign_view.js",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/models/Campaign.java",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/show.scala.html",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_storyEditor.scala.html",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_history.scala.html",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/modules/_story.scss",
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/modules/_story-editor.scss",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/views/home_show.scala.html",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/models/user/User.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/models/course/Course.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/course/CourseController.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/home/HomeController.scala",
+		"/Users/MPatashnik/Documents/Originate/training-website/conf/routes",
+		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/user/UserController.scala"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"goalContainer.position.x",
+			"@goalContainer.position.x",
+			"@goalContainer",
+			"@goalContainers",
+			"moveLight",
+			"avaliable",
+			"Loc = (f",
+			"Loc ",
+			"Loc = {",
+			"Loc",
+			"graphics",
+			"t",
+			"clear",
+			");\n",
+			"getDefault",
+			"User",
+			"<<<",
+			"facebookplugin",
+			"facebookplugin'",
+			"facebookplugin",
+			"facebook",
+			"user",
+			"facebookPluginSettings",
+			"beforeSave",
+			"FacebookPage",
+			"facebook",
+			"dropdown",
+			"hover",
+			"campaign-",
+			"campaig",
+			"campaign-tabs",
+			"facebook",
+			"filter",
+			"date-filter",
+			"/api/a",
+			"asset",
+			"assets/",
+			"asset",
+			"/api/a",
+			"/api/",
+			"/api/assets/",
+			"saveDesign",
+			"delete",
+			"deleteCampaign",
+			"doForgotPassword",
+			"toUrl",
+			"api/assets/",
+			"api",
+			"request()",
+			"request",
+			"save",
+			"save_design",
+			"save",
+			"save_design",
+			"/assets",
+			"getImageUrl",
+			"is_uploading",
+			"progress",
+			"upload_",
+			"if(options.success)",
+			"exports",
+			"options.success",
+			"if(options.success",
+			"Theme",
+			"logo_added",
+			"campaign design",
+			"dropzone",
+			"console",
+			"DateTime",
+			"taStyle",
+			"getPropertyValue",
+			"height",
+			"50",
+			"cover",
+			"submission-info",
+			"/admin/api/campaign",
+			"/admin/api/campaigns",
+			"findBy",
+			"coll().findOne",
+			"find",
+			"Facebook",
+			"ng-app",
+			"ng-click",
+			"ng-controller",
+			"console.log",
+			"id",
+			"clear",
+			"$win",
+			"win",
+			"watch",
+			"window",
+			"win",
+			"bind",
+			"resize",
+			"responseTo",
+			"update",
+			"on",
+			"msd-elastic",
+			"Campaign.get",
+			"moment",
+			"console",
+			"getMore_s",
+			"String sorts",
+			"getStats",
+			"getActivity",
+			"getVote",
+			"getVisible",
+			"sort",
+			"mk",
+			"mks",
+			"grouped",
+			"getAverageRating",
+			"rating",
+			"getAverage",
+			"averageRating",
+			"rating",
+			"getLike",
+			"getViews",
+			"getRanking",
+			"like",
+			"l",
+			"getL",
+			"getLike",
+			"getV",
+			"get",
+			"plays",
+			"views",
+			"stats"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"available",
+			"Course",
+			"getMoreS"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/scripts/setStage.coffee",
+					"settings":
+					{
+						"buffer_size": 23035,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10173,
+								10173
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3968.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/models/board.coffee",
+					"settings":
+					{
+						"buffer_size": 8080,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4167,
+								4167
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 987.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/models/util/color.coffee",
+					"settings":
+					{
+						"buffer_size": 3974,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1031,
+								1031
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/models/subhex/spark.coffee",
+					"settings":
+					{
+						"buffer_size": 2044,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "assets/main.css",
+					"settings":
+					{
+						"buffer_size": 287,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								216,
+								216
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "assets/boards/board01.json",
+					"settings":
+					{
+						"buffer_size": 2072,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								140,
+								140
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 6,
+					"file": "/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
+					"settings":
+					{
+						"buffer_size": 4678,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 859.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "index.html",
+					"settings":
+					{
+						"buffer_size": 354,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								346,
+								346
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 25.0
+	},
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/Users/MPatashnik/Documents/College/Sophomore Year/CS 3110/PS6/team/babybot.ml"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 169.0,
+	"status_bar_visible": true
+}
