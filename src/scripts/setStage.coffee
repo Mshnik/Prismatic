@@ -185,7 +185,7 @@
   prismsContent.position.y = 140
   helpContainer.addChild(prismsContent)
 
-  crystalIcon = PIXI.Sprite.fromImage("assets/img/hex-lit.png")
+  crystalIcon = PIXI.Sprite.fromImage("assets/img/crystal.png")
   crystalIcon.position.x = 50
   crystalIcon.position.y = 175
   crystalIcon.scale.x = 0.25
@@ -262,7 +262,7 @@
 ### Load assets into cache ###
 @preloadImages = ->
   assets = ["assets/img/galaxy-28.jpg", "assets/img/helpBackground.png",
-            "/assets/img/hex-back.png", "assets/img/hex-lit.png", "assets/img/core.png",
+            "/assets/img/hex-back.png", "assets/img/core.png",
             "assets/img/spark.png", "assets/img/crystal.png",
             "assets/img/menu.png", "assets/img/connector_off.png", "assets/img/connector_on.png"]
   loader = new PIXI.AssetLoader(assets)
@@ -783,16 +783,16 @@ for c in Color.values()
     sidePanels = []
     ## Create color Circles
     if hex instanceof Prism
+      coreRad = 32 # Radius of the core hexagon
+      trim = 0
       for i in [0 .. Hex.SIDES - 1] by 1
         c = hex.colorOfSide(i)
         if(not isNaN(c))
           c = Color.asString(c).toUpperCase()
         else
           c = c.toUpperCase()
-        nudge = 0.528  ## Nudges along radius
-        shrink = 25 ## Moves beam towards center
-        point = new PIXI.Point( (@hexRad / 2 - shrink) * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + nudge), 
-                               (@hexRad / 2 - shrink) * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + nudge))
+        point = new PIXI.Point(coreRad * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + radTo60Degree/2 + trim), 
+                               coreRad * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + radTo60Degree/2 + trim))
         cr = PIXI.Sprite.fromImage("assets/img/connector_off.png")
         cr.linked = false
         cr.anchor.x = 0.5

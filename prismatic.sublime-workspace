@@ -523,7 +523,7 @@
 			"file": "src/scripts/setStage.coffee",
 			"settings":
 			{
-				"buffer_size": 23035,
+				"buffer_size": 30046,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,7 +531,7 @@
 			"file": "src/models/board.coffee",
 			"settings":
 			{
-				"buffer_size": 8080,
+				"buffer_size": 8123,
 				"line_ending": "Unix"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "src/models/util/color.coffee",
 			"settings":
 			{
-				"buffer_size": 3974,
+				"buffer_size": 4550,
 				"line_ending": "Unix"
 			}
 		},
@@ -555,7 +555,7 @@
 			"file": "assets/main.css",
 			"settings":
 			{
-				"buffer_size": 287,
+				"buffer_size": 187,
 				"line_ending": "Unix"
 			}
 		},
@@ -568,7 +568,7 @@
 			}
 		},
 		{
-			"file": "/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
+			"file": "javaSwing/src/models/ColorCircle.java",
 			"settings":
 			{
 				"buffer_size": 4678,
@@ -579,7 +579,15 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 354,
+				"buffer_size": 427,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "prismatic.sublime-project",
+			"settings":
+			{
+				"buffer_size": 167,
 				"line_ending": "Unix"
 			}
 		}
@@ -937,15 +945,15 @@
 					"file": "src/scripts/setStage.coffee",
 					"settings":
 					{
-						"buffer_size": 23035,
+						"buffer_size": 30046,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10173,
-								10173
+								0,
+								0
 							]
 						],
 						"settings":
@@ -965,15 +973,15 @@
 					"file": "src/models/board.coffee",
 					"settings":
 					{
-						"buffer_size": 8080,
+						"buffer_size": 8123,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4167,
-								4167
+								0,
+								0
 							]
 						],
 						"settings":
@@ -993,15 +1001,15 @@
 					"file": "src/models/util/color.coffee",
 					"settings":
 					{
-						"buffer_size": 3974,
+						"buffer_size": 4550,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1031,
-								1031
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1049,15 +1057,15 @@
 					"file": "assets/main.css",
 					"settings":
 					{
-						"buffer_size": 287,
+						"buffer_size": 187,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								216,
-								216
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1101,12 +1109,11 @@
 			]
 		},
 		{
-			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 6,
-					"file": "/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
+					"file": "javaSwing/src/models/ColorCircle.java",
 					"settings":
 					{
 						"buffer_size": 4678,
@@ -1137,20 +1144,48 @@
 					"file": "index.html",
 					"settings":
 					{
-						"buffer_size": 354,
+						"buffer_size": 427,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								346,
-								346
+								0,
+								0
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "prismatic.sublime-project",
+					"settings":
+					{
+						"buffer_size": 167,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								154,
+								154
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
