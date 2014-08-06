@@ -229,15 +229,7 @@ class @Board
             else if value.Type is "P"
               new Prism(b, Loc.fromString(key), value.Colors)
             else if value.Type is "S"
-              colorArr = value.Colors
-              if colorArr[0] isnt "none"
-                a = ["none"]
-                for c in colorArr
-                  if c isnt "none"
-                    a.push(c)
-              else
-                a = colorArr
-              new Spark(b, Loc.fromString(key), a)
+              new Spark(b, Loc.fromString(key), value.Colors)
             else
               Console.error("Bad k/v found " + key + ";" + value)
           else

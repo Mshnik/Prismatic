@@ -37,7 +37,6 @@
                   0, 0, 0.5, 0,
                   0, 0, 0, 1]
 
-
   offset = 0
   ## Containers for elements to be colored. Two layers per color - lit and unlit 
   @colorContainers = {}
@@ -60,7 +59,10 @@
     cContainer.addChild(lit)
     
     cContainer.unlit = unlit
-    cContainer.unlit.filters = [@flat]
+    if(colr isnt "NONE")
+      cContainer.unlit.filters = [@flat]
+    else
+      cContainer.unlit.filters = null
     cContainer.lit = lit
     ## The pulse filter - creates lighting effects for all colors. Shouldn't favor a color, as it goes overtop other colorizing filters
     ## Initially flat - advanced in rendering steps

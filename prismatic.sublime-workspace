@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"rad",
+				"radTo60Degree"
+			],
+			[
 				"BOARD",
 				"BOARDNAME"
 			],
@@ -510,60 +514,24 @@
 			[
 				"appro",
 				"approxRoot2"
-			],
-			[
-				"numb",
-				"number_of_int"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/scripts/setStage.coffee",
-			"settings":
-			{
-				"buffer_size": 30046,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "src/models/board.coffee",
 			"settings":
 			{
-				"buffer_size": 8123,
+				"buffer_size": 8367,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/models/util/color.coffee",
+			"file": "src/scripts/setStage.coffee",
 			"settings":
 			{
-				"buffer_size": 4550,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/subhex/spark.coffee",
-			"settings":
-			{
-				"buffer_size": 2044,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "assets/main.css",
-			"settings":
-			{
-				"buffer_size": 187,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "assets/boards/board01.json",
-			"settings":
-			{
-				"buffer_size": 2072,
+				"buffer_size": 32906,
 				"line_ending": "Unix"
 			}
 		},
@@ -644,6 +612,22 @@
 	},
 	"file_history":
 	[
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/setStage.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board09.json",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board10.json",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board11.json",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/board.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board08.json",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board07.json",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board06.json",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board05.json",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board04.json",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board03.json",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board02.json",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board01.json",
+		"/Users/MPatashnik/Documents/Prismatic/assets/main.css",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/subhex/spark.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/util/color.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/board1.json",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/main.css",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/spark.coffee",
@@ -755,23 +739,7 @@
 		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.campaign_manage.js",
 		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.story_editor.js",
 		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_schedule.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/views/campaign.scss",
-		"/Users/MPatashnik/Desktop/storyJSON.txt",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/data/data.campaign.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.campaign_view.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/it/create/models/Campaign.java",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/show.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_storyEditor.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_history.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/modules/_story.scss",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/modules/_story-editor.scss",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/views/home_show.scala.html",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/models/user/User.scala",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/models/course/Course.scala",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/course/CourseController.scala",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/home/HomeController.scala",
-		"/Users/MPatashnik/Documents/Originate/training-website/conf/routes",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/controllers/user/UserController.scala"
+		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/views/campaign.scss"
 	],
 	"find":
 	{
@@ -789,6 +757,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"25",
+			"goalContainer",
+			"menu.png",
+			"goalContainer",
+			"menu",
+			"hex-lit",
 			"goalContainer.position.x",
 			"@goalContainer.position.x",
 			"@goalContainer",
@@ -910,13 +884,7 @@
 			"getRanking",
 			"like",
 			"l",
-			"getL",
-			"getLike",
-			"getV",
-			"get",
-			"plays",
-			"views",
-			"stats"
+			"getL"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -937,23 +905,23 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/scripts/setStage.coffee",
+					"file": "src/models/board.coffee",
 					"settings":
 					{
-						"buffer_size": 30046,
+						"buffer_size": 8367,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								7068,
+								7068
 							]
 						],
 						"settings":
@@ -963,25 +931,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3968.0,
+						"translation.y": 2974.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/models/board.coffee",
+					"file": "src/scripts/setStage.coffee",
 					"settings":
 					{
-						"buffer_size": 8123,
+						"buffer_size": 32906,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								17827,
+								17827
 							]
 						],
 						"settings":
@@ -991,117 +959,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 987.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/models/util/color.coffee",
-					"settings":
-					{
-						"buffer_size": 4550,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/models/subhex/spark.coffee",
-					"settings":
-					{
-						"buffer_size": 2044,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "assets/main.css",
-					"settings":
-					{
-						"buffer_size": 187,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "assets/boards/board01.json",
-					"settings":
-					{
-						"buffer_size": 2072,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								140,
-								140
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 7318.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1112,7 +970,7 @@
 			"sheets":
 			[
 				{
-					"buffer": 6,
+					"buffer": 2,
 					"file": "javaSwing/src/models/ColorCircle.java",
 					"settings":
 					{
@@ -1140,7 +998,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 3,
 					"file": "index.html",
 					"settings":
 					{
@@ -1166,7 +1024,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 4,
 					"file": "prismatic.sublime-project",
 					"settings":
 					{
@@ -1224,7 +1082,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.726556353265,
 			1.0
 		],
 		"rows":

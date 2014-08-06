@@ -137,9 +137,9 @@ class @Color
                 0, 0, 0.7, 0,
                 0, 0, 0, 1]
       else ## Returns a muted gray for other color
-        return [0.2, 0, 0, 0,
-                0, 0.2, 0, 0,
-                0, 0, 0.2, 0,
+        return [0.8, 0, 0, 0,
+                0, 0.8, 0, 0,
+                0, 0, 0.8, 0,
                 0, 0, 0, 1]
 
 
