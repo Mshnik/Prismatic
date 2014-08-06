@@ -197,6 +197,8 @@ class @Hex
   ### Perform default behavior for interacting with this hex ###
   click : () -> ("Cannot instantiate Hex Class - click method must be overriden")
 
+  anticlick : () -> ("Cannot instantiate Hex Class - click method must be overriden")
+
   ### Returns the location of this hex as the string for this hex ###
   toString : () -> @loc.toString()
 

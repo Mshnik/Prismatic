@@ -105,7 +105,7 @@ class @Prism extends Hex
       @rotateCounter()
 
   ### Does the opposite of the default behavior. Mwa haha! ###
-  antiClick : () ->
+  anticlick : () ->
     if(not Prism.ROTATE_CLOCKWISE)
       @rotate()
     else

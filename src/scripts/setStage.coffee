@@ -4,7 +4,7 @@
 @initted  = false       ## True if a full init process has occured. False until then
 @gameOn   = true       ## True if the board should respond to clicks, false otherwise (false when help is up)
 @showWinContainer = true  ## True if the win container should be shown when the player wins
-@difficulty = @Game.EASY  ## Difficulty the player is currently on
+@difficulty = @Game.MEDIUM  ## Difficulty the player is currently on
 
 @init = -> 
   @initStart()
@@ -258,7 +258,8 @@
   title.position.y = 10
   @winContainer.addChild(title)
 
-  topContent = new PIXI.Text("You beat level " + @level + " in " + @BOARD.moves + " moves.", contentStyle)
+  topContent = new PIXI.Text("You beat level " + @level + " in " + @BOARD.moves + 
+    " moves on " + @Game.asString(@difficulty) + " mode.", contentStyle)
   topContent.position.x = 20
   topContent.position.y = 40
   @winContainer.addChild(topContent)
@@ -316,7 +317,10 @@
     nextLvl = @menu.children[5]
     resetButton = @menu.children[6]
     helpButton = @menu.children[7]
-    goalContainer = @menu.children[8]
+    easyButton = @menu.children[8]
+    medButton = @menu.children[9]
+    hardButton = @menu.children[10]
+    goalContainer = @menu.children[@goalContainerIndex]
 
     ##Fix background image
     bck.scale.x = Math.max(window.innerWidth / bck.texture.baseTexture.width, 0.75) 
@@ -355,6 +359,9 @@
 
     #Right Justified Elements
     helpButton.position.x = window.innerWidth - menumargin - 40
+    hardButton.position.x = helpButton.position.x
+    medButton.position.x = hardButton.position.x - 60
+    easyButton.position.x = medButton.position.x - 60
 
 
     fixY = (comp, scale) ->
@@ -370,6 +377,14 @@
     fixY(helpButton, newScale3)
     fixY(nextLvl, newScale3)
     fixY(prevLvl, newScale3)
+
+    fixYRowTwo = (comp, scale) ->
+      comp.position.y = 45 * scale + 35
+      return
+
+    fixYRowTwo(easyButton, newScale3)
+    fixYRowTwo(medButton, newScale3)
+    fixYRowTwo(hardButton, newScale3)
 
     if goalContainer?
       ## Fix goalContainer
@@ -498,7 +513,7 @@ for c in Color.values()
     if (@BOARD?)
       ## Update text on goal
       curLit = @BOARD.crystalLitCount()
-      goalContainer = @menu.children[8]
+      goalContainer = @menu.children[@goalContainerIndex]
       isWin = true ## True if this user has won - every goal set.
       for pan in goalContainer.children
         for spr in pan.children
@@ -606,6 +621,9 @@ for c in Color.values()
 @menuHeaderStyle = {font:"bold 20px 'Futura' ", fill:"white"}
 @menuContentStyle = {font: "16px 'Futura' ", fill: "gray"}
 
+## Index of the goal container on the menu
+@goalContainerIndex = 11
+
 ### Creates the menu. Has children:
     0) background image
     1) icon
@@ -615,7 +633,10 @@ for c in Color.values()
     5) next level
     6) reset level
     7) help button
-    8) goal container
+    8) easy button
+    9) med button
+    10) hard button
+    11) goal container
 ###
 @initMenu = () ->
   ## Create the background itself
@@ -706,6 +727,48 @@ for c in Color.values()
   helpButton.addChild(helpBorder)
   @menu.addChild(helpButton)
 
+  easyButton = new PIXI.Text("Easy", @menuContentStyle)
+  easyButton.interactive = true
+  easyButton.buttonMode = true
+  easyButton.click = ->
+    if window.difficulty isnt window.Game.EASY
+       window.difficulty = Game.EASY
+       resetButton.click()
+    return
+  easyBorder = new PIXI.Sprite(@borderBox(45 , 25))
+  easyBorder.position.x = -15
+  easyBorder.position.y = -11
+  easyButton.addChild(easyBorder)
+  @menu.addChild(easyButton)
+
+  medButton = new PIXI.Text("Med", @menuContentStyle)
+  medButton.interactive = true
+  medButton.buttonMode = true
+  medButton.click = ->
+    if window.difficulty isnt Game.MEDIUM
+       window.difficulty = Game.MEDIUM
+       resetButton.click()
+    return
+  medBorder = new PIXI.Sprite(@borderBox(45 , 25))
+  medBorder.position.x = -15
+  medBorder.position.y = -11
+  medButton.addChild(medBorder)
+  @menu.addChild(medButton)
+
+  hardButton = new PIXI.Text("Hard", @menuContentStyle)
+  hardButton.interactive = true
+  hardButton.buttonMode = true
+  hardButton.click = ->
+    if window.difficulty isnt Game.HARD
+       window.difficulty = Game.HARD
+       resetButton.click()
+    return
+  hardBorder = new PIXI.Sprite(@borderBox(45 , 25))
+  hardBorder.position.x = -15
+  hardBorder.position.y = -11
+  hardButton.addChild(hardBorder)
+  @menu.addChild(hardButton)
+
   ## Add goal components to menu
   @menu.addChild(@goalContainer)
   @updateMenu()
@@ -760,12 +823,31 @@ for c in Color.values()
   else
     nextLvl.setText("     ")
     nextLvl.interactive = false
+
+  @g.clear()
+  @g.beginFill(0xFFFFFF, 0.5)
+  @g.drawRect(0,0,45,25)
+  @g.endFill()
+
+  backingTex = @g.generateTexture()
+  ## Set the correct level button selected
+  difficultyButtons = [@menu.children[8], @menu.children[9], @menu.children[10]]
+  for b in difficultyButtons
+    try
+      b.removeChild(b.getChildAt(1))
+    catch
+  diffBorder = new PIXI.Sprite(backingTex)
+  diffBorder.position.x = -15
+  diffBorder.position.y = -11
+  difficultyButtons[@difficulty].addChild(diffBorder)
+    
+
   return
 
 ### Clears board and associated sprites from screen, usually in anticipation of new board being loaded ###
 @clearBoard = () ->
   sprToRemove = []
-  for pan in @menu.children[8].children
+  for pan in @menu.children[@goalContainerIndex].children
     for spr in pan.children
       sprToRemove.push(spr)
   for spr in @stage.children[1].children
@@ -844,6 +926,16 @@ for c in Color.values()
     text.position.y = -12
     text.color = c.lit
     @goalContainer[c.lit.toUpperCase()].addChild(text)
+
+  for c in colors
+    if window.BOARD[c.toUpperCase()] is 0
+      @colorContainers[c.toUpperCase()].alpha = 0
+      for spark in window.BOARD.allHexesOfClass("Spark")
+        s = spark.getAvailableColors()
+        s.splice(s.indexOf(c), 1)
+        spark.setAvailableColors(s)
+    else
+      @colorContainers[c.toUpperCase()].alpha = 1
 
   window.BOARD.relight()
   ## Fit the canvas to the window
@@ -977,9 +1069,12 @@ for c in Color.values()
 
     #Add a click listener
     backpanel.interactive = true
-    backpanel.click = -> 
+    backpanel.click = (event) -> 
       if window.gameOn
-        hex.click()
+        if not event.originalEvent.shiftKey
+          hex.click()
+        else
+          hex.anticlick()
       return
 
   return hex.panel

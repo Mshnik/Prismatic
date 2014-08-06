@@ -28,11 +28,10 @@ class @Spark extends Hex
   getAvailableColors : () ->
     @availableColors.toArray()
 
-  ###Allows setting the ColorCircle, but only if it isn't set yet (is null). Don't call otherwise
+  ###Allows setting the ColorCircle
   ###
   setAvailableColors : (colors) ->
-    if(@availableColors != undefined and @availableColors != null and @availableColors.length > 0)
-      return
+
     @availableColors = ColorCircle.fromArray(colors);
     return
   
@@ -51,6 +50,10 @@ class @Spark extends Hex
     @lightChange = true
     return
   
+  anticlick : () ->
+    click()
+    return
+
   ### @Override
       Overrides Hex isLit() because Sparks are always lit ###
   isLit : () ->

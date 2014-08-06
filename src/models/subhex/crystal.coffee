@@ -61,3 +61,5 @@ class @Crystal extends Hex
   ### Interacting with a Crystal does nothing - do nothing here ###
   click : () -> return
 
+  anticlick : () -> return
+

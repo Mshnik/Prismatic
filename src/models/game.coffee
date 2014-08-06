@@ -13,4 +13,14 @@ class @Game
   @MEDIUM = @_difficulty.MEDIUM
   @HARD = @_difficulty.HARD
 
+  @asString : (difficulty) ->
+    switch(difficulty)
+      when @EASY
+        return "easy"
+      when @MEDIUM
+        return "medium"
+      when @HARD
+        return "hard"
+      else
+        return "NO SUCH DIFFICULTY"
 
