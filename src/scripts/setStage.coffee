@@ -1,9 +1,10 @@
 ### Begins init processing ###
 
-@BOARDNAME = "board16" ## Most recent board loaded. Initial value is default
+@BOARDNAME = "board11" ## Most recent board loaded. Initial value is default
 @initted  = false       ## True if a full init process has occured. False until then
 @gameOn   = true       ## True if the board should respond to clicks, false otherwise (false when help is up)
-@showWinContainer = true 
+@showWinContainer = true  ## True if the win container should be shown when the player wins
+@difficulty = @Game.EASY  ## Difficulty the player is currently on
 
 @init = -> 
   @initStart()
@@ -789,15 +790,40 @@ for c in Color.values()
   ## Create the goal board on the right of the main board
   colors = window.BOARD.colorsPresent()
 
-  ## Goal board has crystal, spark on even rows only.
+  ## Array of goals, ex: ["RED", "RED", "BLUE", "GREEN"]
+  goalArr = []
+  for c in colors
+    for i in [1 .. window.BOARD[c.toUpperCase()]] by 1
+      goalArr.push(c.toUpperCase())
+
+  ## If on easy, remove half of the goal requirements, rounded down
+  if @difficulty is @Game.EASY
+    removeCount = goalArr.length /2
+
+  ## If on medium, remove a fourth of the goal requirements, rounded down
+  if @difficulty is @Game.MEDIUM
+    removeCount = goalArr.length / 4
+
+  ## If on hard, remove no requirements
+  if @difficulty is @Game.HARD
+    removeCount = 0
+
+  for i in [1 .. removeCount] by 1
+    r = Math.floor(Math.random() * goalArr.length)
+    window.BOARD[goalArr[r]]--
+    goalArr.splice(r, 1)
+
+  ## Goal board has crystals.
   goalBoard = new Board(colors.length,1)
   i = 0
   for color in colors
-    c = new Crystal(goalBoard, new Loc(i, 0))
-    c.lit = color
-    i++
+    goalCount = window.BOARD[color.toUpperCase()]
+    if(goalCount > 0)
+      c = new Crystal(goalBoard, new Loc(i, 0))
+      c.lit = color
+      i++
   
-  @goalContainer.count = colors.length
+  @goalContainer.count = Math.max(i,3)
   spaceCoef = 5/6
   pushCoef = 1/4
   for c in goalBoard.allHexesOfClass("Crystal")

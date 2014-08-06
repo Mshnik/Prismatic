@@ -1,27 +1,16 @@
 class @Game
 
-  ### Creates a game to wrap the given board ###
-  constructor : (board) ->
-    @setBoard(board)
+  # Difficulty enum
+  @_difficulty = 
+    EASY : 0
+    MEDIUM : 1
+    HARD : 2
 
+  @difficultyCount : () -> Object.keys(@_difficulty).length
+  @difficultyValues : () -> Object.keys(@_difficulty)
 
-  ### Sets the board for this game - disposes of older board, if any ###
-  setBoard : (board) ->
-    if(@board isnt null and @board isnt board) @board.dispose
-      @board = board
+  @EASY = @_difficulty.EASY
+  @MEDIUM = @_difficulty.MEDIUM
+  @HARD = @_difficulty.HARD
 
-  ### Returns the board for this game ###
-  getBoard : () -> @board
-
-  ### Called when a hex alters itself on the board - should repaint as necessary ###
-  updateHex : (h) ->
-    throw ("Can't Instantiate Type Game - updateHex must be overriden in subclasses")
-
-  ### Resets this game to its initial settings ###
-  reset : () ->
-    throw ("Can't Instantiate Type Game - reset must be overriden in subclasses")
-
-  ### Should return the difficulty of this game as an integer ###
-  getDifficulty : () ->
-    throw ("Can't Instantiate Type Game - getDifficulty must be overriden in subclasses")
 
