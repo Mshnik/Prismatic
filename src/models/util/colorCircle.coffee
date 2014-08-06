@@ -1,6 +1,6 @@
 ##= require ./color
 
-class ColorCircle
+class @ColorCircle
 
   ### Creates a circularly linked list of colorCircles from an array of colors.
       Returns the first colorCircle (head). Returns null if the input is null or length 0 ###
@@ -68,12 +68,28 @@ class ColorCircle
   equals : (o) ->
     if (! (o instanceof ColorCircle)) 
       return false
-    c = (ColorCircle) o
+    c = o
     d = this
     if(@size != c.size) 
       return false
     loop
       if(c.color != d.color) 
+        return false
+      c = c.next;
+      d = d.next;
+      break if (d is this)
+    return true
+
+  ### Two color circles match if their sizes are equald and they have the same color at every position, with Color.ANY as a wild card ###
+  matches : (o) ->
+    if (! (o instanceof ColorCircle)) 
+      return false
+    c = o
+    d = this
+    if(@size != c.size) 
+      return false
+    loop
+      if(c.color != d.color and Color.fromString(c.color) isnt Color.ANY and Color.fromString(d.color) isnt Color.ANY) 
         return false
       c = c.next;
       d = d.next;

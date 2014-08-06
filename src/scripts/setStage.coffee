@@ -613,7 +613,6 @@ for c in Color.values()
     return
   requestAnimFrame(animate )
   window.createHelpMenu()
-  @BOARD = new Board() ## Temp board to handle resize requests while loading new board
   Board.loadBoard(window.BOARDNAME)
   return
 
@@ -879,17 +878,43 @@ for c in Color.values()
     for i in [1 .. window.BOARD[c.toUpperCase()]] by 1
       goalArr.push(c.toUpperCase())
 
+  fix = (h, cir) ->
+    i = 0
+    while not h.colorCircle.matches(ColorCircle.fromArray(val))
+      h.rotate()
+      i++
+      if i == 6
+        console.error("Rotated six times, no match!")
+        break;
+      h.targetRotation = 0
+    return
+
   ## If on easy, remove half of the goal requirements, rounded down
+  ## Also rotate and lock all of the locked tiles
   if @difficulty is @Game.EASY
     removeCount = goalArr.length /2
+    for key, val of @BOARD.Locked
+      h = @BOARD.getHex(Loc.fromString(key))
+      fix(h, ColorCircle.fromArray(val))
+      h.isLocked = true
 
   ## If on medium, remove a fourth of the goal requirements, rounded down
+  ## Also rotate and lock half of the locked tiles.
   if @difficulty is @Game.MEDIUM
     removeCount = goalArr.length / 4
+    use = true
+    for key, val of @BOARD.Locked
+      if use
+        h = @BOARD.getHex(Loc.fromString(key))
+        fix(h, ColorCircle.fromArray(val))
+        h.isLocked = true
+      use = not use
 
   ## If on hard, remove no requirements
   if @difficulty is @Game.HARD
     removeCount = 0
+
+  @BOARD.moves = 0
 
   for i in [1 .. removeCount] by 1
     r = Math.floor(Math.random() * goalArr.length)
@@ -1069,7 +1094,11 @@ for c in Color.values()
       @base.addChild(backpanel)
 
     #Add a click listener
-    backpanel.interactive = true
+    if hex.isLocked
+      backpanel.interactive = false
+      spr.tint = 0xFFFF21
+    else
+      backpanel.interactive = true
     backpanel.click = (event) -> 
       if window.gameOn
         if not event.originalEvent.shiftKey

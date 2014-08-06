@@ -1,123 +1,129 @@
 {
-"(0,5)":{
-"Type":"C",
-"Loc":"(0,5)"
+"(0,1)":{
+"Type":"P",
+"Loc":"(0,1)",
+"Colors":["red", "green", "green", "blue", "red", "blue"]
 },
-"(2,5)":{
-"Type":"C",
-"Loc":"(2,5)"
+"(0,2)":{
+"Type":"P",
+"Loc":"(0,2)",
+"Colors":["blue", "green", "green", "blue", "red", "red"]
+},
+"(0,3)":{
+"Type":"P",
+"Loc":"(0,3)",
+"Colors":["green", "red", "blue", "red", "blue", "blue"]
+},
+"(0,4)":{
+"Type":"P",
+"Loc":"(0,4)",
+"Colors":["red", "green", "red", "green", "blue", "blue"]
+},
+"(1,1)":{
+"Type":"P",
+"Loc":"(1,1)",
+"Colors":["blue", "red", "red", "red", "green", "green"]
+},
+"(1,2)":{
+"Type":"P",
+"Loc":"(1,2)",
+"Colors":["blue", "red", "blue", "red", "blue", "red"]
+},
+"(1,3)":{
+"Type":"P",
+"Loc":"(1,3)",
+"Colors":["green", "blue", "red", "red", "red", "red"]
+},
+"(1,4)":{
+"Type":"P",
+"Loc":"(1,4)",
+"Colors":["green", "blue", "red", "green", "blue", "red"]
+},
+"(2,1)":{
+"Type":"P",
+"Loc":"(2,1)",
+"Colors":["blue", "blue", "green", "red", "green", "red"]
+},
+"(2,2)":{
+"Type":"P",
+"Loc":"(2,2)",
+"Colors":["red", "blue", "red", "green", "green", "blue"]
+},
+"(2,3)":{
+"Type":"P",
+"Loc":"(2,3)",
+"Colors":["red", "red", "green", "blue", "green", "blue"]
+},
+"(2,4)":{
+"Type":"P",
+"Loc":"(2,4)",
+"Colors":["green", "green", "red", "red", "blue", "blue"]
+},
+"(3,1)":{
+"Type":"P",
+"Loc":"(3,1)",
+"Colors":["red", "blue", "red", "green", "blue", "green"]
+},
+"(3,2)":{
+"Type":"P",
+"Loc":"(3,2)",
+"Colors":["blue", "red", "green", "red", "green", "green"]
+},
+"(3,3)":{
+"Type":"P",
+"Loc":"(3,3)",
+"Colors":["green", "blue", "red", "blue", "green", "red"]
+},
+"(3,4)":{
+"Type":"P",
+"Loc":"(3,4)",
+"Colors":["blue", "green", "red", "blue", "green", "red"]
+},
+"(3,0)":{
+"Type":"S",
+"Loc":"(3,0)",
+"Colors":["green", "red", "blue"]
+},
+"(2,0)":{
+"Type":"S",
+"Loc":"(2,0)",
+"Colors":["green", "red", "blue"]
+},
+"(1,0)":{
+"Type":"S",
+"Loc":"(1,0)",
+"Colors":["green", "red", "blue"]
+},
+"(0,0)":{
+"Type":"S",
+"Loc":"(0,0)",
+"Colors":["green", "red", "blue"]
 },
 "(3,5)":{
 "Type":"C",
 "Loc":"(3,5)"
 },
+"(2,5)":{
+"Type":"C",
+"Loc":"(2,5)"
+},
 "(1,5)":{
 "Type":"C",
 "Loc":"(1,5)"
 },
-"(0,1)":{
-"Type":"P",
-"Loc":"(0,1)",
-"Colors":["green", "blue", "red", "green", "red", "blue"]
-},
-"(0,2)":{
-"Type":"P",
-"Loc":"(0,2)",
-"Colors":["red", "blue", "green", "blue", "red", "green"]
-},
-"(0,3)":{
-"Type":"P",
-"Loc":"(0,3)",
-"Colors":["red", "blue", "red", "red", "blue", "red"]
-},
-"(0,4)":{
-"Type":"P",
-"Loc":"(0,4)",
-"Colors":["red", "green", "blue", "green", "red", "blue"]
-},
-"(1,1)":{
-"Type":"P",
-"Loc":"(1,1)",
-"Colors":["blue", "green", "green", "red", "blue", "red"]
-},
-"(1,2)":{
-"Type":"P",
-"Loc":"(1,2)",
-"Colors":["red", "green", "blue", "green", "red", "blue"]
-},
-"(1,3)":{
-"Type":"P",
-"Loc":"(1,3)",
-"Colors":["red", "green", "red", "blue", "green", "blue"]
-},
-"(1,4)":{
-"Type":"P",
-"Loc":"(1,4)",
-"Colors":["blue", "red", "green", "green", "red", "blue"]
-},
-"(2,1)":{
-"Type":"P",
-"Loc":"(2,1)",
-"Colors":["blue", "red", "green", "green", "red", "blue"]
-},
-"(2,2)":{
-"Type":"P",
-"Loc":"(2,2)",
-"Colors":["blue", "blue", "red", "green", "red", "green"]
-},
-"(2,3)":{
-"Type":"P",
-"Loc":"(2,3)",
-"Colors":["red", "blue", "green", "blue", "green", "blue"]
-},
-"(2,4)":{
-"Type":"P",
-"Loc":"(2,4)",
-"Colors":["green", "blue", "red", "blue", "green", "red"]
-},
-"(3,1)":{
-"Type":"P",
-"Loc":"(3,1)",
-"Colors":["red", "green", "red", "blue", "green", "blue"]
-},
-"(3,2)":{
-"Type":"P",
-"Loc":"(3,2)",
-"Colors":["blue", "green", "red", "blue", "green", "red"]
-},
-"(3,3)":{
-"Type":"P",
-"Loc":"(3,3)",
-"Colors":["green", "red", "blue", "red", "blue", "green"]
-},
-"(3,4)":{
-"Type":"P",
-"Loc":"(3,4)",
-"Colors":["blue", "red", "green", "blue", "red", "green"]
-},
-"(3,0)":{
-"Type":"S",
-"Loc":"(3,0)",
-"Colors":["blue", "green", "red"]
-},
-"(2,0)":{
-"Type":"S",
-"Loc":"(2,0)",
-"Colors":["blue", "green", "red"]
-},
-"(1,0)":{
-"Type":"S",
-"Loc":"(1,0)",
-"Colors":["blue", "green", "red"]
-},
-"(0,0)":{
-"Type":"S",
-"Loc":"(0,0)",
-"Colors":["blue", "green", "red"]
+"(0,5)":{
+"Type":"C",
+"Loc":"(0,5)"
 },
 "BLUE":1,
-"RED":2,
 "GREEN":1,
+"RED":2,
+"Locked":{
+"(2,2)":["any", "any", "any", "red", "any", "red"],
+"(1,2)":["red", "blue", "red", "any", "red", "blue"],
+"(1,4)":["blue", "red", "any", "blue", "red", "any"],
+"(2,4)":["blue", "blue", "any", "any", "red", "red"]
+},
 "Height":4,
 "Width":6
 }

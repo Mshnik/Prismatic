@@ -101,7 +101,7 @@ public class ColorCircle implements JSONString{
     return s;
   }
   
-  /** Two color circles are equal if their sizes are equal and, for every colorCircle in the chain, the colors are equal */
+  /** Two color circles are equal if their sizes are equal and, for every colorCircle in the chain, the colors are equal. */
   @Override
   public boolean equals(Object o){
     if (! (o instanceof ColorCircle)) return false;
@@ -110,6 +110,21 @@ public class ColorCircle implements JSONString{
     if(size != c.size) return false;
     do{
       if(c.color != d.color) return false;
+      c = c.next;
+      d = d.next;
+    }while(d != this);
+    return true;
+  }
+  
+  /** Two color circles are equal if their sizes are equal and, for every colorCircle in the chain, the colors are equal.
+   * Color.ANY is treated as a wild card here and matches with any color */
+  public boolean matches(Object o){
+    if (! (o instanceof ColorCircle)) return false;
+    ColorCircle c = (ColorCircle)o;
+    ColorCircle d = this;
+    if(size != c.size) return false;
+    do{
+      if(c.color != d.color && c.color != Color.ANY && d.color != Color.ANY) return false;
       c = c.next;
       d = d.next;
     }while(d != this);
