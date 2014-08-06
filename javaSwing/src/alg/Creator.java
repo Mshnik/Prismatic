@@ -3,6 +3,7 @@ package alg;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -37,9 +38,13 @@ public class Creator {
     public final Board board;
     public final HashMap<Integer, LinkedList<Solution>> solutions;   //Hash of color array to list of solutions, one per color.
     
-    public CreatedGame(Board b, HashMap<Integer, LinkedList<Solution>> solutions){
+    public final HashMap<Hex, Color[]> lockedTiles;   //Hexes and their orientations that are guaranteed to be in the solution.
+    
+    public CreatedGame(Board b, HashMap<Integer, LinkedList<Solution>> solutions, HashMap<Hex, Color[]> lockedTiles){
       this.board = b;
+      b.lockedTiles = lockedTiles;
       this.solutions = solutions;
+      this.lockedTiles = lockedTiles;
     }
   }
   
@@ -87,7 +92,7 @@ public class Creator {
     }
     
     game.solutions.put(Colors.hashArray(usedColors), solutions);
-    
+    lock(game, Math.max(game.board.getHeight(), game.board.getWidth() - 2));
     scramble(game);
     branch(game, 3);
     fuzzify(game);
@@ -184,7 +189,7 @@ public class Creator {
   /** Preps a craetedGame for creating puzzles */
   private static CreatedGame prepGame(int boardHeight, int boardWidth, int sparks, int crystals, int colors){
     Board b = new Board(boardHeight, boardWidth);
-    CreatedGame game = new CreatedGame(b, new HashMap<Integer, LinkedList<Solution>>());
+    CreatedGame game = new CreatedGame(b, new HashMap<Integer, LinkedList<Solution>>(), new HashMap<Hex, Color[]>());
     //Place sparks and crystals on sides of board.
     int i = 0;
     while(i < crystals){
@@ -217,6 +222,28 @@ public class Creator {
       }
     }
     return game;
+  }
+  
+  /** Records the orientation of the given number of hexes in game
+   * 
+   */
+  private static void lock(CreatedGame game, int count){ 
+    LinkedList<Hex> prisms = (LinkedList<Hex>)game.board.allHexesOfClass(Prism.class);
+    Set<Location> importantHexes = new HashSet<Location>();
+    for(LinkedList<Solution> sol : game.solutions.values()){
+      for (Solution s : sol){
+        importantHexes.addAll(s.path);
+      }
+    }
+    while(count > 0){
+      //Pick a random prism that hasn't been picked yet but is important.
+      Prism p = null;
+      while(p == null || game.lockedTiles.containsKey(p) || !importantHexes.contains(p.location)){
+        p = prisms.get((int)(Math.random() * prisms.size())).asPrism();
+      }
+      game.lockedTiles.put(p, p.colorArray());
+      count--;
+    }
   }
   
   /** Fills in board by making new random paths. Tries to do this in a way that doesn't change the solution set

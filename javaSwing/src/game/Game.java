@@ -62,6 +62,7 @@ public abstract class Game {
   /** Saves the current board w/ random name*/
   public void saveBoard(String name){
     Board b = new Board(board);
+    b.lockedTiles = board.lockedTiles;
     if(this instanceof CreatedGame)
       b.puzzle = ((CreatedGame)this).puzzleString();
     try {

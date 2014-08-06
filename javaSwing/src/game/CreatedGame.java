@@ -37,7 +37,7 @@ public class CreatedGame extends Game{
 
   /** Make a buncha boards. */
   public static void makeManyBoards(){
-    int i = 17;
+    int i = 48;
     while(i <= 50){
       try{
         CreatedGame g = new CreatedGame(3 + (i / 15));

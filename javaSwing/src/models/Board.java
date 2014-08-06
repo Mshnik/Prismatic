@@ -28,6 +28,10 @@ public class Board implements JSONString{
    */
   private Hex[][] board;
   
+  /** Tiles and their configurations that are known to be in the solution set 
+   * Show or hide these based on the difficulty */
+  public HashMap<Hex, Color[]> lockedTiles;
+  
   /** Collections of all hexes in this board by their class.
    * Calculated and added to lazily. If an entry is not present, specifies that it needs to be recalculated
    */
@@ -233,6 +237,7 @@ public class Board implements JSONString{
     if (rs < 0 || cs < 0) throw new IllegalArgumentException("Illegal Board Construction for Dimensions " + rs + ", " + cs);
     board = new Hex[rs][cs];
     allHexesByClass = new HashMap<Class<? extends Hex>, Collection<Hex>>();
+    lockedTiles = null;
   }
   
   /** Default size for constructing a default (square) board */
@@ -315,6 +320,17 @@ public class Board implements JSONString{
       String subStr = puzzle.substring(puzzle.indexOf(col) + col.length() + 2);
       int count = Integer.parseInt(subStr.substring(0, subStr.indexOf(' ')));
       s += "\n" + Util.addQ(col) + ":" + count + ",";
+    }
+    if(lockedTiles != null){
+      s += "\n" + Util.addQ("Locked") + ":{";
+      int i = 0;
+      for (Hex h : lockedTiles.keySet()){
+        s +="\n" + Util.addQ(h.location.toString()) + ":" + ColorCircle.fromArray(lockedTiles.get(h)).toJSONString();
+        if (i < lockedTiles.keySet().size() - 1)
+          s+= ",";
+        i++;
+      }
+      s += "\n},";
     }
     s += "\n" + Util.addQ("Height") + ":" + getHeight() + ",";
     s += "\n" + Util.addQ("Width") + ":" + getWidth();
