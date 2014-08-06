@@ -706,7 +706,10 @@ for c in Color.values()
   resetBorder.position.x = -15
   resetBorder.position.y = -11
   resetButton.addChild(resetBorder)
-
+  resetBack = new PIXI.Sprite(@backBox(50 , 25))
+  resetBack.position.x = -15
+  resetBack.position.y = -11
+  resetButton.addChild(resetBack)
   @menu.addChild(resetButton)
 
   helpButton = new PIXI.Text("Help", @menuContentStyle)
@@ -724,6 +727,10 @@ for c in Color.values()
   helpBorder.position.x = -15
   helpBorder.position.y = -11
   helpButton.addChild(helpBorder)
+  helpBack = new PIXI.Sprite(@backBox(45 , 25))
+  helpBack.position.x = -15
+  helpBack.position.y = -11
+  helpButton.addChild(helpBack)
   @menu.addChild(helpButton)
 
   easyButton = new PIXI.Text("Easy", @menuContentStyle)
@@ -776,11 +783,19 @@ for c in Color.values()
 @g = new PIXI.Graphics()
 ## Returns a simple gray box texture with the given dimensions
 @borderBox = (width, height) ->
-  g.lineStyle(1.5, 0x777777, 1)
-  g.drawRect(0,0,width, height)
-  tex = g.generateTexture()
-  g.clear()
-  return tex
+  @g.clear()
+  @g.lineStyle(1.5, 0x777777, 1)
+  @g.drawRect(0,0,width, height)
+  return @g.generateTexture()
+
+## Returns a simple white box (filled) with the given dimensions
+@backBox = (width, height) ->
+  @g.clear()
+  @g.beginFill(0xFFFFFF, 0.5)
+  @g.drawRect(0,0,width,height)
+  @g.endFill()
+  return @g.generateTexture()
+
 
 ## Updates the menu to the most recent text for level - assumes initted
 @updateMenu = () ->
@@ -788,7 +803,8 @@ for c in Color.values()
   lvlText.setText(@level + " of 50")
   prevLvl = @menu.children[3]
   if prevLvl.children.length > 0
-    prevLvl.removeChild(prevLvl.getChildAt(0))  ## Get rid of the old box
+    prevLvl.removeChild(prevLvl.getChildAt(0))  ## Get rid of the old boxes (remove 0 index twice)
+    prevLvl.removeChild(prevLvl.getChildAt(0))
   if @level > 1
     prevLvl.setText("<< " + (@level - 1))
     prevLvl.interactive = true
@@ -801,12 +817,17 @@ for c in Color.values()
     prevBorder.position.x = -15
     prevBorder.position.y = -11
     prevLvl.addChild(prevBorder)
+    prevBack = new PIXI.Sprite(@backBox(size , 25))
+    prevBack.position.x = -15
+    prevBack.position.y = -11
+    prevLvl.addChild(prevBack)
   else
     prevLvl.setText("     ")
     prevLvl.interactive = false
   nextLvl = @menu.children[5]
   if nextLvl.children.length > 0
-    nextLvl.removeChild(nextLvl.getChildAt(0))  ## Get rid of the old box
+    nextLvl.removeChild(nextLvl.getChildAt(0))   ## Get rid of the old boxes (remove 0 index twice)
+    nextLvl.removeChild(nextLvl.getChildAt(0))
   if @level < 50
     nextLvl.setText((@level + 1) + " >>")
     nextLvl.interactive = true
@@ -819,16 +840,15 @@ for c in Color.values()
     nextBorder.position.x = -15
     nextBorder.position.y = -11
     nextLvl.addChild(nextBorder)
+    nextBack = new PIXI.Sprite(@backBox(size , 25))
+    nextBack.position.x = -15
+    nextBack.position.y = -11
+    nextLvl.addChild(nextBack)
   else
     nextLvl.setText("     ")
     nextLvl.interactive = false
 
-  @g.clear()
-  @g.beginFill(0xFFFFFF, 0.5)
-  @g.drawRect(0,0,45,25)
-  @g.endFill()
-
-  backingTex = @g.generateTexture()
+  backingTex = @backBox(45, 25)
   ## Set the correct level button selected
   difficultyButtons = [@menu.children[8], @menu.children[9], @menu.children[10]]
   for b in difficultyButtons
@@ -899,7 +919,7 @@ for c in Color.values()
       h.isLocked = true
 
   ## If on medium, remove a fourth of the goal requirements, rounded down
-  ## Also rotate and lock half of the locked tiles.
+  ## Also rotate and lock half of the locked tiles. (rounded up)
   if @difficulty is @Game.MEDIUM
     removeCount = goalArr.length / 4
     use = true
