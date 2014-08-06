@@ -273,7 +273,7 @@
 
 ### Load assets into cache ###
 @preloadImages = ->
-  assets = ["assets/img/galaxy-28.jpg", "assets/img/helpBackground.png", "assets/img/icon.png",
+  assets = ["assets/img/galaxy-28.jpg", "assets/img/helpBackground.png", "assets/img/icon_v2.png",
             "/assets/img/hex-back.png", "assets/img/core.png",
             "assets/img/spark.png", "assets/img/crystal.png",
             "assets/img/connector_off.png", "assets/img/connector_on.png"]
@@ -606,7 +606,7 @@ for c in Color.values()
   bck = PIXI.Sprite.fromImage("assets/img/galaxy-28.jpg")
   @menu.addChild(bck)
   
-  menuicon = PIXI.Sprite.fromImage("assets/img/icon.png")
+  menuicon = PIXI.Sprite.fromImage("assets/img/icon_v2.png")
   menuicon.scale.x = menuicon.scale.y = 0.5
   @menu.addChild(menuicon)
 
