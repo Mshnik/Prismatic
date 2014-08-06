@@ -3,7 +3,7 @@
 @BOARDNAME = "board16" ## Most recent board loaded. Initial value is default
 @initted  = false       ## True if a full init process has occured. False until then
 @gameOn   = true       ## True if the board should respond to clicks, false otherwise (false when help is up)
-
+@showWinContainer = true 
 
 @init = -> 
   @initStart()
@@ -236,6 +236,19 @@
 
   headerStyle = {font:"bold 15px Futura", fill: "#6E6E6E"}
   contentStyle = {font: "15px Futura", fill: "#6E6E6E"}
+
+  close = new PIXI.Text("X", {font: "bold 20px Sans-Serif", fill: "gray"})
+  close.position.x = 480
+  close.position.y = 5
+  close.interactive = true
+  close.buttonMode = true
+  close.click = ->
+    window.stage.removeChild(window.winContainer)
+    window.winContainer = null
+    window.gameOn = true
+    window.showWinContainer = false ## Don't show when this player wins this map
+    return
+  @winContainer.addChild(close)
 
   title = new PIXI.Text("You Win!", headerStyle)
   title.position.x = 200
@@ -491,7 +504,7 @@ for c in Color.values()
             if curLit[spr.color.toUpperCase()] < parseInt(spr.text.substring(2))
               isWin = false
 
-      if isWin and (not @winContainer?)
+      if isWin and (not @winContainer?) and @showWinContainer
         @gameOn = false
         @makeWinGameContainer()
 
@@ -661,6 +674,7 @@ for c in Color.values()
       window.stage.removeChild(window.winContainer)
     window.winContainer = null
     window.gameOn = true
+    window.showWinContainer = true
     window.clearBoard()
     Board.loadBoard(window.BOARDNAME)
     window.updateMenu()
@@ -705,8 +719,6 @@ for c in Color.values()
 
 ## Updates the menu to the most recent text for level - assumes initted
 @updateMenu = () ->
-  
-
   lvlText = @menu.children[4]
   lvlText.setText(@level + " of 50")
   prevLvl = @menu.children[3]
