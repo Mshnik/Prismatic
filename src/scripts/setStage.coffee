@@ -867,6 +867,7 @@ for c in Color.values()
   ##Make the menu, now that we know what level we're on
   if not @initted
     window.initMenu()
+    @menu.children[7].click()
     @initted = true
 
   ## Create the goal board on the right of the main board
