@@ -1,6 +1,6 @@
 ### Begins init processing ###
 
-@BOARDNAME = "board11" ## Most recent board loaded. Initial value is default
+@BOARDNAME = "board01" ## Most recent board loaded. Initial value is default
 @initted  = false       ## True if a full init process has occured. False until then
 @gameOn   = true       ## True if the board should respond to clicks, false otherwise (false when help is up)
 @showWinContainer = true  ## True if the win container should be shown when the player wins
