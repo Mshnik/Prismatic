@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"helpB",
+				"helpButton"
+			],
+			[
+				"diff",
+				"difficulty"
+			],
+			[
+				"goalCon",
+				"goalContainerIndex"
+			],
+			[
+				"goalConta",
+				"goalContainerIndex"
+			],
+			[
 				"rad",
 				"radTo60Degree"
 			],
@@ -26,10 +42,6 @@
 			[
 				"hel",
 				"helpButton"
-			],
-			[
-				"goalCon",
-				"goalContainer"
 			],
 			[
 				"over",
@@ -502,36 +514,88 @@
 			[
 				"fl",
 				"float_of_number"
-			],
-			[
-				"forma",
-				"formatter"
-			],
-			[
-				"Ring",
-				"RingUtils"
-			],
-			[
-				"appro",
-				"approxRoot2"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/models/board.coffee",
+			"file": "src/scripts/setStage.coffee",
 			"settings":
 			{
-				"buffer_size": 8367,
+				"buffer_size": 38408,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/scripts/setStage.coffee",
+			"file": "src/models/board.coffee",
 			"settings":
 			{
-				"buffer_size": 32906,
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/util/color.coffee",
+			"settings":
+			{
+				"buffer_size": 4550,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/game.coffee",
+			"settings":
+			{
+				"buffer_size": 519,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/crystal.coffee",
+			"settings":
+			{
+				"buffer_size": 2409,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/spark.coffee",
+			"settings":
+			{
+				"buffer_size": 1915,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/hex.coffee",
+			"settings":
+			{
+				"buffer_size": 8869,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/subhex/prism.coffee",
+			"settings":
+			{
+				"buffer_size": 4007,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/models/util/colorCircle.coffee",
+			"settings":
+			{
+				"buffer_size": 3081,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/boards/board11.json",
+			"settings":
+			{
+				"buffer_size": 3203,
 				"line_ending": "Unix"
 			}
 		},
@@ -612,11 +676,12 @@
 	},
 	"file_history":
 	[
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board01.json",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/board.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/setStage.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board09.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board10.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board11.json",
-		"/Users/MPatashnik/Documents/Prismatic/src/models/board.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board08.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board07.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board06.json",
@@ -624,7 +689,6 @@
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board04.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board03.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board02.json",
-		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board01.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/main.css",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/subhex/spark.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/util/color.coffee",
@@ -757,6 +821,17 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"icon_v2.png",
+			"icon_v2",
+			"icon",
+			"assets",
+			"assets/",
+			"\"assets/",
+			"assets/",
+			".click",
+			"initted",
+			"8",
+			"tint",
 			"25",
 			"goalContainer",
 			"menu.png",
@@ -873,18 +948,7 @@
 			"sort",
 			"mk",
 			"mks",
-			"grouped",
-			"getAverageRating",
-			"rating",
-			"getAverage",
-			"averageRating",
-			"rating",
-			"getLike",
-			"getViews",
-			"getRanking",
-			"like",
-			"l",
-			"getL"
+			"grouped"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -892,6 +956,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"@siteprefix + \"assets/",
 			"available",
 			"Course",
 			"getMoreS"
@@ -910,18 +975,18 @@
 			[
 				{
 					"buffer": 0,
-					"file": "src/models/board.coffee",
+					"file": "src/scripts/setStage.coffee",
 					"settings":
 					{
-						"buffer_size": 8367,
+						"buffer_size": 38408,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7068,
-								7068
+								52,
+								52
 							]
 						],
 						"settings":
@@ -931,25 +996,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2974.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/scripts/setStage.coffee",
+					"file": "src/models/board.coffee",
 					"settings":
 					{
-						"buffer_size": 32906,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								17827,
-								17827
+								0,
+								0
 							]
 						],
 						"settings":
@@ -959,7 +1024,229 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 7318.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/models/util/color.coffee",
+					"settings":
+					{
+						"buffer_size": 4550,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								768,
+								768
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1263.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/models/game.coffee",
+					"settings":
+					{
+						"buffer_size": 519,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								207,
+								207
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/models/subhex/crystal.coffee",
+					"settings":
+					{
+						"buffer_size": 2409,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2388,
+								2388
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 225.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/models/subhex/spark.coffee",
+					"settings":
+					{
+						"buffer_size": 1915,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1106,
+								1106
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/models/hex.coffee",
+					"settings":
+					{
+						"buffer_size": 8869,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8156,
+								8156
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2108.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/models/subhex/prism.coffee",
+					"settings":
+					{
+						"buffer_size": 4007,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1805,
+								1805
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 66.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/models/util/colorCircle.coffee",
+					"settings":
+					{
+						"buffer_size": 3081,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2386,
+								2386
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 278.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "assets/boards/board11.json",
+					"settings":
+					{
+						"buffer_size": 3203,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2724,
+								2724
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1423.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -970,7 +1257,7 @@
 			"sheets":
 			[
 				{
-					"buffer": 2,
+					"buffer": 10,
 					"file": "javaSwing/src/models/ColorCircle.java",
 					"settings":
 					{
@@ -998,7 +1285,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 11,
 					"file": "index.html",
 					"settings":
 					{
@@ -1024,7 +1311,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 12,
 					"file": "prismatic.sublime-project",
 					"settings":
 					{

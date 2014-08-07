@@ -407,11 +407,12 @@
     if goalContainer?
       helpGoalHighlight = @helpContainer.children[1]
       helpGoalHighlight.position.y = -@helpContainer.position.y
-      helpGoalHighlight.scale.x = 90*goalContainer.count / 100
-      helpGoalHighlight.position.x = goalContainer.position.x - @helpContainer.position.x - helpGoalHighlight.scale.x * 11 - 20
+      effectiveCount = Math.max(3, goalContainer.count)
+      helpGoalHighlight.scale.x = 90*effectiveCount / 100
+      helpGoalHighlight.position.x = (helpButton.position.x -  90 * effectiveCount) - @helpContainer.position.x - helpGoalHighlight.scale.x * 11 - 20
       helpGoalText = @helpContainer.children[2]
       helpGoalText.position.y = -@helpContainer.position.y + 40
-      helpGoalText.position.x = helpGoalHighlight.position.x + 8 + 9 * goalContainer.count
+      helpGoalText.position.x = helpGoalHighlight.position.x + 8 + 9 * effectiveCount
 
 
 
@@ -943,7 +944,7 @@ for c in Color.values()
       c.lit = color
       i++
   
-  @goalContainer.count = Math.max(i,3)
+  @goalContainer.count = i
   spaceCoef = 5/6
   pushCoef = 1/4
   for c in goalBoard.allHexesOfClass("Crystal")
