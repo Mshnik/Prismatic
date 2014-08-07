@@ -292,7 +292,7 @@
 
 ### Load assets into cache ###
 @preloadImages = ->
-  assets = [@siteprefix + "assets/img/galaxy-28.jpg", @siteprefix + "assets/img/helpBackground.png", @siteprefix + "assets/img/icon_v2.png",
+  assets = [@siteprefix + "assets/img/galaxy-28.jpg", @siteprefix + "assets/img/helpBackground.png", @siteprefix + "assets/img/Icon_v2.png",
             @siteprefix + "assets/img/hex-back.png", @siteprefix +  "assets/img/core.png",
             @siteprefix + "assets/img/spark.png", @siteprefix + "assets/img/crystal.png",
             @siteprefix + "assets/img/connector_off.png", @siteprefix + "assets/img/connector_on.png"]
