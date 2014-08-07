@@ -94,10 +94,16 @@
     cContainer = new PIXI.DisplayObjectContainer()
     cContainer.position.y = menuHeight
 
-    ## Add basic color filter to this colorContainer
+    ## Add basic color filter and pulse to this colorContainer.
+    ## Pulse only animated if this goal is met
     f = new PIXI.ColorMatrixFilter()
     f.matrix = Color.matrixFor(colr)
-    cContainer.filters = [f]
+    pulse = new PIXI.ColorMatrixFilter()
+    pulse.matrix = [1, 0, 0, 0,
+                   0, 1, 0, 0,
+                   0, 0, 1, 0,
+                   0, 0, 0, 1]
+    cContainer.filters = [f, pulse]
     @goalContainer[colr] = cContainer
     @goalContainer.addChild(cContainer)
 
@@ -504,6 +510,23 @@ for c in Color.values()
     m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
     m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75
     pulse.matrix = m
+  for cont in @goalContainer.children
+    if cont.children.length >= 2 and cont.filters.length >= 2
+      pulse = cont.filters[1]
+      correspondCont = @colorContainers[cont.children[0].color.toUpperCase()].lit
+      c = (count + correspondCont.pulseOffset)/correspondCont.pulseLength
+      m = pulse.matrix
+      if parseInt(cont.children[1].text.substring(0, 1)) >= parseInt(cont.children[1].text.substring(2))
+        m[0] = Math.abs(Math.sin(c * 2 * Math.PI)) * 0.5 + 0.5
+        m[5] = Math.abs(Math.sin(c * 2 * Math.PI)) * 0.5 + 0.5
+        m[10] = Math.abs(Math.sin(c * 2 * Math.PI)) * 0.5 + 0.5
+        m[15] = Math.abs(Math.sin(c * 2 * Math.PI)) * 0.25 + 0.75
+      else
+        m[0] = 1
+        m[5] = 1
+        m[10] = 1
+        m[15] = 1
+      pulse.matrix = m
   return
 
 ### Finish initing after assets are loaded ###
