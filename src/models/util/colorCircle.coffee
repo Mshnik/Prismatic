@@ -45,7 +45,7 @@ class @ColorCircle
   getNext : () -> @next
 
   ### Returns the previous link ###
-  getPrevious : () -> @previous
+  getPrevious : () -> @prev
 
   ### Returns the size of this circle ###
   getSize : () -> @size

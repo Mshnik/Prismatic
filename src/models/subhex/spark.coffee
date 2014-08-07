@@ -24,6 +24,13 @@ class @Spark extends Hex
     @update()
     return
 
+  ### Makes this spark use the previous available color. Relights and redraws ###
+  usePreviousColor : () ->
+    @availableColors = @availableColors.getPrevious()
+    @light()
+    @update()
+    return
+
   ### Returns the available colors of this spark. ###
   getAvailableColors : () ->
     @availableColors.toArray()
@@ -51,7 +58,9 @@ class @Spark extends Hex
     return
   
   anticlick : () ->
-    click()
+    @usePreviousColor()
+    @toColor = @getColor()
+    @lightChange = true
     return
 
   ### @Override
