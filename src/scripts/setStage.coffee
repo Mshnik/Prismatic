@@ -6,7 +6,7 @@
 @showWinContainer = true  ## True if the win container should be shown when the player wins
 @difficulty = @Game.MEDIUM  ## Difficulty the player is currently on
 
-@siteprefix = "prismatic/" ## For the git site, routing assets
+@siteprefix = "" ## For the git site, routing assets. prepended onto all asset requests
 
 @init = -> 
   @initStart()
