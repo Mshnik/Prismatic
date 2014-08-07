@@ -702,14 +702,14 @@ for c in Color.values()
     Board.loadBoard(window.BOARDNAME)
     window.updateMenu()
     return
+  resetBack = new PIXI.Sprite(@backBox(50 , 25))
+  resetBack.position.x = -15
+  resetBack.position.y = -11
+  resetButton.addChild(resetBack)  
   resetBorder = new PIXI.Sprite(@borderBox(50 , 25))
   resetBorder.position.x = -15
   resetBorder.position.y = -11
   resetButton.addChild(resetBorder)
-  resetBack = new PIXI.Sprite(@backBox(50 , 25))
-  resetBack.position.x = -15
-  resetBack.position.y = -11
-  resetButton.addChild(resetBack)
   @menu.addChild(resetButton)
 
   helpButton = new PIXI.Text("Help", @menuContentStyle)
@@ -723,14 +723,14 @@ for c in Color.values()
       else
         helpContainer.close()
     return
-  helpBorder = new PIXI.Sprite(@borderBox(45 , 25))
-  helpBorder.position.x = -15
-  helpBorder.position.y = -11
-  helpButton.addChild(helpBorder)
   helpBack = new PIXI.Sprite(@backBox(45 , 25))
   helpBack.position.x = -15
   helpBack.position.y = -11
   helpButton.addChild(helpBack)
+  helpBorder = new PIXI.Sprite(@borderBox(45 , 25))
+  helpBorder.position.x = -15
+  helpBorder.position.y = -11
+  helpButton.addChild(helpBorder)
   @menu.addChild(helpButton)
 
   easyButton = new PIXI.Text("Easy", @menuContentStyle)
@@ -813,14 +813,14 @@ for c in Color.values()
         55
       else
         45
-    prevBorder = new PIXI.Sprite(@borderBox(size , 25))
-    prevBorder.position.x = -15
-    prevBorder.position.y = -11
-    prevLvl.addChild(prevBorder)
     prevBack = new PIXI.Sprite(@backBox(size , 25))
     prevBack.position.x = -15
     prevBack.position.y = -11
     prevLvl.addChild(prevBack)
+    prevBorder = new PIXI.Sprite(@borderBox(size , 25))
+    prevBorder.position.x = -15
+    prevBorder.position.y = -11
+    prevLvl.addChild(prevBorder)
   else
     prevLvl.setText("     ")
     prevLvl.interactive = false
@@ -836,14 +836,14 @@ for c in Color.values()
         55
       else
         45
-    nextBorder = new PIXI.Sprite(@borderBox(size , 25))
-    nextBorder.position.x = -15
-    nextBorder.position.y = -11
-    nextLvl.addChild(nextBorder)
     nextBack = new PIXI.Sprite(@backBox(size , 25))
     nextBack.position.x = -15
     nextBack.position.y = -11
     nextLvl.addChild(nextBack)
+    nextBorder = new PIXI.Sprite(@borderBox(size , 25))
+    nextBorder.position.x = -15
+    nextBorder.position.y = -11
+    nextLvl.addChild(nextBorder)
   else
     nextLvl.setText("     ")
     nextLvl.interactive = false
@@ -905,7 +905,7 @@ for c in Color.values()
       i++
       if i == 6
         console.error("Rotated six times, no match!")
-        break;
+        break
       h.targetRotation = 0
     return
 
@@ -937,9 +937,9 @@ for c in Color.values()
   @BOARD.moves = 0
 
   for i in [1 .. removeCount] by 1
-    r = Math.floor(Math.random() * goalArr.length)
-    window.BOARD[goalArr[r]]--
-    goalArr.splice(r, 1)
+    r = Math.floor(Math.random() * goalArr.length) ## Unused
+    window.BOARD[goalArr[i]]--
+    goalArr.splice(i, 1)
 
   ## Goal board has crystals.
   goalBoard = new Board(colors.length,1)
