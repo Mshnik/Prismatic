@@ -644,7 +644,7 @@ for c in Color.values()
   bck = PIXI.Sprite.fromImage(@siteprefix + "assets/img/galaxy-28.jpg")
   @menu.addChild(bck)
   
-  menuicon = PIXI.Sprite.fromImage(@siteprefix + "assets/img/icon_v2.png")
+  menuicon = PIXI.Sprite.fromImage(@siteprefix + "assets/img/Icon_v2.png")
   menuicon.scale.x = menuicon.scale.y = 0.5
   @menu.addChild(menuicon)
 
