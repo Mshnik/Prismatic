@@ -6,6 +6,8 @@
 @showWinContainer = true  ## True if the win container should be shown when the player wins
 @difficulty = @Game.MEDIUM  ## Difficulty the player is currently on
 
+@siteprefix = "prismatic/" ## For the git site, routing assets
+
 @init = -> 
   @initStart()
 
@@ -141,7 +143,7 @@
   helpContainer.addChild(goalText)
 
   ## Add background as second child  - 500x300 in original size ##
-  helpContainer.addChild(PIXI.Sprite.fromImage("assets/img/helpBackground.png"))
+  helpContainer.addChild(PIXI.Sprite.fromImage(@siteprefix + "assets/img/helpBackground.png"))
   
   close = new PIXI.Text("X", {font: "bold 20px Sans-Serif", fill: "gray"})
   close.position.x = 480
@@ -166,7 +168,7 @@
   topContent.position.y = 40
   helpContainer.addChild(topContent)
 
-  sparkIcon = PIXI.Sprite.fromImage("assets/img/spark.png")
+  sparkIcon = PIXI.Sprite.fromImage(@siteprefix + "assets/img/spark.png")
   sparkIcon.position.x = 50
   sparkIcon.position.y = 95
   sparkIcon.scale.x = 0.25
@@ -183,7 +185,7 @@
   sparksContent.position.y = 100
   helpContainer.addChild(sparksContent)
 
-  prismIcon = PIXI.Sprite.fromImage("assets/img/hex-back.png")
+  prismIcon = PIXI.Sprite.fromImage(@siteprefix + "assets/img/hex-back.png")
   prismIcon.position.x = 50
   prismIcon.position.y = 135
   prismIcon.scale.x = 0.25
@@ -200,7 +202,7 @@
   prismsContent.position.y = 140
   helpContainer.addChild(prismsContent)
 
-  crystalIcon = PIXI.Sprite.fromImage("assets/img/crystal.png")
+  crystalIcon = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
   crystalIcon.position.x = 50
   crystalIcon.position.y = 175
   crystalIcon.scale.x = 0.25
@@ -233,7 +235,7 @@
 ### Makes and adds the win container. Called when the player beats this level ###
 @makeWinGameContainer = ->
   @winContainer = new PIXI.DisplayObjectContainer()
-  @winContainer.addChild(new PIXI.Sprite(new PIXI.Texture(PIXI.BaseTexture.fromImage("assets/img/helpBackground.png"), new PIXI.Rectangle(0,0,500,200))))
+  @winContainer.addChild(new PIXI.Sprite(new PIXI.Texture(PIXI.BaseTexture.fromImage(@siteprefix + "assets/img/helpBackground.png"), new PIXI.Rectangle(0,0,500,200))))
   @winContainer.position.x = 450
   @winContainer.position.y = 250
 
@@ -290,10 +292,10 @@
 
 ### Load assets into cache ###
 @preloadImages = ->
-  assets = ["assets/img/galaxy-28.jpg", "assets/img/helpBackground.png", "assets/img/icon_v2.png",
-            "/assets/img/hex-back.png", "assets/img/core.png",
-            "assets/img/spark.png", "assets/img/crystal.png",
-            "assets/img/connector_off.png", "assets/img/connector_on.png"]
+  assets = [@siteprefix + "assets/img/galaxy-28.jpg", @siteprefix + "assets/img/helpBackground.png", @siteprefix + "assets/img/icon_v2.png",
+            @siteprefix + "assets/img/hex-back.png", @siteprefix +  "assets/img/core.png",
+            @siteprefix + "assets/img/spark.png", @siteprefix + "assets/img/crystal.png",
+            @siteprefix + "assets/img/connector_off.png", @siteprefix + "assets/img/connector_on.png"]
   loader = new PIXI.AssetLoader(assets)
   loader.onComplete = @initFinish
   loader.load()
@@ -551,19 +553,19 @@ for c in Color.values()
             c = h.colorOfSide(connector.side)
             n = nS[connector.side]
             if n? and c in hLit and n.colorOfSide(n.indexLinked(h)) is c and not connector.linked
-              connector.texture = PIXI.Texture.fromImage("assets/img/connector_on.png")
+              connector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_on.png")
               @toLit(connector)
               for nConnector in n.colorPanels
                 if nConnector.side is n.indexLinked(h) and not nConnector.linked
-                  nConnector.texture = PIXI.Texture.fromImage("assets/img/connector_on.png")
+                  nConnector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_on.png")
                   @toLit(nConnector)
             else if connector.linked and (c not in hLit or n? and n.colorOfSide(n.indexLinked(h)) isnt c)
-              connector.texture = PIXI.Texture.fromImage("assets/img/connector_off.png")
+              connector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_off.png")
               @toUnlit(connector)
               if n?
                 for nConnector in n.colorPanels
                   if nConnector.side is n.indexLinked(h) and nConnector.linked
-                    nConnector.texture = PIXI.Texture.fromImage("assets/img/connector_off.png")
+                    nConnector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_off.png")
                     @toUnlit(nConnector)
 
         ### Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
@@ -639,10 +641,10 @@ for c in Color.values()
 ###
 @initMenu = () ->
   ## Create the background itself
-  bck = PIXI.Sprite.fromImage("assets/img/galaxy-28.jpg")
+  bck = PIXI.Sprite.fromImage(@siteprefix + "assets/img/galaxy-28.jpg")
   @menu.addChild(bck)
   
-  menuicon = PIXI.Sprite.fromImage("assets/img/icon_v2.png")
+  menuicon = PIXI.Sprite.fromImage(@siteprefix + "assets/img/icon_v2.png")
   menuicon.scale.x = menuicon.scale.y = 0.5
   @menu.addChild(menuicon)
 
@@ -803,8 +805,7 @@ for c in Color.values()
   lvlText.setText(@level + " of 50")
   prevLvl = @menu.children[3]
   if prevLvl.children.length > 0
-    prevLvl.removeChild(prevLvl.getChildAt(0))  ## Get rid of the old boxes (remove 0 index twice)
-    prevLvl.removeChild(prevLvl.getChildAt(0))
+    prevLvl.removeChild(prevLvl.getChildAt(0))  ## Get rid of the old boxes
   if @level > 1
     prevLvl.setText("<< " + (@level - 1))
     prevLvl.interactive = true
@@ -813,10 +814,6 @@ for c in Color.values()
         55
       else
         45
-    prevBack = new PIXI.Sprite(@backBox(size , 25))
-    prevBack.position.x = -15
-    prevBack.position.y = -11
-    prevLvl.addChild(prevBack)
     prevBorder = new PIXI.Sprite(@borderBox(size , 25))
     prevBorder.position.x = -15
     prevBorder.position.y = -11
@@ -826,8 +823,7 @@ for c in Color.values()
     prevLvl.interactive = false
   nextLvl = @menu.children[5]
   if nextLvl.children.length > 0
-    nextLvl.removeChild(nextLvl.getChildAt(0))   ## Get rid of the old boxes (remove 0 index twice)
-    nextLvl.removeChild(nextLvl.getChildAt(0))
+    nextLvl.removeChild(nextLvl.getChildAt(0))   ## Get rid of the old boxes
   if @level < 50
     nextLvl.setText((@level + 1) + " >>")
     nextLvl.interactive = true
@@ -836,10 +832,6 @@ for c in Color.values()
         55
       else
         45
-    nextBack = new PIXI.Sprite(@backBox(size , 25))
-    nextBack.position.x = -15
-    nextBack.position.y = -11
-    nextLvl.addChild(nextBack)
     nextBorder = new PIXI.Sprite(@borderBox(size , 25))
     nextBorder.position.x = -15
     nextBorder.position.y = -11
@@ -956,7 +948,7 @@ for c in Color.values()
   pushCoef = 1/4
   for c in goalBoard.allHexesOfClass("Crystal")
     ## Create sprites for crystal
-    spr = PIXI.Sprite.fromImage("assets/img/crystal.png")
+    spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
     spr.lit = false
     spr.color = c.lit
     spr.hex = c
@@ -1021,11 +1013,11 @@ for c in Color.values()
 
     ## Create hex and add to panel
     if hex instanceof Prism
-      spr = PIXI.Sprite.fromImage("assets/img/hex-back.png")
+      spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/hex-back.png")
     else if hex instanceof Crystal
-      spr = PIXI.Sprite.fromImage("assets/img/crystal.png")
+      spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
     else if hex instanceof Spark
-      spr = PIXI.Sprite.fromImage("assets/img/spark.png")
+      spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/spark.png")
     spr.lit = false ## Initially unlit
     spr.anchor.x = 0.5
     spr.anchor.y = 0.5
@@ -1047,7 +1039,7 @@ for c in Color.values()
           c = c.toUpperCase()
         point = new PIXI.Point(coreRad * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + radTo60Degree/2 + cumulative[i]), 
                                coreRad * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + radTo60Degree/2 + cumulative[i]))
-        cr = PIXI.Sprite.fromImage("assets/img/connector_off.png")
+        cr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector_off.png")
         cr.linked = false
         cr.anchor.x = 0.5
         cr.anchor.y = 0.8
@@ -1078,7 +1070,7 @@ for c in Color.values()
               Color.asString(col).toUpperCase()
             else
               col.toUpperCase()
-          core = PIXI.Sprite.fromImage("assets/img/core.png")
+          core = PIXI.Sprite.fromImage(@siteprefix + "assets/img/core.png")
           core.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (7/16)
           core.position.y = hex.loc.row * @hexRad + @hexRad * (7/16) - 0.5
           core.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
