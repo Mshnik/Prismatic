@@ -214,11 +214,9 @@ class @Board
       s = s + "\n"
     return s
 
-  @boardSitePrefix = ""
-
   ### Loads the given board from JSON text. Takes the name of the board (no file extension) as arg ###
   @loadBoard = (name) ->
-    file = @boardSitePrefix + "assets/boards/" + name + ".json"
+    file = window.siteprefix + "assets/boards/" + name + ".json"
     window.level = parseInt(name.substring(5))  ## Sets the level to the 2 characters at the end of the json file
     $.getJSON(file, 
       (content) ->
