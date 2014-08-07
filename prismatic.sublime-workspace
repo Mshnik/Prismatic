@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"effe",
+				"effectiveCount"
+			],
+			[
+				"goalC",
+				"goalContainer"
+			],
+			[
 				"helpB",
 				"helpButton"
 			],
@@ -506,14 +514,6 @@
 			[
 				"Field",
 				"FieldOfFractionsType"
-			],
-			[
-				"pol",
-				"polygon"
-			],
-			[
-				"fl",
-				"float_of_number"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "src/scripts/setStage.coffee",
 			"settings":
 			{
-				"buffer_size": 38408,
+				"buffer_size": 38464,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,7 +531,7 @@
 			"file": "src/models/board.coffee",
 			"settings":
 			{
-				"buffer_size": 0,
+				"buffer_size": 8142,
 				"line_ending": "Unix"
 			}
 		},
@@ -603,7 +603,7 @@
 			"file": "javaSwing/src/models/ColorCircle.java",
 			"settings":
 			{
-				"buffer_size": 4678,
+				"buffer_size": 5246,
 				"line_ending": "Unix"
 			}
 		},
@@ -970,7 +970,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -978,15 +978,15 @@
 					"file": "src/scripts/setStage.coffee",
 					"settings":
 					{
-						"buffer_size": 38408,
+						"buffer_size": 38464,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								52,
-								52
+								15124,
+								15124
 							]
 						],
 						"settings":
@@ -996,7 +996,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 5506.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1006,7 +1006,7 @@
 					"file": "src/models/board.coffee",
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 8142,
 						"regions":
 						{
 						},
@@ -1261,7 +1261,7 @@
 					"file": "javaSwing/src/models/ColorCircle.java",
 					"settings":
 					{
-						"buffer_size": 4678,
+						"buffer_size": 5246,
 						"regions":
 						{
 						},

@@ -143,7 +143,9 @@
   helpContainer.addChild(goalText)
 
   ## Add background as second child  - 500x300 in original size ##
-  helpContainer.addChild(PIXI.Sprite.fromImage(@siteprefix + "assets/img/helpBackground.png"))
+  backr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/helpBackground.png")
+  backr.height = 365
+  helpContainer.addChild(backr)
   
   close = new PIXI.Text("X", {font: "bold 20px Sans-Serif", fill: "gray"})
   close.position.x = 480
@@ -163,14 +165,14 @@
   title.position.y = 10
   helpContainer.addChild(title)
 
-  topContent = new PIXI.Text("Prismatic is a light-based color game. Get the right \nnumber of Crystals to light up for each color.", contentStyle)
+  topContent = new PIXI.Text("Prismatic is a light-bending puzzle game. Light up Crystals \nby sending light from sparks through prisms.", contentStyle)
   topContent.position.x = 20
   topContent.position.y = 40
   helpContainer.addChild(topContent)
 
   sparkIcon = PIXI.Sprite.fromImage(@siteprefix + "assets/img/spark.png")
   sparkIcon.position.x = 50
-  sparkIcon.position.y = 95
+  sparkIcon.position.y = 98
   sparkIcon.scale.x = 0.25
   sparkIcon.scale.y = 0.25
   helpContainer.addChild(sparkIcon)
@@ -187,7 +189,7 @@
 
   prismIcon = PIXI.Sprite.fromImage(@siteprefix + "assets/img/hex-back.png")
   prismIcon.position.x = 50
-  prismIcon.position.y = 135
+  prismIcon.position.y = 155
   prismIcon.scale.x = 0.25
   prismIcon.scale.y = 0.25
   helpContainer.addChild(prismIcon)
@@ -197,36 +199,38 @@
   prismsHeader.position.y = 140
   helpContainer.addChild(prismsHeader)
 
-  prismsContent = new PIXI.Text(" - the basic piece. They channel light and rotate.", contentStyle)
-  prismsContent.position.x = 150
+  prismsContent = new PIXI.Text("           - the basic piece. They channel light and rotate.\n" +
+                                "Prisms outlined in yellow are locked in place.\nThey are locked for a reason.", contentStyle)
+  prismsContent.position.x = 100
   prismsContent.position.y = 140
   helpContainer.addChild(prismsContent)
 
   crystalIcon = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
   crystalIcon.position.x = 50
-  crystalIcon.position.y = 175
+  crystalIcon.position.y = 218
   crystalIcon.scale.x = 0.25
   crystalIcon.scale.y = 0.25
   helpContainer.addChild(crystalIcon)
 
   crystalsHeader = new PIXI.Text("Crystals", headerStyle)
   crystalsHeader.position.x = 100
-  crystalsHeader.position.y = 180
+  crystalsHeader.position.y = 220
   helpContainer.addChild(crystalsHeader)
 
-  crystalsContent = new PIXI.Text(" - the end goal. They recieve light.", contentStyle)
-  crystalsContent.position.x = 160
-  crystalsContent.position.y = 180
+  crystalsContent = new PIXI.Text("              - the end goal. They recieve light.\n" + 
+                                  "Light the crystals the given combination of colors \nto progress to the next level.", contentStyle)
+  crystalsContent.position.x = 100
+  crystalsContent.position.y = 220
   helpContainer.addChild(crystalsContent)
 
   bottomContent = new PIXI.Text("> Click on Sparks to change their color. \n> Click on Prisms to rotate their alignment.", contentStyle)
   bottomContent.position.x = 20
-  bottomContent.position.y = 230
+  bottomContent.position.y = 295
   helpContainer.addChild(bottomContent)
 
   tagText = new PIXI.Text("created by Michael Patashnik - Mgpshnik@gmail.com", {font: "italic 10px Sans-Serif", fill: "gray"})
   tagText.position.x = 120
-  tagText.position.y = 275
+  tagText.position.y = 342
   helpContainer.addChild(tagText)
 
   @resize()
@@ -395,8 +399,8 @@
 
   ## Fix the help menu. resize the back opacity layer, reposition the rest
   if @helpContainer?
-    helpWidth = @helpContainer.children[3].getLocalBounds().width
-    helpHeight = @helpContainer.children[3].getLocalBounds().height
+    helpWidth = @helpContainer.children[3].getLocalBounds().width * @helpContainer.children[3].scale.x
+    helpHeight = @helpContainer.children[3].getLocalBounds().height * @helpContainer.children[3].scale.y
     @helpContainer.position.x = (window.innerWidth - helpWidth) / 2
     @helpContainer.position.y = (window.innerHeight - menuHeight - helpHeight) / 2 + menuHeight
     helpBack = @helpContainer.children[0]

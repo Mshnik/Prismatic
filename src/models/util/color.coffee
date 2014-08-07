@@ -61,7 +61,7 @@ class @Color
     col for i in [0 ... (length - 1)] by 1
 
 
-  ### Returns a hex value for a color ###
+  ### Returns a hex value for a color. Unused for the time being ###
   @hexValueFor : (color) ->
     c = 
       if isNaN(color)
@@ -98,8 +98,8 @@ class @Color
     switch c
       when @RED
         return [1, 0, 0, 0,
-                0, (84/255), 0, 0,
-                0, 0, (84/255), 0,
+                0, (51/255), 0, 0,
+                0, 0, (51/255), 0,
                 0, 0, 0, 1]
       when @BLUE
         return [(25/255), 0, 0, 0,
@@ -112,8 +112,8 @@ class @Color
                 0, 0, (63/255), 0,
                 0, 0, 0, 1]
       when @ORANGE
-        return [0.7, 0, 0, 0,
-                0, 0.4, 0, 0,
+        return [0.9, 0, 0, 0,
+                0, 0.5, 0, 0,
                 0, 0, 0.2, 0,
                 0, 0, 0, 1]
       when @PURPLE
@@ -123,13 +123,13 @@ class @Color
                 0, 0, 0, 1]
       when @CYAN
         return [0.2, 0, 0, 0,
-                0, 0.7, 0, 0,
+                0, 1, 0, 0,
                 0, 0, 0.7, 0,
                 0, 0, 0, 1]
       when @YELLOW
         return [0.7, 0, 0, 0,
                 0, 0.2, 0, 0,
-                0, 0, 0.7, 0,
+                0, 0, 1, 0,
                 0, 0, 0, 1]
       when @PINK
         return [1, 0, 0, 0,
