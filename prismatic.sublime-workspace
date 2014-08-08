@@ -523,7 +523,7 @@
 			"file": "src/scripts/setStage.coffee",
 			"settings":
 			{
-				"buffer_size": 38464,
+				"buffer_size": 39849,
 				"line_ending": "Unix"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "src/models/util/color.coffee",
 			"settings":
 			{
-				"buffer_size": 4550,
+				"buffer_size": 4573,
 				"line_ending": "Unix"
 			}
 		},
@@ -560,10 +560,13 @@
 			}
 		},
 		{
+			"contents": "##= require ./hex\n\nclass @Spark extends Hex\n\n  ### Constructs a Spark and puts it into board b\n     @param b - the board this spark belongs to\n     @param l - the location of this spark in (row, col) in the board\n     @param colors - the colors of this spark, in clockwise order starting with the top. Can be null, then set later.\n     @throws IllegalArgumentException - if there is already hex at row,col, or row,col is OOB, or if colors is nonnull and length == 0.\n  ###\n  constructor : (board, loc, colors) ->\n    super(board, loc)\n    @setAvailableColors(colors)\n    @toColor = \"\"       ## Color to change this to on next redraw. Empty if current color is ok\n\n  ### Returns the current color of this spark ###\n  getColor : () ->\n    @availableColors.getColor()\n\n  ### Makes this spark use the next available color. Relights and redraws ###\n  useNextColor : () ->\n    @availableColors = @availableColors.getNext()\n    @light()\n    @update()\n    return\n\n  ### Makes this spark use the previous available color. Relights and redraws ###\n  usePreviousColor : () ->\n    @availableColors = @availableColors.getPrevious()\n    @light()\n    @update()\n    return\n\n  ### Returns the available colors of this spark. ###\n  getAvailableColors : () ->\n    @availableColors.toArray()\n\n  ###Allows setting the ColorCircle\n  ###\n  setAvailableColors : (colors) ->\n\n    @availableColors = ColorCircle.fromArray(colors);\n    return\n  \n  ### @Override\n      Sparks always find light because they always light themselves. No setting of fields neccesary ###\n  light : () ->\n    @stopProvidingLight()\n    @provideLight()\n    return\n  \n  ### @Override\n      Default behavior for a spark is to switch to the next available color ###\n  click : () ->\n    @useNextColor()\n    @toColor = @getColor()\n    @lightChange = true\n    return\n  \n  anticlick : () ->\n    @usePreviousColor()\n    @toColor = @getColor()\n    @lightChange = true\n    return\n\n  ### @Override\n      Overrides Hex isLit() because Sparks are always lit ###\n  isLit : () ->\n    l = []\n    l.push(@getColor());\n    return l\n\n  ### @Override\n      Overrides Hex colorOfSide(), all color of lit ###\n  colorOfSide : (n) ->\n    return @getColor()",
 			"file": "src/models/subhex/spark.coffee",
+			"file_size": 2180,
+			"file_write_time": 1407453129000000,
 			"settings":
 			{
-				"buffer_size": 1915,
+				"buffer_size": 2180,
 				"line_ending": "Unix"
 			}
 		},
@@ -587,7 +590,7 @@
 			"file": "src/models/util/colorCircle.coffee",
 			"settings":
 			{
-				"buffer_size": 3081,
+				"buffer_size": 3077,
 				"line_ending": "Unix"
 			}
 		},
@@ -821,6 +824,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"goalContainer",
 			"icon_v2.png",
 			"icon_v2",
 			"icon",
@@ -947,8 +951,7 @@
 			"getVisible",
 			"sort",
 			"mk",
-			"mks",
-			"grouped"
+			"mks"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -970,7 +973,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 8,
 			"sheets":
 			[
 				{
@@ -978,15 +981,15 @@
 					"file": "src/scripts/setStage.coffee",
 					"settings":
 					{
-						"buffer_size": 38464,
+						"buffer_size": 39849,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								15124,
-								15124
+								38994,
+								38994
 							]
 						],
 						"settings":
@@ -996,7 +999,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5506.0,
+						"translation.y": 16489.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1034,15 +1037,15 @@
 					"file": "src/models/util/color.coffee",
 					"settings":
 					{
-						"buffer_size": 4550,
+						"buffer_size": 4573,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								768,
-								768
+								3214,
+								3214
 							]
 						],
 						"settings":
@@ -1051,8 +1054,8 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 1263.0,
+						"translation.x": 4.0,
+						"translation.y": 1312.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1118,15 +1121,15 @@
 					"file": "src/models/subhex/spark.coffee",
 					"settings":
 					{
-						"buffer_size": 1915,
+						"buffer_size": 2180,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1106,
-								1106
+								1156,
+								1156
 							]
 						],
 						"settings":
@@ -1136,7 +1139,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 143.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1202,15 +1205,15 @@
 					"file": "src/models/util/colorCircle.coffee",
 					"settings":
 					{
-						"buffer_size": 3081,
+						"buffer_size": 3077,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2386,
-								2386
+								1800,
+								1800
 							]
 						],
 						"settings":
@@ -1220,7 +1223,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 278.0,
+						"translation.y": 194.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

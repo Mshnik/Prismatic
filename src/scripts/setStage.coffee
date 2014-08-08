@@ -43,12 +43,15 @@
   offset = 0
   ## Containers for elements to be colored. Two layers per color - lit and unlit 
   @colorContainers = {}
+  ##The ordering of the colorContainers on the stage. Earlier = added earlier
+  @colorContainersArr = []
   for c in Color.values()
     colr = c
     if(not isNaN(colr))
       colr = Color.asString(colr)
     cContainer = new PIXI.DisplayObjectContainer()
     cContainer.position.y = menuHeight
+    cContainer.color = colr
 
     ## Add basic color filter to this colorContainer
     f = new PIXI.ColorMatrixFilter()
@@ -80,8 +83,10 @@
     offset += 70
     cContainer.lit.filters = [pulse]
 
+    ##Set the index of this colorContainer
     @stage.addChild(cContainer)
     @colorContainers[colr] = cContainer
+    @colorContainersArr.push(cContainer)
 
   ## Containers for goal elements. Only one layer per color - lit
   @goalContainer = new PIXI.DisplayObjectContainer()
@@ -556,6 +561,19 @@ for c in Color.values()
         @gameOn = false
         @makeWinGameContainer()
 
+      ##Every so often, rotate the color container orders
+      if window.count %% 250 is 0
+        contain = @colorContainersArr[0]
+        @colorContainersArr = @colorContainersArr.splice(1, @colorContainersArr.length - 1)
+        for a in @colorContainersArr
+          console.log(a.color)
+        @stage.removeChild(contain)
+        @colorContainersArr.push(contain)
+        for a in @colorContainersArr
+          console.log(a.color)
+        @stage.addChild(contain)
+      
+
       for h in @BOARD.allHexes()
         ##Update lighting of all hexes
         if h.isLit().length > 0 and not h.backPanel.children[0].lit
@@ -569,6 +587,7 @@ for c in Color.values()
 
         hLit = h.isLit()
         if h instanceof Prism
+          ## Adjust opacity of cores
           for col, core of h.cores
             if col.toLowerCase() not in hLit and core.alpha > 0
               core.alpha = 0
