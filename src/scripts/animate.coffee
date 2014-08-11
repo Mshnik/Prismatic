@@ -137,26 +137,27 @@ for c in Color.values()
               core.alpha = 0.75
 
         nS = h.getNeighborsWithBlanks()
-        for col, panel of h.colorPanels
+        for panel in h.colorPanels
+          col = panel.color.toLowerCase()
           for connector in panel.children
-            c = h.colorOfSide(connector.side)
-            n = nS[connector.side]
-            
-            # if n? and c in hLit and n.colorOfSide(n.indexLinked(h)) is c and not connector.linked
-            #   connector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_on.png")
-            #   @toLit(connector)
-            #   for nConnector in n.colorPanels
-            #     if nConnector.side is n.indexLinked(h) and not nConnector.linked
-            #       nConnector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_on.png")
-            #       @toLit(nConnector)
-            # else if connector.linked and (c not in hLit or n? and n.colorOfSide(n.indexLinked(h)) isnt c)
-            #   connector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_off.png")
-            #   @toUnlit(connector)
-            #   if n?
-            #     for nConnector in n.colorPanels
-            #       if nConnector.side is n.indexLinked(h) and nConnector.linked
-            #         nConnector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_off.png")
-            #         @toUnlit(nConnector)
+            for side in connector.sides
+              n = nS[side]
+
+              if n? and col in hLit and n.colorOfSide(n.indexLinked(h)) is col and not connector.linked
+                @toLit(connector)
+                for nPanel in n.colorPanels
+                  for nConnector in nPanel.children
+                    for nSide in nConnector.sides
+                      if nSide is n.indexLinked(h) and not nConnector.linked
+                        @toLit(nConnector)
+              else if connector.linked and col not in hLit
+                @toUnlit(connector)
+                if n?
+                  for nPanel in n.colorPanels
+                    for nConnector in nPanel.children
+                      for nSide in nConnector.sides
+                        if nSide is n.indexLinked(h) and not nConnector.linked
+                          @toUnlit(nConnector)
 
         ### Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
             If this is the first notification that this prism wants to rotate, stops providing light.
@@ -174,19 +175,18 @@ for c in Color.values()
           h.currentRotation += inc 
           for value in h.colorPanels
             value.rotation += inc * radTo60Degree
-          for col, core of h.cores
-            core.currentRotation += inc
           if Math.abs(h.targetRotation - h.currentRotation) < tolerance
             inc = (h.targetRotation - h.currentRotation)
             h.backPanel.rotation += inc * radTo60Degree
             h.currentRotation += inc
-            for col, core of h.cores
-              core.currentRotation += inc
             for value in h.colorPanels
               value.rotation += inc * radTo60Degree
               ## Update side index of each sprite
               for spr in value.children
-                spr.side = (spr.side + (h.currentRotation - h.prevRotation)) %% Hex.SIDES
+                newSides = []
+                for side in spr.sides
+                  newSides.push((side + (h.currentRotation - h.prevRotation)) %% Hex.SIDES)
+                spr.sides = newSides
             h.prevRotation = h.currentRotation
             h.canLight = true
             h.light()

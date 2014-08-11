@@ -205,6 +205,7 @@
               indices.push(i)
           if indices.length == 1
             con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-none.png")
+            con.sides = [indices[0]]
             fixAndRotateConnector(con, indices[0], c, cpanel)
           else
             ##Create pair wise combinations of indices as a 2 digit number, greater number first
@@ -237,6 +238,7 @@
                 when 5
                   con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-adjacent.png")
                   theSide = sideOne
+              con.sides = [sideOne, sideTwo]
               fixAndRotateConnector(con, theSide, c, cpanel)
 
           ## Add to unlit (for now)
