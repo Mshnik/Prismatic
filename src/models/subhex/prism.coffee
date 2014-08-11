@@ -56,8 +56,12 @@ class @Prism extends Hex
 
   ### Returns the number of sides of this that are the specified color ###
   colorCount : (c) ->
+    if not isNaN(c)
+      c = Color.asString(c).toLowerCase()
+    else
+      c = c.toLowerCase()
     count = 0
-    for col in colorArray()
+    for col in @colorArray()
       if c is col
         count++
       else
