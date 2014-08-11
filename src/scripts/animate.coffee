@@ -102,20 +102,7 @@ for c in Color.values()
       if isWin and (not @winContainer?) and @showWinContainer
         @gameOn = false
         @makeWinGameContainer()
-
-      ##Every so often, rotate the color container orders - TODO
-      # if window.count %% 250 is 0
-      #   contain = @colorContainersArr[0]
-      #   @colorContainersArr = @colorContainersArr.splice(1, @colorContainersArr.length - 1)
-      #   for a in @colorContainersArr
-      #     console.log(a.color)
-      #   @stage.removeChild(contain)
-      #   @colorContainersArr.push(contain)
-      #   for a in @colorContainersArr
-      #     console.log(a.color)
-      #   @stage.addChild(contain)
       
-
       for h in @BOARD.allHexes()
         ##Update lighting of all hexes
         if h.isLit().length > 0 and not h.backPanel.children[0].lit
