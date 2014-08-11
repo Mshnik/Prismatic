@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"colorContainers",
+				"colorContainersArr"
+			],
+			[
+				"colorCon",
+				"colorContainersArr"
+			],
+			[
+				"colrCon",
+				"colorContainer"
+			],
+			[
 				"effe",
 				"effectiveCount"
 			],
@@ -502,130 +514,11 @@
 			[
 				"OrderedRing",
 				"OrderedRingUtils"
-			],
-			[
-				"floa",
-				"float_of_number"
-			],
-			[
-				"is",
-				"is_non_neg"
-			],
-			[
-				"Field",
-				"FieldOfFractionsType"
 			]
 		]
 	},
 	"buffers":
 	[
-		{
-			"file": "src/scripts/setStage.coffee",
-			"settings":
-			{
-				"buffer_size": 39849,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/board.coffee",
-			"settings":
-			{
-				"buffer_size": 8142,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/util/color.coffee",
-			"settings":
-			{
-				"buffer_size": 4573,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/game.coffee",
-			"settings":
-			{
-				"buffer_size": 519,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/subhex/crystal.coffee",
-			"settings":
-			{
-				"buffer_size": 2409,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "##= require ./hex\n\nclass @Spark extends Hex\n\n  ### Constructs a Spark and puts it into board b\n     @param b - the board this spark belongs to\n     @param l - the location of this spark in (row, col) in the board\n     @param colors - the colors of this spark, in clockwise order starting with the top. Can be null, then set later.\n     @throws IllegalArgumentException - if there is already hex at row,col, or row,col is OOB, or if colors is nonnull and length == 0.\n  ###\n  constructor : (board, loc, colors) ->\n    super(board, loc)\n    @setAvailableColors(colors)\n    @toColor = \"\"       ## Color to change this to on next redraw. Empty if current color is ok\n\n  ### Returns the current color of this spark ###\n  getColor : () ->\n    @availableColors.getColor()\n\n  ### Makes this spark use the next available color. Relights and redraws ###\n  useNextColor : () ->\n    @availableColors = @availableColors.getNext()\n    @light()\n    @update()\n    return\n\n  ### Makes this spark use the previous available color. Relights and redraws ###\n  usePreviousColor : () ->\n    @availableColors = @availableColors.getPrevious()\n    @light()\n    @update()\n    return\n\n  ### Returns the available colors of this spark. ###\n  getAvailableColors : () ->\n    @availableColors.toArray()\n\n  ###Allows setting the ColorCircle\n  ###\n  setAvailableColors : (colors) ->\n\n    @availableColors = ColorCircle.fromArray(colors);\n    return\n  \n  ### @Override\n      Sparks always find light because they always light themselves. No setting of fields neccesary ###\n  light : () ->\n    @stopProvidingLight()\n    @provideLight()\n    return\n  \n  ### @Override\n      Default behavior for a spark is to switch to the next available color ###\n  click : () ->\n    @useNextColor()\n    @toColor = @getColor()\n    @lightChange = true\n    return\n  \n  anticlick : () ->\n    @usePreviousColor()\n    @toColor = @getColor()\n    @lightChange = true\n    return\n\n  ### @Override\n      Overrides Hex isLit() because Sparks are always lit ###\n  isLit : () ->\n    l = []\n    l.push(@getColor());\n    return l\n\n  ### @Override\n      Overrides Hex colorOfSide(), all color of lit ###\n  colorOfSide : (n) ->\n    return @getColor()",
-			"file": "src/models/subhex/spark.coffee",
-			"file_size": 2180,
-			"file_write_time": 1407453129000000,
-			"settings":
-			{
-				"buffer_size": 2180,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/hex.coffee",
-			"settings":
-			{
-				"buffer_size": 8869,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/subhex/prism.coffee",
-			"settings":
-			{
-				"buffer_size": 4007,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/models/util/colorCircle.coffee",
-			"settings":
-			{
-				"buffer_size": 3077,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "assets/boards/board11.json",
-			"settings":
-			{
-				"buffer_size": 3203,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "javaSwing/src/models/ColorCircle.java",
-			"settings":
-			{
-				"buffer_size": 5246,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "index.html",
-			"settings":
-			{
-				"buffer_size": 427,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "prismatic.sublime-project",
-			"settings":
-			{
-				"buffer_size": 167,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "Packages/Better CoffeeScript/CoffeeScript.sublime-build",
 	"command_palette":
@@ -679,12 +572,29 @@
 	},
 	"file_history":
 	[
-		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board01.json",
+		"/Users/MPatashnik/Documents/Prismatic/index.html",
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/animate.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/utils.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/helpWindow.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/winWindow.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/menu.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/init.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/boardManager.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/prismatic.sublime-project",
+		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board11.json",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/subhex/prism.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/hex.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/subhex/spark.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/subhex/crystal.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/game.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/util/color.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/board.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/setStage.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/util/colorCircle.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board01.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board09.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board10.json",
-		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board11.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board08.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board07.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board06.json",
@@ -693,8 +603,6 @@
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board03.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board02.json",
 		"/Users/MPatashnik/Documents/Prismatic/assets/main.css",
-		"/Users/MPatashnik/Documents/Prismatic/src/models/subhex/spark.coffee",
-		"/Users/MPatashnik/Documents/Prismatic/src/models/util/color.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/boards/board1.json",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/assets/main.css",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/models/subhex/spark.coffee",
@@ -744,7 +652,6 @@
 		"/Users/MPatashnik/Documents/Prismatic/webGL/lib/beans.js",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/watchCoffee.sh",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/brewCoffee.sh",
-		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/game/Game.java",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/spark.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/webGL/src/color.coffee",
@@ -792,21 +699,7 @@
 		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/project/Build.scala",
 		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/project/build.properties",
 		"/Users/MPatashnik/Documents/Originate/training-website/build.sbt",
-		"/Users/MPatashnik/.sbt/0.13/plugins/gpg.sbt",
-		"/Users/MPatashnik/Documents/Originate/training-website/project/build.properties",
-		"/Users/MPatashnik/.sbt/0.13/plugins/plugins.sbt",
-		"/Users/MPatashnik/Documents/Originate/training-website/project/plugins.sbt",
-		"/Users/MPatashnik/Desktop/plugins.sbt",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/views/audition.scss",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_auditions.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.campaign_auditions.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.submission_manage.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.submission.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.campaign_schedule.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.campaign_manage.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/javascript/admin/ctrl.story_editor.js",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/views/admin/campaigns/_schedule.scala.html",
-		"/Users/MPatashnik/Documents/Originate/CreateIt/app/assets/stylesheet/admin/views/campaign.scss"
+		"/Users/MPatashnik/.sbt/0.13/plugins/gpg.sbt"
 	],
 	"find":
 	{
@@ -824,6 +717,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"colorContainers",
+			"core",
 			"goalContainer",
 			"icon_v2.png",
 			"icon_v2",
@@ -949,9 +844,7 @@
 			"getActivity",
 			"getVote",
 			"getVisible",
-			"sort",
-			"mk",
-			"mks"
+			"sort"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -973,374 +866,13 @@
 	"groups":
 	[
 		{
-			"selected": 8,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "src/scripts/setStage.coffee",
-					"settings":
-					{
-						"buffer_size": 39849,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								38994,
-								38994
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 16489.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/models/board.coffee",
-					"settings":
-					{
-						"buffer_size": 8142,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/models/util/color.coffee",
-					"settings":
-					{
-						"buffer_size": 4573,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3214,
-								3214
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 4.0,
-						"translation.y": 1312.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/models/game.coffee",
-					"settings":
-					{
-						"buffer_size": 519,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								207,
-								207
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/models/subhex/crystal.coffee",
-					"settings":
-					{
-						"buffer_size": 2409,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2388,
-								2388
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 225.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/models/subhex/spark.coffee",
-					"settings":
-					{
-						"buffer_size": 2180,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1156,
-								1156
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 143.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/models/hex.coffee",
-					"settings":
-					{
-						"buffer_size": 8869,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8156,
-								8156
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2108.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "src/models/subhex/prism.coffee",
-					"settings":
-					{
-						"buffer_size": 4007,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1805,
-								1805
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 66.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "src/models/util/colorCircle.coffee",
-					"settings":
-					{
-						"buffer_size": 3077,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1800,
-								1800
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 194.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "assets/boards/board11.json",
-					"settings":
-					{
-						"buffer_size": 3203,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2724,
-								2724
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1423.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		},
 		{
 			"sheets":
 			[
-				{
-					"buffer": 10,
-					"file": "javaSwing/src/models/ColorCircle.java",
-					"settings":
-					{
-						"buffer_size": 5246,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Java/Java.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 859.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "index.html",
-					"settings":
-					{
-						"buffer_size": 427,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "prismatic.sublime-project",
-					"settings":
-					{
-						"buffer_size": 167,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								154,
-								154
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -1372,7 +904,7 @@
 		"cols":
 		[
 			0.0,
-			0.726556353265,
+			0.513239427823,
 			1.0
 		],
 		"rows":

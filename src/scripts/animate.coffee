@@ -141,21 +141,22 @@ for c in Color.values()
           for connector in panel.children
             c = h.colorOfSide(connector.side)
             n = nS[connector.side]
-            if n? and c in hLit and n.colorOfSide(n.indexLinked(h)) is c and not connector.linked
-              connector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_on.png")
-              @toLit(connector)
-              for nConnector in n.colorPanels
-                if nConnector.side is n.indexLinked(h) and not nConnector.linked
-                  nConnector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_on.png")
-                  @toLit(nConnector)
-            else if connector.linked and (c not in hLit or n? and n.colorOfSide(n.indexLinked(h)) isnt c)
-              connector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_off.png")
-              @toUnlit(connector)
-              if n?
-                for nConnector in n.colorPanels
-                  if nConnector.side is n.indexLinked(h) and nConnector.linked
-                    nConnector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_off.png")
-                    @toUnlit(nConnector)
+            
+            # if n? and c in hLit and n.colorOfSide(n.indexLinked(h)) is c and not connector.linked
+            #   connector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_on.png")
+            #   @toLit(connector)
+            #   for nConnector in n.colorPanels
+            #     if nConnector.side is n.indexLinked(h) and not nConnector.linked
+            #       nConnector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_on.png")
+            #       @toLit(nConnector)
+            # else if connector.linked and (c not in hLit or n? and n.colorOfSide(n.indexLinked(h)) isnt c)
+            #   connector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_off.png")
+            #   @toUnlit(connector)
+            #   if n?
+            #     for nConnector in n.colorPanels
+            #       if nConnector.side is n.indexLinked(h) and nConnector.linked
+            #         nConnector.texture = PIXI.Texture.fromImage(@siteprefix + "assets/img/connector_off.png")
+            #         @toUnlit(nConnector)
 
         ### Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
             If this is the first notification that this prism wants to rotate, stops providing light.

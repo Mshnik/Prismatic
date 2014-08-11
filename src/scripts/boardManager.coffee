@@ -172,58 +172,75 @@
     hex.spr = spr
 
     sidePanels = []
-    ## Create color Circles
-    if hex instanceof Prism
-      coreRad = 32        # Radius of the core hexagon
-      cumulative = [0.01, -0.02, 0.01, 0, 0, 0.02]
-      for i in [0 .. Hex.SIDES - 1] by 1
-        c = hex.colorOfSide(i)
-        if(not isNaN(c))
-          c = Color.asString(c).toUpperCase()
-        else
-          c = c.toUpperCase()
-        point = new PIXI.Point(coreRad * Math.cos((i - 2) * 2 * Math.PI / Hex.SIDES + radTo60Degree/2 + cumulative[i]), 
-                               coreRad * Math.sin((i - 2) * 2 * Math.PI / Hex.SIDES + radTo60Degree/2 + cumulative[i]))
-        cr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector_off.png")
-        cr.linked = false
-        cr.anchor.x = 0.5
-        cr.anchor.y = 0.8
-        cr.rotation = i * radTo60Degree
-        cr.position.x = point.x
-        cr.position.y = point.y
-        # The side of the hex this is on
-        cr.side = i
-        cr.color = c
-        ## Create a panel for this connector
-        cpanel = new PIXI.DisplayObjectContainer()
-        cpanel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
-        cpanel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
-        cpanel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
-        cpanel.pivot.x = 0.5
-        cpanel.pivot.y = 0.5
-        cpanel.addChild(cr)
-        cr.panel = cpanel
-        sidePanels.push(cpanel)
-        ## Add to unlit (for now)
-        @colorContainers[c].unlit.addChild(cpanel)
 
-        ## Create cores
-        coreContainer = {}
-        for col in Color.regularColors()
-          col = 
-            if not isNaN(col)
-              Color.asString(col).toUpperCase()
-            else
-              col.toUpperCase()
-          core = PIXI.Sprite.fromImage(@siteprefix + "assets/img/core.png")
-          core.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (7/16)
-          core.position.y = hex.loc.row * @hexRad + @hexRad * (7/16) - 0.5
-          core.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
-          core.pivot.x = 0.5
-          core.pivot.y = 0.5
-          core.alpha = 0
-          coreContainer[col] = core
-          @colorContainers[col].lit.addChild(core)
+    ## Fix and rotate this connector for the given side. Also adds to the given panel
+    fixAndRotateConnector = (connector, side, color, panel) ->
+      connector.linked = false
+      connector.anchor.x = 0.5
+      connector.anchor.y = 0.5
+      connector.color = color
+      connector.rotation = side * radTo60Degree
+      connector.panel = panel
+      panel.addChild(connector)
+      return
+
+    ## Create color bridges for prism
+    if hex instanceof Prism
+      for c in Color.regularColors()
+        if hex.colorCount(c) > 0
+          ## Create a panel for this set of connectors (panel per color)
+          cpanel = new PIXI.DisplayObjectContainer()
+          cpanel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
+          cpanel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
+          cpanel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
+          cpanel.pivot.x = 0.5
+          cpanel.pivot.y = 0.5
+          cpanel.color = c
+          sidePanels.push(cpanel)
+
+          ## Find the sides this color is on
+          indices = []
+          for i in [0 .. (Hex.SIDES - 1)] by 1
+            if hex.colorOfSide(i) is c.toLowerCase()
+              indices.push(i)
+          if indices.length == 1
+            con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-none.png")
+            fixAndRotateConnector(con, indices[0], c, cpanel)
+          else
+            ##Create pair wise combinations of indices as a 2 digit number, greater number first
+            pairCombos = []
+            for i in [0 .. (indices.length - 1)] by 1
+              for j in [(i + 1) .. (indices.length - 1)] by 1
+                pairCombos.push(indices[j] * 10 + indices[i])
+            ## For each pair combination, add its corresponding connector
+            for combo in pairCombos
+              sideOne = combo % 10
+              sideTwo = Math.floor(combo / 10)
+              diff = (sideTwo - sideOne) %% Hex.SIDES
+              theSide = -1
+              switch diff
+                when 0
+                  con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-opposite.png")
+                  theSide = sideTwo
+                when 1
+                  con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-adjacent.png")
+                  theSide = sideTwo
+                when 2
+                  con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-far-neighbor.png")
+                  theSide = sideTwo
+                when 3
+                  con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-opposite.png")
+                  theSide = sideOne
+                when 4
+                  con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-far-neighbor.png")
+                  theSide = sideOne
+                when 5
+                  con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-adjacent.png")
+                  theSide = sideOne
+              fixAndRotateConnector(con, theSide, c, cpanel)
+
+          ## Add to unlit (for now)
+          @colorContainers[c].unlit.addChild(cpanel)
 
 
     ## Store the color this is currently lit (if non-prism)
@@ -244,7 +261,6 @@
     # Store panels in hex for later access
     hex.backPanel = backpanel
     hex.colorPanels = sidePanels
-    hex.cores = coreContainer
 
     ## Add to back container, if prism
     if hex instanceof Prism
