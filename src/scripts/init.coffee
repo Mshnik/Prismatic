@@ -31,6 +31,14 @@
                   0, 0, 0, 1]
 
   offset = 0
+
+  ## The dummy texture that takes up the whole screen to make sure that color layers don't resize
+  g = new PIXI.Graphics()
+  g.clear()
+  g.lineStyle(0.5, 0xFFFFFF, 1)
+  g.drawRect(0,0,window.innerWidth, window.innerHeight)
+  dumTex = g.generateTexture()
+
   ## Containers for elements to be colored. Two layers per color - lit and unlit 
   @colorContainers = {}
   ##The ordering of the colorContainers on the stage. Earlier = added earlier
@@ -51,8 +59,10 @@
     ## Create lit and unlit branches for this color Container
     unlit = new PIXI.DisplayObjectContainer()
     cContainer.addChild(unlit)
+    unlit.addChild(new PIXI.Sprite(dumTex))
     lit = new PIXI.DisplayObjectContainer()
     cContainer.addChild(lit)
+    lit.addChild(new PIXI.Sprite(dumTex))
     
     cContainer.unlit = unlit
     if(colr isnt "NONE")

@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"spr",
+				"spr"
+			],
+			[
 				"colorContainers",
 				"colorContainersArr"
 			],
@@ -510,15 +514,19 @@
 			[
 				"nu",
 				"nUnder2"
-			],
-			[
-				"OrderedRing",
-				"OrderedRingUtils"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "src/scripts/animate.coffee",
+			"settings":
+			{
+				"buffer_size": 12935,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "Packages/Better CoffeeScript/CoffeeScript.sublime-build",
 	"command_palette":
@@ -572,23 +580,24 @@
 	},
 	"file_history":
 	[
-		"/Users/MPatashnik/Documents/Prismatic/index.html",
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/boardManager.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/animate.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/util/color.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/lib/init.js",
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/init.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/index.html",
+		"/Users/MPatashnik/Documents/Prismatic/src/models/subhex/prism.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/utils.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/helpWindow.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/winWindow.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/menu.coffee",
-		"/Users/MPatashnik/Documents/Prismatic/src/scripts/init.coffee",
-		"/Users/MPatashnik/Documents/Prismatic/src/scripts/boardManager.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/prismatic.sublime-project",
 		"/Users/MPatashnik/Documents/Prismatic/javaSwing/src/models/ColorCircle.java",
 		"/Users/MPatashnik/Documents/Prismatic/assets/boards/board11.json",
-		"/Users/MPatashnik/Documents/Prismatic/src/models/subhex/prism.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/hex.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/subhex/spark.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/subhex/crystal.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/game.coffee",
-		"/Users/MPatashnik/Documents/Prismatic/src/models/util/color.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/board.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/setStage.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/util/colorCircle.coffee",
@@ -698,8 +707,7 @@
 		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/config/build.sbt",
 		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/project/Build.scala",
 		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/project/build.properties",
-		"/Users/MPatashnik/Documents/Originate/training-website/build.sbt",
-		"/Users/MPatashnik/.sbt/0.13/plugins/gpg.sbt"
+		"/Users/MPatashnik/Documents/Originate/training-website/build.sbt"
 	],
 	"find":
 	{
@@ -866,8 +874,37 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/scripts/animate.coffee",
+					"settings":
+					{
+						"buffer_size": 12935,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1154,
+								1154
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		},
 		{

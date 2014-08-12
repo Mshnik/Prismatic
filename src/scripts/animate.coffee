@@ -315,7 +315,7 @@ for c in Color.values()
 
   ## Fix board
   if @BOARD?
-    scale = (1 / 130) * Math.min(window.innerHeight / window.BOARD.getHeight() / 1.1, window.innerWidth * 1.15 / window.BOARD.getWidth())
+    scale = (1 / 130) * Math.min((window.innerHeight - menuHeight) / window.BOARD.getHeight(), window.innerWidth * 1.15 / window.BOARD.getWidth())
     @base.scale.x = scale
     @base.scale.y = scale
     for col, cContainer of @colorContainers
@@ -328,5 +328,12 @@ for c in Color.values()
     @base.position.x = newX
     for col, cContainer of @colorContainers
       cContainer.position.x = newX
+      subPaneArr = [cContainer.lit, cContainer.unlit]
+      for subPane in subPaneArr
+        dumSpr = subPane.children[0]
+        dumSpr.position.x = -cContainer.position.x
+        dumSpr.position.y = -cContainer.position.y
+        dumSpr.height = (window.innerHeight + menuHeight)/scale
+        dumSpr.width = window.innerWidth
 
   return
