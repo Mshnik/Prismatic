@@ -8,9 +8,10 @@
       sprToRemove.push(spr)
   for spr in @stage.children[1].children
     sprToRemove.push(spr)
-  for i in [1 ..(@stage.children.length - 1)]
+  for i in [1 ..(@stage.children.length - 1)] by 1
     for pan in @stage.children[i].children
-      for spr in pan.children
+      for j in [1 .. pan.children.length] by 1
+        spr = pan.children[j]
         sprToRemove.push(spr)
   for spr in sprToRemove
     if spr?
@@ -110,6 +111,8 @@
     text.color = c.lit
     @goalContainer[c.lit.toUpperCase()].addChild(text)
 
+  ## Remove colors that aren't part of the solution from all sparks, 
+  ## set alpha of that container to 0
   for c in colors
     if window.BOARD[c.toUpperCase()] is 0
       @colorContainers[c.toUpperCase()].alpha = 0
@@ -127,13 +130,6 @@
   window.resize()
   window.drawBoard()
   @resize()
-
-### Creates a dummy board and adds to scope. Mainly for testing ###
-@createDummyBoard = () ->
-  @BOARD = @Board.makeBoard(4, 12,3)
-  @onBoardLoad()
-  return
-
 
 ### Draws the Board in BOARD on the stage. ###
 @drawBoard = () ->
@@ -271,7 +267,7 @@
     #Add a click listener
     if hex.isLocked
       backpanel.interactive = false
-      spr.tint = 0xFFFF21
+      spr.alpha = 0
     else
       backpanel.interactive = true
     backpanel.click = (event) -> 

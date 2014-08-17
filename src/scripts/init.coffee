@@ -35,7 +35,7 @@
   ## The dummy texture that takes up the whole screen to make sure that color layers don't resize
   g = new PIXI.Graphics()
   g.clear()
-  g.lineStyle(0.5, 0xFFFFFF, 1)
+  g.lineStyle(0, 0xFFFFFF, 1)
   g.drawRect(0,0,window.innerWidth, window.innerHeight)
   dumTex = g.generateTexture()
 

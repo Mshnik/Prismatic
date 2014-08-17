@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"sub",
+				"subPaneArr"
+			],
+			[
 				"spr",
 				"spr"
 			],
@@ -510,20 +514,24 @@
 			[
 				"Quo",
 				"QuotientUtils"
-			],
-			[
-				"nu",
-				"nUnder2"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"file": "src/scripts/init.coffee",
+			"settings":
+			{
+				"buffer_size": 4990,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "src/scripts/animate.coffee",
 			"settings":
 			{
-				"buffer_size": 12935,
+				"buffer_size": 13274,
 				"line_ending": "Unix"
 			}
 		}
@@ -580,8 +588,8 @@
 	},
 	"file_history":
 	[
-		"/Users/MPatashnik/Documents/Prismatic/src/scripts/boardManager.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/animate.coffee",
+		"/Users/MPatashnik/Documents/Prismatic/src/scripts/boardManager.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/util/color.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/lib/init.js",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/init.coffee",
@@ -874,23 +882,23 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/scripts/animate.coffee",
+					"file": "src/scripts/init.coffee",
 					"settings":
 					{
-						"buffer_size": 12935,
+						"buffer_size": 4990,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1154,
-								1154
+								1114,
+								1114
 							]
 						],
 						"settings":
@@ -900,7 +908,35 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 681.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/scripts/animate.coffee",
+					"settings":
+					{
+						"buffer_size": 13274,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13185,
+								13185
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4274.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -941,7 +977,7 @@
 		"cols":
 		[
 			0.0,
-			0.513239427823,
+			0.645145284432,
 			1.0
 		],
 		"rows":
