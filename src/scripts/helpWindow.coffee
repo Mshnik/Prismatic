@@ -91,8 +91,7 @@
   prismsHeader.position.y = 140
   helpContainer.addChild(prismsHeader)
 
-  prismsContent = new PIXI.Text("           - the basic piece. They channel light and rotate.\n" +
-                                "Prisms outlined in yellow are locked in place.\nThey are locked for a reason.", contentStyle)
+  prismsContent = new PIXI.Text("           - the basic piece. They channel light and rotate.", contentStyle)
   prismsContent.position.x = 100
   prismsContent.position.y = 140
   helpContainer.addChild(prismsContent)
