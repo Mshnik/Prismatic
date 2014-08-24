@@ -93,7 +93,7 @@
 
   prismsContent = new PIXI.Text("           - the basic piece. They channel light and rotate.", contentStyle)
   prismsContent.position.x = 100
-  prismsContent.position.y = 140
+  prismsContent.position.y = 165
   helpContainer.addChild(prismsContent)
 
   crystalIcon = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
