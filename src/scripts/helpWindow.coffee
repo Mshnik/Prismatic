@@ -20,6 +20,7 @@
     window.stage.removeChild(window.helpContainer)
     window.gameOn = true
     return
+  overlaySprite.tap = overlaySprite.click
   helpContainer.addChild(overlaySprite)
 
   overlay.clear()
@@ -48,6 +49,7 @@
     window.stage.removeChild(window.helpContainer)
     window.gameOn = true
     return
+  close.tap = close.click
   helpContainer.addChild(close)
   ## Store in container for an extra reference to this
   helpContainer.close = close.click

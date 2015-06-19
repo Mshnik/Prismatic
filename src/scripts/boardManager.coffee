@@ -276,6 +276,6 @@
         else
           hex.anticlick()
       return
-    backpanel.touchstart = backpanel.click
+    backpanel.tap = backpanel.click
 
   return hex.panel

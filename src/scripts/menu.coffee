@@ -50,6 +50,7 @@
     window.BOARDNAME = "board" + num
     resetButton.click()
     return
+  prevLvl.tap = prevLvl.click
   @menu.addChild(prevLvl)
 
   lvlText = new PIXI.Text(@level + " of 50", @menuContentStyle)
@@ -71,6 +72,7 @@
     window.BOARDNAME = "board" + num
     resetButton.click()
     return
+  nextLvl.tap = nextLvl.click
   @menu.addChild(nextLvl)
 
   resetButton = new PIXI.Text("Reset", @menuContentStyle)
@@ -86,6 +88,7 @@
     Board.loadBoard(window.BOARDNAME)
     window.updateMenu()
     return
+  resetButton.tap = resetButton.click
   resetBack = new PIXI.Sprite(@backBox(50 , 25))
   resetBack.position.x = -15
   resetBack.position.y = -11
@@ -107,6 +110,7 @@
       else
         helpContainer.close()
     return
+  helpButton.tap = helpButton.click
   helpBack = new PIXI.Sprite(@backBox(45 , 25))
   helpBack.position.x = -15
   helpBack.position.y = -11
@@ -125,6 +129,7 @@
        window.difficulty = Game.EASY
        resetButton.click()
     return
+  easyButton.tap = easyButton.click
   easyBorder = new PIXI.Sprite(@borderBox(45 , 25))
   easyBorder.position.x = -15
   easyBorder.position.y = -11
@@ -139,6 +144,7 @@
        window.difficulty = Game.MEDIUM
        resetButton.click()
     return
+  medButton.tap = medButton.click
   medBorder = new PIXI.Sprite(@borderBox(45 , 25))
   medBorder.position.x = -15
   medBorder.position.y = -11
@@ -153,6 +159,7 @@
        window.difficulty = Game.HARD
        resetButton.click()
     return
+  hardButton.tap = hardButton.click
   hardBorder = new PIXI.Sprite(@borderBox(45 , 25))
   hardBorder.position.x = -15
   hardBorder.position.y = -11
