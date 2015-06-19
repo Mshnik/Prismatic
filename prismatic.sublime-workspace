@@ -519,37 +519,17 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "src/scripts/init.coffee",
-			"settings":
-			{
-				"buffer_size": 4988,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/scripts/animate.coffee",
-			"settings":
-			{
-				"buffer_size": 13274,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/scripts/boardManager.coffee",
-			"settings":
-			{
-				"buffer_size": 9633,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "Packages/Better CoffeeScript/CoffeeScript.sublime-build",
 	"command_palette":
 	{
-		"height": 287.0,
+		"height": 147.0,
 		"selected_items":
 		[
+			[
+				"set syntax:Co",
+				"Set Syntax: CoffeeScript"
+			],
 			[
 				"install",
 				"Package Control: Install Package"
@@ -596,6 +576,12 @@
 	},
 	"file_history":
 	[
+		"/Users/mpatashn/Prismatic/_config.yml",
+		"/Users/mpatashn/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/mpatashn/Prismatic/src/models/board.coffee",
+		"/Users/mpatashn/Prismatic/src/scripts/boardManager.coffee",
+		"/Users/mpatashn/Prismatic/src/scripts/animate.coffee",
+		"/Users/mpatashn/Prismatic/src/scripts/init.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/animate.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/scripts/boardManager.coffee",
 		"/Users/MPatashnik/Documents/Prismatic/src/models/util/color.coffee",
@@ -717,13 +703,7 @@
 		"/Users/MPatashnik/Documents/Originate/training-website/app/models/Data.scala",
 		"/Users/MPatashnik/Documents/Originate/training-website/app/views/user_control_show.scala.html",
 		"/Users/MPatashnik/Documents/Originate/training-website/conf/application.conf",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/views/bootstrap_demo.scala.html",
-		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/build.sbt",
-		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/project/plugins.sbt",
-		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/config/build.sbt",
-		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/project/Build.scala",
-		"/Users/MPatashnik/Documents/Originate/training-website/typesafe_conf/project/build.properties",
-		"/Users/MPatashnik/Documents/Originate/training-website/build.sbt"
+		"/Users/MPatashnik/Documents/Originate/training-website/app/views/bootstrap_demo.scala.html"
 	],
 	"find":
 	{
@@ -890,93 +870,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "src/scripts/init.coffee",
-					"settings":
-					{
-						"buffer_size": 4988,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1338,
-								1338
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 348.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/scripts/animate.coffee",
-					"settings":
-					{
-						"buffer_size": 13274,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								12203,
-								12203
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 4324.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/scripts/boardManager.coffee",
-					"settings":
-					{
-						"buffer_size": 9633,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								579,
-								579
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		},
 		{
