@@ -23,52 +23,11 @@
   ## Create the goal board on the right of the main board
   colors = window.BOARD.colorsPresent()
 
-  ## Goal board has crystals.
-  goalBoard = new Board(colors.length,1)
-  i = 0
-  for color in colors
-    goalCount = window.BOARD[color.toUpperCase()]
-    if(goalCount > 0)
-      c = new Crystal(goalBoard, new Loc(i, 0))
-      c.lit = color
-      i++
-  
-  @goalContainer.count = i
-  spaceCoef = 5/6
-  pushCoef = 1/4
-  for c in goalBoard.allHexesOfClass("Crystal")
-    ## Create sprites for crystal
-    spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
-    spr.lit = false
-    spr.color = c.lit
-    spr.hex = c
-    spr.position.x = c.loc.row * @hexRad * spaceCoef  ## Leaves some space for text between sprites
-    spr.anchor.x = spr.anchor.y = 0.5
-    spr.scale.x = spr.scale.y = 0.25
-    c.spr = spr
-    @updateLight(c)
-    @goalContainer.addChild(spr)
-    goalCount = window.BOARD[c.lit.toUpperCase()]
-    @goalContainer.colorCount[c.lit.toUpperCase()] = goalCount
-    goalStyle = @menuContentStyle
-    text = new PIXI.Text("0/" + goalCount, goalStyle)
-    text.position.x = c.loc.row * @hexRad * spaceCoef + @hexRad * pushCoef
-    text.position.y = -12
-    text.color = c.lit
-    text.tint = @Color.hexValueForLit(text.color)
-    @goalContainer.addChild(text)
-
   ##Make the menu, now that we know what level we're on
   if not @initted
     window.initMenu()
     @menu.children[7].click()
     @initted = true
-
-  ## Array of goals, ex: ["RED", "RED", "BLUE", "GREEN"]
-  goalArr = []
-  for c in colors
-    for i in [1 .. window.BOARD[c.toUpperCase()]] by 1
-      goalArr.push(c.toUpperCase())
 
   fix = (h, cir) ->
     i = 0
@@ -80,6 +39,12 @@
         break
       h.targetRotation = 0
     return
+
+  ## Array of goals, ex: ["RED", "RED", "BLUE", "GREEN"]
+  goalArr = []
+  for c in colors
+    for i in [1 .. window.BOARD[c.toUpperCase()]] by 1
+      goalArr.push(c.toUpperCase())
 
   ## If on easy, remove half of the goal requirements, rounded down
   ## Also rotate and lock all of the locked tiles
@@ -121,6 +86,41 @@
         s = spark.getAvailableColors()
         s.splice(s.indexOf(c), 1)
         spark.setAvailableColors(s)
+
+  ## Goal board has crystals.
+  goalBoard = new Board(colors.length,1)
+  i = 0
+  for color in colors
+    goalCount = window.BOARD[color.toUpperCase()]
+    if(goalCount > 0)
+      c = new Crystal(goalBoard, new Loc(i, 0))
+      c.lit = color
+      i++
+  
+  @goalContainer.count = i
+  spaceCoef = 5/6
+  pushCoef = 1/4
+  for c in goalBoard.allHexesOfClass("Crystal")
+    ## Create sprites for crystal
+    spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
+    spr.lit = false
+    spr.color = c.lit
+    spr.hex = c
+    spr.position.x = c.loc.row * @hexRad * spaceCoef  ## Leaves some space for text between sprites
+    spr.anchor.x = spr.anchor.y = 0.5
+    spr.scale.x = spr.scale.y = 0.25
+    c.spr = spr
+    @updateLight(c)
+    @goalContainer.addChild(spr)
+    goalCount = window.BOARD[c.lit.toUpperCase()]
+    @goalContainer.colorCount[c.lit.toUpperCase()] = goalCount
+    goalStyle = @menuContentStyle
+    text = new PIXI.Text("0/" + goalCount, goalStyle)
+    text.position.x = c.loc.row * @hexRad * spaceCoef + @hexRad * pushCoef
+    text.position.y = -12
+    text.color = c.lit
+    text.tint = @Color.hexValueForLit(text.color)
+    @goalContainer.addChild(text)
 
   window.BOARD.relight()
   ## Fit the canvas to the window
