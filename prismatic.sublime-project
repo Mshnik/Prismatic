@@ -1,16 +1,2 @@
 {
-	"folders":
-	[
-		{
-			"path": "/Users/MPatashnik/Documents/Prismatic"
-		}
-	],
-
-  "settings":
-  {
-    "CoffeeScript":
-    {
-      "compileOnSave" : false
-    }
-  }
 }

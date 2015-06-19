@@ -519,6 +519,13 @@
 	},
 	"buffers":
 	[
+		{
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "Packages/Better CoffeeScript/CoffeeScript.sublime-build",
 	"command_palette":
@@ -576,6 +583,7 @@
 	},
 	"file_history":
 	[
+		"/Users/mpatashn/Prismatic/prismatic.sublime-workspace",
 		"/Users/mpatashn/Prismatic/_config.yml",
 		"/Users/mpatashn/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
 		"/Users/mpatashn/Prismatic/src/models/board.coffee",
@@ -702,8 +710,7 @@
 		"/Users/MPatashnik/Documents/Originate/training-website/app/models/Course.scala",
 		"/Users/MPatashnik/Documents/Originate/training-website/app/models/Data.scala",
 		"/Users/MPatashnik/Documents/Originate/training-website/app/views/user_control_show.scala.html",
-		"/Users/MPatashnik/Documents/Originate/training-website/conf/application.conf",
-		"/Users/MPatashnik/Documents/Originate/training-website/app/views/bootstrap_demo.scala.html"
+		"/Users/MPatashnik/Documents/Originate/training-website/conf/application.conf"
 	],
 	"find":
 	{
@@ -870,8 +877,34 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		},
 		{

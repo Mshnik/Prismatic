@@ -185,7 +185,7 @@
       for c in Color.regularColors()
         if hex.colorCount(c) > 0
           ## Create a panel for this set of connectors (panel per color)
-          cpanel = new PIXI.DisplayObjectContainer()
+          cpanel = new PIXI.SpriteBatch()
           cpanel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
           cpanel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
           cpanel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
@@ -255,7 +255,6 @@
       spr.panel = backpanel
       @toLit(spr)
 
-
     # Store panels in hex for later access
     hex.backPanel = backpanel
     hex.colorPanels = sidePanels
@@ -277,5 +276,6 @@
         else
           hex.anticlick()
       return
+    backpanel.touchstart = backpanel.click
 
   return hex.panel

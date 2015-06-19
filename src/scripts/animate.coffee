@@ -49,41 +49,23 @@ for c in Color.values()
     c = c.toUpperCase()
   @colorOffset[c] = Math.random() + 0.5
 
-### Updates the pulse filter that controls lighting effects ###
-@calcPulseFilter = (count) ->
-  for col, val of @colorContainers
-    pulse = val.lit.filters[0]
-    cont = (count + val.lit.pulseOffset)/val.lit.pulseLength
-    m = pulse.matrix
-    m[0] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
-    m[5] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
-    m[10] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.5 + 0.5
-    m[15] = Math.abs(Math.sin(cont * 2 * Math.PI)) * 0.25 + 0.75
-    pulse.matrix = m
-  for cont in @goalContainer.children
-    if cont.children.length >= 2 and cont.filters.length >= 2
-      pulse = cont.filters[1]
-      correspondCont = @colorContainers[cont.children[0].color.toUpperCase()].lit
-      c = (count + correspondCont.pulseOffset)/correspondCont.pulseLength
-      m = pulse.matrix
-      if parseInt(cont.children[1].text.substring(0, 1)) >= parseInt(cont.children[1].text.substring(2))
-        m[0] = Math.abs(Math.sin(c * 2 * Math.PI)) * 0.5 + 0.5
-        m[5] = Math.abs(Math.sin(c * 2 * Math.PI)) * 0.5 + 0.5
-        m[10] = Math.abs(Math.sin(c * 2 * Math.PI)) * 0.5 + 0.5
-        m[15] = Math.abs(Math.sin(c * 2 * Math.PI)) * 0.25 + 0.75
-      else
-        m[0] = 1
-        m[5] = 1
-        m[10] = 1
-        m[15] = 1
-      pulse.matrix = m
-  return
+
+## True if this user has won - every goal set.
+checkForWin = () ->   
+  curLit = @BOARD.crystalLitCount()
+  goalContainer = @menu.children[@goalContainerIndex]
+  for pan in goalContainer.children
+    for spr in pan.children
+      if spr instanceof PIXI.Text and spr.color.toUpperCase() of curLit
+        spr.setText(curLit[spr.color.toUpperCase()] + spr.text.substring(1))
+        if curLit[spr.color.toUpperCase()] < parseInt(spr.text.substring(2))
+          return false
+  return true
 
 ### The animation function. Called by pixi and requests to be recalled ###
 @animate = () ->
     ## Color animation
     window.count += 1;  ## Frame count
-    @calcPulseFilter(window.count)
     rotSpeed = 1/5
     tolerance = 0.000001 ## For floating point errors - difference below this is considered 'equal'
     radTo60Degree = 1.04719755 ## 1 radian * this coefficient = 60 degrees
@@ -91,15 +73,7 @@ for c in Color.values()
       ## Update text on goal
       curLit = @BOARD.crystalLitCount()
       goalContainer = @menu.children[@goalContainerIndex]
-      isWin = true ## True if this user has won - every goal set.
-      for pan in goalContainer.children
-        for spr in pan.children
-          if spr instanceof PIXI.Text and spr.color.toUpperCase() of curLit
-            spr.setText(curLit[spr.color.toUpperCase()] + spr.text.substring(1))
-            if curLit[spr.color.toUpperCase()] < parseInt(spr.text.substring(2))
-              isWin = false
-
-      if isWin and (not @winContainer?) and @showWinContainer
+      if checkForWin() and (not @winContainer?) and @showWinContainer
         @gameOn = false
         @makeWinGameContainer()
       
@@ -115,14 +89,6 @@ for c in Color.values()
             @toUnlit(h.backPanel.spr)
 
         hLit = h.isLit()
-        if h instanceof Prism
-          ## Adjust opacity of cores
-          for col, core of h.cores
-            if col.toLowerCase() not in hLit and core.alpha > 0
-              core.alpha = 0
-            else if col.toLowerCase() in hLit and core.alpha is 0
-              core.alpha = 0.75
-
         nS = h.getNeighborsWithBlanks()
         for panel in h.colorPanels
           col = panel.color.toLowerCase()
