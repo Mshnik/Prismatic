@@ -30,12 +30,6 @@ class @Color
   ## Color manipulation filters. Creating many of the same is redundant. Built below
   @filters = {}
 
-  @makeFilters : () -> 
-    for c in @values()
-      @filters[c.toLowerCase()] = new PIXI.ColorMatrixFilter()
-      @filters[c.toLowerCase()].matrix = @matrixFor(c)
-    return
-
   @count : () -> Object.keys(@_val).length
 
   @values : () -> Object.keys(@_val)
@@ -61,8 +55,8 @@ class @Color
     col for i in [0 ... (length - 1)] by 1
 
 
-  ### Returns a hex value for a color. Unused for the time being ###
-  @hexValueFor : (color) ->
+  ### Returns a hex value for a lit color. Unused for the time being ###
+  @hexValueForLit : (color) ->
     c = 
       if isNaN(color)
         @fromString(color)
@@ -88,8 +82,8 @@ class @Color
       else ## Returns a muted gray for other color
         return 0xCCCCCC
 
-  ### Returns a 'matrix' (length 16 array) that transforms a white asset into an asset of this color ###
-  @matrixFor : (color) ->
+  ### Returns a hex value for an unlit color. Unused for the time being ###
+  @hexValueForUnlit : (color) ->
     c = 
       if isNaN(color)
         @fromString(color)
@@ -97,50 +91,23 @@ class @Color
         color
     switch c
       when @RED
-        return [1, 0, 0, 0,
-                0, (51/255), 0, 0,
-                0, 0, (51/255), 0,
-                0, 0, 0, 1]
+        return 0x801A00
       when @BLUE
-        return [(25/255), 0, 0, 0,
-                0, (217/255), 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1]
+        return 0x1F5C99
       when @GREEN
-        return [(56/255), 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, (63/255), 0,
-                0, 0, 0, 1]
+        return 0x3D993D
       when @ORANGE
-        return [0.9, 0, 0, 0,
-                0, 0.5, 0, 0,
-                0, 0, 0.2, 0,
-                0, 0, 0, 1]
+        return 0x804C00
       when @PURPLE
-        return [0.7, 0, 0, 0,
-                0, 0.7, 0, 0,
-                0, 0, 0.2, 0,
-                0, 0, 0, 1]
+        return 0x4C3380
       when @CYAN
-        return [0.2, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 0.7, 0,
-                0, 0, 0, 1]
+        return 0x3D9999
       when @YELLOW
-        return [0.7, 0, 0, 0,
-                0, 0.2, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1]
+        return 0x99993D
       when @PINK
-        return [1, 0, 0, 0,
-                0, 0.2, 0, 0,
-                0, 0, 0.7, 0,
-                0, 0, 0, 1]
+        return 0xB2478F
       else ## Returns a muted gray for other color
-        return [0.8, 0, 0, 0,
-                0, 0.8, 0, 0,
-                0, 0, 0.8, 0,
-                0, 0, 0, 1]
+        return 0xCCCCCC
 
 
   @asString : (color) ->
@@ -167,24 +134,27 @@ class @Color
         return "none"
 
   @fromString : (color) ->
-    switch color.toLowerCase()
-      when "any"
-        return @ANY
-      when "red"
-        return @RED
-      when "blue"
-        return @BLUE
-      when "green"
-        return @GREEN
-      when "orange"
-        return @ORANGE
-      when "purple"
-        return @PURPLE
-      when "cyan"
-        return @CYAN
-      when "yellow"
-        return @YELLOW
-      when "pink"
-        return @PINK
-      else
-        return @NONE
+    if color?
+      switch color.toLowerCase()
+        when "any"
+          return @ANY
+        when "red"
+          return @RED
+        when "blue"
+          return @BLUE
+        when "green"
+          return @GREEN
+        when "orange"
+          return @ORANGE
+        when "purple"
+          return @PURPLE
+        when "cyan"
+          return @CYAN
+        when "yellow"
+          return @YELLOW
+        when "pink"
+          return @PINK
+        else
+          return @NONE
+    else
+      return @NONE

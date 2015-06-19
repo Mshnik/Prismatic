@@ -2,53 +2,21 @@
 ## The frame count the window is on ##
 @count = 0
 
-### Moves the connector to the correct lit layer ###
-@toLit = (connector) ->
-  try
-    @colorContainers[connector.color].unlit.removeChild(connector.panel)
-  catch
-  if @typeIsArray connector.color
-    if connector.color.length > 0
-      c = connector.color[0].toUpperCase()
-    else
-      c = Color.asString(Color.NONE).toUpperCase()
+### Lights the hex ###
+@updateLight = (hex) ->
+  if hex instanceof Crystal
+    hex.spr.tint = @Color.hexValueForLit(hex.lit)
+  else if hex instanceof Spark
+    hex.spr.tint = @Color.hexValueForLit(hex.isLit()[0])
+  else if hex instanceof Prism
+    colorsLit = hex.isLit()
+    for connector in hex.connectors
+      if connector.color.toLowerCase() in colorsLit
+        connector.tint = @Color.hexValueForLit(connector.color)
+      else
+        connector.tint = @Color.hexValueForUnlit(connector.color)
   else
-    c = connector.color.toUpperCase()
-  if c is Color.asString(Color.NONE).toUpperCase()
-    @toUnlit(connector) ## Prevent lighting of color.NONE
-  else
-    @colorContainers[c.toUpperCase()].lit.addChild(connector.panel)
-    connector.linked = true
-  return
-
-### Moves the connector to the correct unlit layer ###
-@toUnlit = (connector) ->
-  try
-    @colorContainers[connector.color].lit.removeChild(connector.panel)
-  catch
-  if @typeIsArray connector.color
-    if connector.color.length > 0
-      c = connector.color[0]
-    else
-      c = Color.asString(Color.NONE)
-  else
-    c = connector.color
-  if connector.hex? and connector.hex instanceof Crystal  
-    @colorContainers[Color.asString(Color.NONE).toUpperCase()].unlit.addChild(connector.panel)
-  else
-    @colorContainers[c.toUpperCase()].unlit.addChild(connector.panel)
-  connector.linked = false
-  return
-
-### Creates a frame offset for the each color ###
-@colorOffset = {}
-for c in Color.values()
-  if not isNaN(c)
-    c = Color.fromString(c).toUpperCase()
-  else
-    c = c.toUpperCase()
-  @colorOffset[c] = Math.random() + 0.5
-
+    throw ("Incorrect call to updateLight")
 
 ## True if this user has won - every goal set.
 checkForWin = () ->   
@@ -78,39 +46,7 @@ checkForWin = () ->
         @makeWinGameContainer()
       
       for h in @BOARD.allHexes()
-        ##Update lighting of all hexes
-        if h.isLit().length > 0 and not h.backPanel.children[0].lit
-          h.backPanel.children[0].lit = true
-          if not (h instanceof Prism)
-            @toLit(h.backPanel.spr)
-        if h.isLit().length is 0 and h.backPanel.children[0].lit
-          h.backPanel.children[0].lit = false
-          if not (h instanceof Prism)
-            @toUnlit(h.backPanel.spr)
-
-        hLit = h.isLit()
-        nS = h.getNeighborsWithBlanks()
-        for panel in h.colorPanels
-          col = panel.color.toLowerCase()
-          for connector in panel.children
-            for side in connector.sides
-              n = nS[side]
-
-              if n? and col in hLit and n.colorOfSide(n.indexLinked(h)) is col and not connector.linked
-                @toLit(connector)
-                for nPanel in n.colorPanels
-                  for nConnector in nPanel.children
-                    for nSide in nConnector.sides
-                      if nSide is n.indexLinked(h) and not nConnector.linked
-                        @toLit(nConnector)
-              else if connector.linked and col not in hLit
-                @toUnlit(connector)
-                if n?
-                  for nPanel in n.colorPanels
-                    for nConnector in nPanel.children
-                      for nSide in nConnector.sides
-                        if nSide is n.indexLinked(h) and not nConnector.linked
-                          @toUnlit(nConnector)
+        @updateLight(h)
 
         ### Rotation of a prism - finds a prism that wants to rotate and rotates it a bit.
             If this is the first notification that this prism wants to rotate, stops providing light.
@@ -126,20 +62,19 @@ checkForWin = () ->
               -rotSpeed
           h.backPanel.rotation += inc * radTo60Degree
           h.currentRotation += inc 
-          for value in h.colorPanels
+          for value in h.connectors
             value.rotation += inc * radTo60Degree
           if Math.abs(h.targetRotation - h.currentRotation) < tolerance
             inc = (h.targetRotation - h.currentRotation)
             h.backPanel.rotation += inc * radTo60Degree
             h.currentRotation += inc
-            for value in h.colorPanels
+            for value in h.connectors
               value.rotation += inc * radTo60Degree
               ## Update side index of each sprite
-              for spr in value.children
-                newSides = []
-                for side in spr.sides
-                  newSides.push((side + (h.currentRotation - h.prevRotation)) %% Hex.SIDES)
-                spr.sides = newSides
+              newSides = []
+              for side in value.sides
+                newSides.push((side + (h.currentRotation - h.prevRotation)) %% Hex.SIDES)
+              value.sides = newSides
             h.prevRotation = h.currentRotation
             h.canLight = true
             h.light()
@@ -151,9 +86,9 @@ checkForWin = () ->
                 else 
                   h.toColor.toUpperCase()
           h.backPanel.spr.color = col
-          @toLit(h.backPanel.spr)
+          @updateLight(h)
           h.toColor = ""
-    requestAnimFrame(animate )
+    requestAnimFrame(animate)
     @renderer.render(@stage)
     return
 

@@ -92,24 +92,24 @@
   @goalContainer.count = i
   spaceCoef = 5/6
   pushCoef = 1/4
-  for c in goalBoard.allHexesOfClass("Crystal")
-    ## Create sprites for crystal
-    spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
-    spr.lit = false
-    spr.color = c.lit
-    spr.hex = c
-    spr.position.x = c.loc.row * @hexRad * spaceCoef  ## Leaves some space for text between sprites
-    spr.anchor.x = spr.anchor.y = 0.5
-    spr.scale.x = spr.scale.y = 0.25
-    @goalContainer[c.lit.toUpperCase()].addChild(spr)
-    goalCount = window.BOARD[c.lit.toUpperCase()]
-    @goalContainer[c.lit.toUpperCase()].goalCount = goalCount
-    goalStyle = @menuContentStyle
-    text = new PIXI.Text("0/" + goalCount, goalStyle)
-    text.position.x = c.loc.row * @hexRad * spaceCoef + @hexRad * pushCoef
-    text.position.y = -12
-    text.color = c.lit
-    @goalContainer[c.lit.toUpperCase()].addChild(text)
+  # for c in goalBoard.allHexesOfClass("Crystal")
+  #   ## Create sprites for crystal
+  #   spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
+  #   spr.lit = false
+  #   spr.color = c.lit
+  #   spr.hex = c
+  #   spr.position.x = c.loc.row * @hexRad * spaceCoef  ## Leaves some space for text between sprites
+  #   spr.anchor.x = spr.anchor.y = 0.5
+  #   spr.scale.x = spr.scale.y = 0.25
+  #   @goalContainer.addChild(spr)
+  #   goalCount = window.BOARD[c.lit.toUpperCase()]
+  #   @goalContainer[c.lit.toUpperCase()].goalCount = goalCount
+  #   goalStyle = @menuContentStyle
+  #   text = new PIXI.Text("0/" + goalCount, goalStyle)
+  #   text.position.x = c.loc.row * @hexRad * spaceCoef + @hexRad * pushCoef
+  #   text.position.y = -12
+  #   text.color = c.lit
+  #   @goalContainer[c.lit.toUpperCase()].addChild(text)
 
   ## Remove colors that aren't part of the solution from all sparks, 
   ## set alpha of that container to 0
@@ -120,8 +120,6 @@
         s = spark.getAvailableColors()
         s.splice(s.indexOf(c), 1)
         spark.setAvailableColors(s)
-    else
-      @colorContainers[c.toUpperCase()].alpha = 1
 
   window.BOARD.relight()
   ## Fit the canvas to the window
@@ -167,7 +165,10 @@
     backpanel.spr = spr
     hex.spr = spr
 
-    sidePanels = []
+    @base.addChild(backpanel)
+
+    # Store panels in hex for later access
+    hex.backPanel = backpanel
 
     ## Fix and rotate this connector for the given side. Also adds to the given panel
     fixAndRotateConnector = (connector, side, color, panel) ->
@@ -182,17 +183,19 @@
 
     ## Create color bridges for prism
     if hex instanceof Prism
+
+      hex.connectors = []
+
       for c in Color.regularColors()
         if hex.colorCount(c) > 0
           ## Create a panel for this set of connectors (panel per color)
-          cpanel = new PIXI.SpriteBatch()
+          cpanel = new PIXI.DisplayObjectContainer()
           cpanel.position.x = hex.loc.col * @hexRad * 3/4 * 1.11 + @hexRad * (5/8)
           cpanel.position.y = hex.loc.row * @hexRad + @hexRad * (5/8)
           cpanel.position.y +=  @hexRad/2 if hex.loc.col % 2 == 1
           cpanel.pivot.x = 0.5
           cpanel.pivot.y = 0.5
           cpanel.color = c
-          sidePanels.push(cpanel)
 
           ## Find the sides this color is on
           indices = []
@@ -202,6 +205,8 @@
           if indices.length == 1
             con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-none.png")
             con.sides = [indices[0]]
+            con.tint = @Color.hexValueForUnlit(@Color.fromString(c))
+            hex.connectors.push(con)
             fixAndRotateConnector(con, indices[0], c, cpanel)
           else
             ##Create pair wise combinations of indices as a 2 digit number, greater number first
@@ -235,11 +240,12 @@
                   con = PIXI.Sprite.fromImage(@siteprefix + "assets/img/connector-adjacent.png")
                   theSide = sideOne
               con.sides = [sideOne, sideTwo]
+              con.tint = @Color.hexValueForUnlit(@Color.fromString(c))
+              hex.connectors.push(con)
               fixAndRotateConnector(con, theSide, c, cpanel)
 
           ## Add to unlit (for now)
-          @colorContainers[c].unlit.addChild(cpanel)
-
+          @base.addChild(cpanel)
 
     ## Store the color this is currently lit (if non-prism)
     else if hex instanceof Crystal
@@ -249,19 +255,11 @@
         else
           hex.lit.toUpperCase()
       spr.panel = backpanel
-      @toUnlit(spr)
+      @updateLight(hex)
     else if hex instanceof Spark
       spr.color = hex.getColor().toUpperCase()
       spr.panel = backpanel
-      @toLit(spr)
-
-    # Store panels in hex for later access
-    hex.backPanel = backpanel
-    hex.colorPanels = sidePanels
-
-    ## Add to back container, if prism
-    if hex instanceof Prism
-      @base.addChild(backpanel)
+      @updateLight(hex)
 
     #Add a click listener
     if hex.isLocked
