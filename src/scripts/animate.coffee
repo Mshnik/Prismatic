@@ -22,12 +22,11 @@
 checkForWin = () ->   
   curLit = @BOARD.crystalLitCount()
   goalContainer = @menu.children[@goalContainerIndex]
-  for pan in goalContainer.children
-    for spr in pan.children
-      if spr instanceof PIXI.Text and spr.color.toUpperCase() of curLit
-        spr.setText(curLit[spr.color.toUpperCase()] + spr.text.substring(1))
-        if curLit[spr.color.toUpperCase()] < parseInt(spr.text.substring(2))
-          return false
+  for spr in goalContainer.children
+    if spr instanceof PIXI.Text and spr.color.toUpperCase() of curLit
+      spr.setText(curLit[spr.color.toUpperCase()] + spr.text.substring(1))
+      if curLit[spr.color.toUpperCase()] < parseInt(spr.text.substring(2))
+        return false
   return true
 
 ### The animation function. Called by pixi and requests to be recalled ###

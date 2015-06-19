@@ -92,30 +92,30 @@
   @goalContainer.count = i
   spaceCoef = 5/6
   pushCoef = 1/4
-  # for c in goalBoard.allHexesOfClass("Crystal")
-  #   ## Create sprites for crystal
-  #   spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
-  #   spr.lit = false
-  #   spr.color = c.lit
-  #   spr.hex = c
-  #   spr.position.x = c.loc.row * @hexRad * spaceCoef  ## Leaves some space for text between sprites
-  #   spr.anchor.x = spr.anchor.y = 0.5
-  #   spr.scale.x = spr.scale.y = 0.25
-  #   @goalContainer.addChild(spr)
-  #   goalCount = window.BOARD[c.lit.toUpperCase()]
-  #   @goalContainer[c.lit.toUpperCase()].goalCount = goalCount
-  #   goalStyle = @menuContentStyle
-  #   text = new PIXI.Text("0/" + goalCount, goalStyle)
-  #   text.position.x = c.loc.row * @hexRad * spaceCoef + @hexRad * pushCoef
-  #   text.position.y = -12
-  #   text.color = c.lit
-  #   @goalContainer[c.lit.toUpperCase()].addChild(text)
+  for c in goalBoard.allHexesOfClass("Crystal")
+    ## Create sprites for crystal
+    spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
+    spr.lit = false
+    spr.color = c.lit
+    spr.hex = c
+    spr.position.x = c.loc.row * @hexRad * spaceCoef  ## Leaves some space for text between sprites
+    spr.anchor.x = spr.anchor.y = 0.5
+    spr.scale.x = spr.scale.y = 0.25
+    @goalContainer.addChild(spr)
+    goalCount = window.BOARD[c.lit.toUpperCase()]
+    @goalContainer.colorCount[c.lit.toUpperCase()] = goalCount
+    goalStyle = @menuContentStyle
+    text = new PIXI.Text("0/" + goalCount, goalStyle)
+    text.position.x = c.loc.row * @hexRad * spaceCoef + @hexRad * pushCoef
+    text.position.y = -12
+    text.color = c.lit
+    text.tint = @Color.hexValueForLit(text.color)
+    @goalContainer.addChild(text)
 
   ## Remove colors that aren't part of the solution from all sparks, 
   ## set alpha of that container to 0
   for c in colors
     if window.BOARD[c.toUpperCase()] is 0
-      @colorContainers[c.toUpperCase()].alpha = 0
       for spark in window.BOARD.allHexesOfClass("Spark")
         s = spark.getAvailableColors()
         s.splice(s.indexOf(c), 1)

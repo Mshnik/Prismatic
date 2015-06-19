@@ -35,6 +35,7 @@
   ## Containers for goal elements. Only one layer per color - lit
   @goalContainer = new PIXI.DisplayObjectContainer()
   @goalContainer.count = 0  ## Set this later, once the board is loaded
+  @goalContainer.colorCount = []
 
   ## Container for help menu. Only actually added to stage when the help button is clicked ##
   @helpContainer = new PIXI.DisplayObjectContainer()
