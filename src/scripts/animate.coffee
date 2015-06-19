@@ -33,7 +33,7 @@ checkForWin = () ->
 @animate = () ->
     ## Color animation
     window.count += 1;  ## Frame count
-    rotSpeed = 1/5
+    rotSpeed = 1/8
     tolerance = 0.000001 ## For floating point errors - difference below this is considered 'equal'
     radTo60Degree = 1.04719755 ## 1 radian * this coefficient = 60 degrees
     if (@BOARD?)
@@ -180,7 +180,7 @@ checkForWin = () ->
 
     if goalContainer?
       ## Fix goalContainer
-      goalContainer.position.y = -75
+      goalContainer.position.y = 25
       goalContainer.position.x = helpButton.position.x -  90 * goalContainer.count
 
   ## Fix the help menu. resize the back opacity layer, reposition the rest

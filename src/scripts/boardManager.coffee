@@ -3,9 +3,8 @@
 ### Clears board and associated sprites from screen, usually in anticipation of new board being loaded ###
 @clearBoard = () ->
   sprToRemove = []
-  for pan in @menu.children[@goalContainerIndex].children
-    for spr in pan.children
-      sprToRemove.push(spr)
+  for spr in @menu.children[@goalContainerIndex].children
+    sprToRemove.push(spr)
   for spr in @stage.children[1].children
     sprToRemove.push(spr)
   for i in [1 ..(@stage.children.length - 1)] by 1
@@ -21,14 +20,49 @@
 
 ### Called when the board is loaded ###
 @onBoardLoad = () ->
+  ## Create the goal board on the right of the main board
+  colors = window.BOARD.colorsPresent()
+
+  ## Goal board has crystals.
+  goalBoard = new Board(colors.length,1)
+  i = 0
+  for color in colors
+    goalCount = window.BOARD[color.toUpperCase()]
+    if(goalCount > 0)
+      c = new Crystal(goalBoard, new Loc(i, 0))
+      c.lit = color
+      i++
+  
+  @goalContainer.count = i
+  spaceCoef = 5/6
+  pushCoef = 1/4
+  for c in goalBoard.allHexesOfClass("Crystal")
+    ## Create sprites for crystal
+    spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
+    spr.lit = false
+    spr.color = c.lit
+    spr.hex = c
+    spr.position.x = c.loc.row * @hexRad * spaceCoef  ## Leaves some space for text between sprites
+    spr.anchor.x = spr.anchor.y = 0.5
+    spr.scale.x = spr.scale.y = 0.25
+    c.spr = spr
+    @updateLight(c)
+    @goalContainer.addChild(spr)
+    goalCount = window.BOARD[c.lit.toUpperCase()]
+    @goalContainer.colorCount[c.lit.toUpperCase()] = goalCount
+    goalStyle = @menuContentStyle
+    text = new PIXI.Text("0/" + goalCount, goalStyle)
+    text.position.x = c.loc.row * @hexRad * spaceCoef + @hexRad * pushCoef
+    text.position.y = -12
+    text.color = c.lit
+    text.tint = @Color.hexValueForLit(text.color)
+    @goalContainer.addChild(text)
+
   ##Make the menu, now that we know what level we're on
   if not @initted
     window.initMenu()
     @menu.children[7].click()
     @initted = true
-
-  ## Create the goal board on the right of the main board
-  colors = window.BOARD.colorsPresent()
 
   ## Array of goals, ex: ["RED", "RED", "BLUE", "GREEN"]
   goalArr = []
@@ -78,39 +112,6 @@
     r = Math.floor(Math.random() * goalArr.length) ## Unused
     window.BOARD[goalArr[i]]--
     goalArr.splice(i, 1)
-
-  ## Goal board has crystals.
-  goalBoard = new Board(colors.length,1)
-  i = 0
-  for color in colors
-    goalCount = window.BOARD[color.toUpperCase()]
-    if(goalCount > 0)
-      c = new Crystal(goalBoard, new Loc(i, 0))
-      c.lit = color
-      i++
-  
-  @goalContainer.count = i
-  spaceCoef = 5/6
-  pushCoef = 1/4
-  for c in goalBoard.allHexesOfClass("Crystal")
-    ## Create sprites for crystal
-    spr = PIXI.Sprite.fromImage(@siteprefix + "assets/img/crystal.png")
-    spr.lit = false
-    spr.color = c.lit
-    spr.hex = c
-    spr.position.x = c.loc.row * @hexRad * spaceCoef  ## Leaves some space for text between sprites
-    spr.anchor.x = spr.anchor.y = 0.5
-    spr.scale.x = spr.scale.y = 0.25
-    @goalContainer.addChild(spr)
-    goalCount = window.BOARD[c.lit.toUpperCase()]
-    @goalContainer.colorCount[c.lit.toUpperCase()] = goalCount
-    goalStyle = @menuContentStyle
-    text = new PIXI.Text("0/" + goalCount, goalStyle)
-    text.position.x = c.loc.row * @hexRad * spaceCoef + @hexRad * pushCoef
-    text.position.y = -12
-    text.color = c.lit
-    text.tint = @Color.hexValueForLit(text.color)
-    @goalContainer.addChild(text)
 
   ## Remove colors that aren't part of the solution from all sparks, 
   ## set alpha of that container to 0

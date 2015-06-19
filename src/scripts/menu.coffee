@@ -187,7 +187,6 @@
   @g.endFill()
   return @g.generateTexture()
 
-
 ## Updates the menu to the most recent text for level - assumes initted
 @updateMenu = () ->
   lvlText = @menu.children[4]
@@ -241,5 +240,4 @@
   diffBorder.position.y = -11
   difficultyButtons[@difficulty].addChild(diffBorder)
     
-
   return
